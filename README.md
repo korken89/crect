@@ -1,7 +1,5 @@
 # RTFM++:  A C++ implementation of the SRP based Real-Time For the Masses (RTFM) kernel
 
-## Design
-
 **RTFM++** is a C++ template-only metalibrary for generating a compile time
 scheduler based on the papers by:
 
@@ -37,13 +35,13 @@ _Contributors are most welcome! Contact me and we can have a chat._
 * An entity symbolizing something lockable, i.e. any locked Resource may
 only be accessed by a single Job at a time.
 
-**Lock (SRP):**
+**Lock (Stack Resrouce Policy):**
 
 * A lock on a resource keeps other jobs, that will also take said resource,
 from running through manipulation of the systems ISR settings. A lock can only
 be held within a job and must be released before the exit of a job.
 
-**Lock (PRP):**
+**Lock (Per Resrouce Policy):**
 
 * A lock on a resource keeps other jobs, that will also take said resource,
 from running through manipulation of the systems ISR settings. In contrary
