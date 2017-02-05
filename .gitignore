@@ -1,6 +1,9 @@
 # YCM files
 .ycm*
 
+# Build dir
+build
+
 # Compiled Object files
 *.slo
 *.lo

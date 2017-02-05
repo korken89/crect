@@ -4,7 +4,7 @@
 #include "rtfm/job_resource.hpp"
 #include "rtfm/barriers.hpp"
 #include "util/fake_hw.hpp"
-#include "util/print_types.hpp"
+//#include "util/print_types.hpp"
 #include "util/string_hash.hpp"
 
 
@@ -40,10 +40,10 @@ double test(const double a[2])
 int main()
 {
   using Jlist = brigand::list<J1, J2, J3>;
-  print_list<Jlist>("Jobs");
+ // print_list<Jlist>("Jobs");
 
   using Rft = make_resource_tree<Jlist>::result;
-  print_list<Rft>("Full transform");
+  //print_list<Rft>("Full transform");
 
   return 0;
 };
