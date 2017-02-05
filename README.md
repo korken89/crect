@@ -23,6 +23,7 @@ More description will come...
 
 * Emil Fresk
 
+_Contributors are most welcome! Contact me and we can have a chat._
 
 ## Definitions
 **Job:**
