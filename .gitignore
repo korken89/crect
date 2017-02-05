@@ -1,3 +1,6 @@
+# YCM files
+.ycm*
+
 # Compiled Object files
 *.slo
 *.lo
