@@ -2,17 +2,20 @@
 
 ## Design
 
-The RTFM++ is based on the papers by T.P. Baker **"A Stack-Based Resource
-Allocation Policy for Realtime Processes"**, Johan Eriksson et. al. **"Real-Time
-For the Masses, Step 1: Programming API and Static Priority SRP Kernel
-Primitives"** and Per Lindgren et. al. **"Abstract Timers and their Implementation
-onto the ARM Cortex-M family of MCUs"**, which utilizes the Nested Vector
-Interrupt Controller (NVIC) in Cortex-M processors to implement a Stack
-Resource Policy (SRP) based kernel. In this implementation of RTFM, heavy
-use of C++ Metaprogramming and C++14 allows the priorities to be automatically
-calculated at compile time, while resource locks are handled through RAII. This
-minimizes user error without the need for an external extra compile step, as is
-currently being investigated in the RTFM-core language (www.rtfm-lang.org).
+**RTFM++** is a C++ template-only metalibrary for generating a compile time
+scheduler based on the papers by:
+
+* T.P. Baker, **"A Stack-Based Resource Allocation Policy for Realtime Processes"**
+* Johan Eriksson et. al., **"Real-Time For the Masses, Step 1: Programming API and Static Priority SRP Kernel Primitives"**
+* Per Lindgren et. al., **"Abstract Timers and their Implementation onto the ARM Cortex-M family of MCUs"**
+
+Which utilizes the Nested Vector Interrupt Controller (NVIC) in Cortex-M
+processors to implement a Stack Resource Policy (SRP) based kernel. In this
+implementation of RTFM, heavy use of C++ Metaprogramming and C++14 allows the
+priorities to be automatically calculated at compile time, while resource locks
+are handled through RAII. This minimizes user error without the need for an
+external extra compile step, as is currently being investigated in the
+RTFM-core language (www.rtfm-lang.org).
 
 More description will come...
 
