@@ -21,9 +21,14 @@ class lock
 {
 private:
   /**
+   * @brief  Alias of the type of the BASEPRI register.
+   */
+  using basepri_t = decltype( __get_BASEPRI() );
+
+  /**
    * @brief  Holder of old BASEPRI while the lock is active.
    */
-  const uint32_t _old_basepri;
+  const basepri_t _old_basepri;
 
 public:
   /**
