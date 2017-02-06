@@ -34,7 +34,9 @@ public:
   /**
    * @brief  The constructor locks the resource by manipulating BASEPRI.
    */
-  lock() : _old_basepri( __get_BASEPRI() /* Save old BASEPRI */ )
+  lock() : _old_basepri( __get_BASEPRI() )
+    /* Save old BASEPRI before execution of constructor body as per
+     * C++ Standard §12.6.2 */
   {
     /* Lock the resource. */
     __set_BASEPRI_MAX( 5 /* getSRPResourceCeiling<Resource>::value */ );
