@@ -26,9 +26,9 @@ double test_eigen(const double a[2])
   using namespace Eigen;
 
   const auto v = (Vector2d() << 2, 1).finished();
-  //const Map<const Vector2f> m(a);
+  Map<const Vector2d> m(a);
   //const Vector2f m = (Vector2f() << a[0], a[1]).finished();
-  const auto m = Vector2d(a[0], a[1]);
+  //const auto m = Vector2d(a[0], a[1]);
   double ret = v.dot( m.asDiagonal() * v );
 
   return ret;
@@ -49,10 +49,10 @@ void test_rtfm()
 
 int main()
 {
-  using Jlist = brigand::list<J1, J2, J3>;
+  //using Jlist = brigand::list<J1, J2, J3>;
  // print_list<Jlist>("Jobs");
 
-  using Rft = make_resource_tree<Jlist>::result;
+  //using Rft = make_resource_tree<Jlist>::result;
   //print_list<Rft>("Full transform");
 
   return 0;
