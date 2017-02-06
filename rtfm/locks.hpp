@@ -23,7 +23,7 @@ public:
   {
     /* Lock the resource. */
     _old_basepri = __get_BASEPRI();
-    __set_BASEPRI_MAX( getSRPResourceCeiling<Resource>::value );
+    __set_BASEPRI_MAX( 5 /* getSRPResourceCeiling<Resource>::value */ );
 
     core::barrier_entry();
   }

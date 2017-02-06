@@ -2,7 +2,8 @@
 #include <Eigen/Dense>
 #include "rtfm/interrupts.hpp"
 #include "rtfm/job_resource.hpp"
-#include "rtfm/barriers.hpp"
+#include "rtfm/locks.hpp"
+
 #include "util/fake_hw.hpp"
 //#include "util/print_types.hpp"
 #include "util/string_hash.hpp"
@@ -20,7 +21,7 @@ using J2 = Job<2, 2, testISR, R2, R3, R4>;
 using J3 = Job<3, 3, testISR, R1, R3, R4>;
 
 EIGEN_DONT_INLINE
-double test(const double a[2])
+double test_eigen(const double a[2])
 {
   using namespace Eigen;
 
@@ -31,10 +32,19 @@ double test(const double a[2])
   double ret = v.dot( m.asDiagonal() * v );
 
   return ret;
+}
 
-  //rtfm::core::barrier_entry();
+void test_rtfm()
+{
+  rtfm::srp::lock<R1> lock{};
+  /* Lock */
 
-  //rtfm::core::barrier_exit();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+
+  /* Automatic unlock via RAII */
 }
 
 int main()
