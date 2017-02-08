@@ -36,7 +36,7 @@ double test_eigen(const double a[2])
 
 void test_rtfm()
 {
-  rtfm::srp::lock<R1> lock{};
+  rtfm::srp::lock< brigand::integral_constant<unsigned, 1> > lock;
   /* Lock */
 
   asm volatile("nop");
