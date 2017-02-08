@@ -6,15 +6,15 @@
 /* TODO: Implement "get vector table" from job list. */
 
 EIGEN_DONT_INLINE
-double test_eigen(const double a[2])
+auto test_eigen(const float a[2])
 {
   using namespace Eigen;
 
-  const auto v = (Vector2d() << 2, 1).finished();
-  Map<const Vector2d> m(a);
+  const auto v = (Vector2f() << 2, 1).finished();
+  Map<const Vector2f> m(a);
   //const Vector2f m = (Vector2f() << a[0], a[1]).finished();
   //const auto m = Vector2d(a[0], a[1]);
-  double ret = v.dot( m.asDiagonal() * v );
+  float ret = v.dot( m.asDiagonal() * v );
 
   return ret;
 }
