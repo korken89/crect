@@ -2,7 +2,7 @@
 #pragma once
 
 #include <cstdint>
-#include "CMSIS/Core/Include/cmsis_gcc.h"
+#include "rtfm/arm_intrinsics.hpp"
 #include "rtfm/barriers.hpp"
 
 
@@ -23,7 +23,7 @@ private:
   /**
    * @brief  Alias of the type of the BASEPRI register.
    */
-  using basepri_t = decltype( __get_BASEPRI() );
+  using basepri_t = decltype( arm_intrinsics::get_BASEPRI() );
 
   /**
    * @brief  Holder of old BASEPRI while the lock is active.
@@ -34,12 +34,12 @@ public:
   /**
    * @brief  The constructor locks the resource by manipulating BASEPRI.
    */
-  lock() : _old_basepri( __get_BASEPRI() )
+  lock() : _old_basepri( arm_intrinsics::get_BASEPRI() )
     /* Save old BASEPRI before execution of constructor body as per
      * C++ Standard §12.6.2 */
   {
     /* Lock the resource. */
-    __set_BASEPRI_MAX( 5 /* getSRPResourceCeiling<Resource>::value */ );
+    arm_intrinsics::set_BASEPRI_MAX( 5 /* getSRPResourceCeiling<Resource>::value */ );
 
     /* Barriers to guarantee the instruction took hold before continuing. */
     core::barrier_entry();
@@ -54,7 +54,7 @@ public:
     core::barrier_exit();
 
     /* Unlock the resource. */
-    __set_BASEPRI(_old_basepri);
+    arm_intrinsics::set_BASEPRI(_old_basepri);
   }
 };
 

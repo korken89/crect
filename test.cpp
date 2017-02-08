@@ -39,10 +39,10 @@ void test_rtfm()
   rtfm::srp::lock<R1> lock{};
   /* Lock */
 
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
+  asm volatile("nop");
+  asm volatile("nop");
+  asm volatile("nop");
+  asm volatile("nop");
 
   /* Automatic unlock via RAII */
 }
@@ -50,7 +50,7 @@ void test_rtfm()
 int main()
 {
   //using Jlist = brigand::list<J1, J2, J3>;
- // print_list<Jlist>("Jobs");
+  //print_list<Jlist>("Jobs");
 
   //using Rft = make_resource_tree<Jlist>::result;
   //print_list<Rft>("Full transform");
