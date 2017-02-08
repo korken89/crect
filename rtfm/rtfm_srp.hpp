@@ -7,6 +7,10 @@
 #include "rtfm/srp/srp_locks.hpp"
 
 
+/****************************************************************************
+ * User defines here.
+ ****************************************************************************/
+
 #include "util/fake_hw.hpp"
 //#include "util/print_types.hpp"
 #include "util/string_hash.hpp"
@@ -25,16 +29,18 @@ using J1 = rtfm::Job<1, 1, ISR1, R2, R1, R4>;
 using J2 = rtfm::Job<2, 2, ISR2, R2, R3, R4>;
 using J3 = rtfm::Job<3, 3, ISR3, R1, R3, R4>;
 
+/****************************************************************************
+ * End User defines.
+ ****************************************************************************/
 
 
 namespace rtfm
 {
 
 /****************************************************************************
- *
- * Add user defined jobs here!
- *
+ * Add user defined jobs to the list.
  ****************************************************************************/
+
 using system_job_list = brigand::list<J1, J2, J3>;
 
 }
