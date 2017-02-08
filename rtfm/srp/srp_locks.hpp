@@ -1,33 +1,14 @@
 
 #pragma once
 
-#include <cstdint>
 #include "brigand/brigand.hpp"
 #include "rtfm/arm_intrinsics.hpp"
-
-/* TODO: Only for testing, shall be removed. */
-#ifndef __NVIC_PRIO_BITS
-# define __NVIC_PRIO_BITS 3
-#endif
+#include "util/utils.hpp"
 
 namespace rtfm
 {
 namespace srp
 {
-
-/**
- * @brief   Takes a user priority (0 = lowest, increasing numbers means higher
- *          priority) and transforms to NVIC priority (0 = highest, increasing
- *          numbers means lower priority).
- *
- * @return  The transformed priority.
- */
-template <typename T>
-constexpr T priority_to_NVIC_priority(T priority)
-{
-  auto N = (1 << __NVIC_PRIO_BITS) - 1;
-  return ((N - priority) << (8 - __NVIC_PRIO_BITS)) & 0xFF;
-}
 
 /**
  * @brief  The definition of a lock in the SRP version of RTFM++.
@@ -36,7 +17,7 @@ constexpr T priority_to_NVIC_priority(T priority)
  *                            value to lock.
  */
 template <typename ResourcePriority>
-class lock
+class lock_impl
 {
 private:
   /**
@@ -53,13 +34,13 @@ public:
   /**
    * @brief  The constructor locks the resource by manipulating BASEPRI.
    */
-  lock() : _old_basepri( arm_intrinsics::get_BASEPRI() )
+  lock_impl() : _old_basepri( arm_intrinsics::get_BASEPRI() )
     /* Save old BASEPRI before execution of constructor body as per
      * C++ Standard §12.6.2 */
   {
     /* Lock the resource. */
     arm_intrinsics::set_BASEPRI_MAX(
-      priority_to_NVIC_priority( ResourcePriority::value )
+      util::priority_to_NVIC_priority( ResourcePriority::value )
     );
 
     /* Barriers to guarantee the instruction took hold before continuing. */
@@ -69,7 +50,7 @@ public:
   /**
    * @brief  The destructor releases the resource by restoring BASEPRI.
    */
-  ~lock()
+  ~lock_impl()
   {
     /* Barriers to guarantee no reordering before continuing. */
     arm_intrinsics::barrier_exit();

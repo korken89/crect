@@ -3,10 +3,10 @@
 #include "rtfm/interrupts.hpp"
 #include "rtfm/job_resource.hpp"
 #include "rtfm/job_resource_methods.hpp"
-#include "rtfm/locks.hpp"
+#include "rtfm/srp/srp_locks.hpp"
 
 #include "util/fake_hw.hpp"
-#include "util/print_types.hpp"
+//#include "util/print_types.hpp"
 #include "util/string_hash.hpp"
 
 
@@ -24,13 +24,30 @@ using J2 = rtfm::Job<2, 2, ISR2, R2, R3, R4>;
 using J3 = rtfm::Job<3, 3, ISR3, R1, R3, R4>;
 
 
+
 namespace rtfm
 {
 using system_job_list = brigand::list<J1, J2, J3>;
 }
 
-#include "rtfm/srp_prioirty_ceiling.hpp"
+/* Needs to be included after the definition of the rtfm::system_job_list. */
+#include "rtfm/srp/srp_prioirty_ceiling.hpp"
 
+namespace rtfm
+{
+namespace srp
+{
+
+/**
+ * @brief  A convenience definition of a lock in the SRP version of RTFM++.
+ *
+ * @tparam Resource   The resource to lock.
+ */
+template <typename Resource>
+using lock = lock_impl< get_priority_ceiling< Resource > >;
+
+}
+}
 
 
 /* TODO: Implement "get vector table" from job list. */
@@ -55,27 +72,27 @@ double test_eigen(const double a[2])
 
 void test_rtfm()
 {
-  //rtfm::srp::lock< brigand::integral_constant<unsigned, 1> > lock;
-  ///* Lock */
+  rtfm::srp::lock< R4 > lock;
+  /* Lock */
 
-  //asm volatile("nop");
-  //asm volatile("nop");
-  //asm volatile("nop");
-  //asm volatile("nop");
+  asm volatile("nop");
+  asm volatile("nop");
+  asm volatile("nop");
+  asm volatile("nop");
 
   /* Automatic unlock via RAII */
 }
 
 int main()
 {
-  print_list<rtfm::system_job_list>("System Jobs");
+  //print_list<rtfm::system_job_list>("System Jobs");
 
-  print_list<rtfm::details::resource_tree>("Resource tree");
+  //print_list<rtfm::details::resource_tree>("Resource tree");
 
-  //std::cout << "\nresult: " << type_name< Rft >() << std::endl;
+  ////std::cout << "\nresult: " << type_name< Rft >() << std::endl;
 
-  using ceiling = rtfm::get_priority_ceiling< R4 >;
-  std::cout << "\nceiling: " << type_name< ceiling >() << std::endl;
+  //using ceiling = rtfm::get_priority_ceiling< R4 >;
+  //std::cout << "\nceiling: " << type_name< ceiling >() << std::endl;
 
   return 0;
 };
