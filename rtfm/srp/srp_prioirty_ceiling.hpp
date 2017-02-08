@@ -10,7 +10,7 @@
  ****************************************************************************/
 
 #include "util/utils.hpp"
-#include "rtfm/job_resource.hpp"
+#include "rtfm/details/job_resource.hpp"
 
 namespace rtfm
 {

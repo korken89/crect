@@ -2,7 +2,7 @@
 #pragma once
 
 #include "brigand/brigand.hpp"
-#include "rtfm/arm_intrinsics.hpp"
+#include "rtfm/details/arm_intrinsics.hpp"
 #include "util/utils.hpp"
 
 namespace rtfm

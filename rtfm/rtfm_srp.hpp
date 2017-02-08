@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "rtfm/interrupts.hpp"
-#include "rtfm/job_resource.hpp"
-#include "rtfm/job_resource_methods.hpp"
+#include "rtfm/details/interrupts.hpp"
+#include "rtfm/details/job_resource.hpp"
+#include "rtfm/details/job_resource_methods.hpp"
 #include "rtfm/srp/srp_locks.hpp"
 
 
