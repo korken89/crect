@@ -8,7 +8,11 @@ scheduler based on the papers by:
 * Per Lindgren et. al., **"Abstract Timers and their Implementation onto the ARM Cortex-M family of MCUs"**,
 
 which utilizes the Nested Vector Interrupt Controller (NVIC) in Cortex-M
-processors to implement a Stack Resource Policy (SRP) based kernel. In this
+processors to implement a Stack Resource Policy (SRP) based scheduler. Thanks
+to the compile time creation of the scheduler, the resource requirements are
+runtime are minimal with only a few instructions.
+
+In this
 implementation of RTFM, heavy use of C++ Metaprogramming and C++14 allows,
 among other things, priority ceilings and interrupt masks to be automatically
 calculated at compile time, while resource locks are handled through RAII.
@@ -72,7 +76,7 @@ added advantage of less waits in the system, but the locks are more costly.
 * `release(Resource)`
     * Release of local lock
 
-**Per Resource Policy (PRP) extensions:**
+**Per Resource Policy (PRP) extensions (being investigated):**
 
 * `boundary_lock(Resource)`
     * Lock between jobs, i.e. a lock which can live across Job executions.
