@@ -42,7 +42,7 @@ public:
     arm_intrinsics::set_BASEPRI_MAX( 5 /* getSRPResourceCeiling<Resource>::value */ );
 
     /* Barriers to guarantee the instruction took hold before continuing. */
-    core::barrier_entry();
+    arm_intrinsics::barrier_entry();
   }
 
   /**
@@ -51,7 +51,7 @@ public:
   ~lock()
   {
     /* Barriers to guarantee no reordering before continuing. */
-    core::barrier_exit();
+    arm_intrinsics::barrier_exit();
 
     /* Unlock the resource. */
     arm_intrinsics::set_BASEPRI(_old_basepri);

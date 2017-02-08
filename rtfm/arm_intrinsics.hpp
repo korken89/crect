@@ -18,7 +18,7 @@ namespace arm_intrinsics
  *
  * @return    Base Priority register value
  */
-__attribute__(( always_inline ))
+__attribute__((always_inline))
 static inline uint32_t get_BASEPRI(void)
 {
   uint32_t result;
@@ -34,7 +34,7 @@ static inline uint32_t get_BASEPRI(void)
  *
  * @param [in] value    Base Priority value to set
  */
-__attribute__(( always_inline ))
+__attribute__((always_inline))
 static inline void set_BASEPRI(uint32_t value)
 {
   asm volatile ("MSR basepri, %0" : : "r" (value) : "memory");
@@ -49,10 +49,30 @@ static inline void set_BASEPRI(uint32_t value)
  *
  * @param [in]    basePri  Base Priority value to set
  */
-__attribute__(( always_inline ))
+__attribute__((always_inline))
 static inline void set_BASEPRI_MAX(uint32_t value)
 {
   asm volatile ("MSR basepri_max, %0" : : "r" (value) : "memory");
+}
+
+
+/**
+ * @brief  Start of a instruction and data barrier, used to guarantee the
+ *         memory order for critical operations.
+ */
+__attribute__((always_inline)) static inline void barrier_entry()
+{
+  asm volatile("dsb 0xF\nisb 0xF\n" ::: "memory");
+}
+
+
+/**
+ * @brief  End of a instruction and data barrier, used to guarantee the
+ *         memory order for critical operations.
+ */
+__attribute__((always_inline)) static inline void barrier_exit()
+{
+  asm volatile("" ::: "memory");
 }
 
 } /* END namespace arm_intrinsics */
