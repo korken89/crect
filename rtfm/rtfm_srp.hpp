@@ -2,6 +2,16 @@
 #pragma once
 
 #include "brigand/brigand.hpp"
+
+/*
+ * Place MCU definition file here.
+ *
+ * Needs to define:
+ * - __NVIC_PRIO_BITS
+ * - ISR names
+ *
+ */
+
 #include "rtfm/details/interrupts.hpp"
 #include "rtfm/details/job_resource.hpp"
 #include "rtfm/details/job_resource_methods.hpp"
