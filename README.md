@@ -1,6 +1,6 @@
 # RTFM++:  A C++ implementation of the SRP based Real-Time For the Masses (RTFM) kernel
 
-**RTFM++** is a C++ template-only metalibrary for generating a compile time
+**RTFM++** is a C++ library for generating a compile time
 scheduler based on the papers by:
 
 * T.P. Baker, **"A Stack-Based Resource Allocation Policy for Realtime Processes"**,
