@@ -2,23 +2,42 @@
 #include <Eigen/Dense>
 #include "rtfm/interrupts.hpp"
 #include "rtfm/job_resource.hpp"
+#include "rtfm/job_resource_methods.hpp"
 #include "rtfm/locks.hpp"
 
 #include "util/fake_hw.hpp"
-//#include "util/print_types.hpp"
+#include "util/print_types.hpp"
 #include "util/string_hash.hpp"
 
 
-using testISR = MakeISR<&DefaultISR::UnusedISR, 34>;
+using ISR1 = rtfm::MakeISR<&rtfm::DefaultISR::UnusedISR, 2>;
+using ISR2 = rtfm::MakeISR<&rtfm::DefaultISR::UnusedISR, 1>;
+using ISR3 = rtfm::MakeISR<&rtfm::DefaultISR::UnusedISR, 3>;
 
-using R1 = Resource<SPI1>;
-using R2 = Resource<SPI2>;
-using R3 = Resource<I2C1>;
-using R4 = Resource<I2C2>;
+using R1 = rtfm::Resource<SPI1>;
+using R2 = rtfm::Resource<SPI2>;
+using R3 = rtfm::Resource<I2C1>;
+using R4 = rtfm::Resource<I2C2>;
 
-using J1 = Job<1, 1, testISR, R2, R1, R4>;
-using J2 = Job<2, 2, testISR, R2, R3, R4>;
-using J3 = Job<3, 3, testISR, R1, R3, R4>;
+using J1 = rtfm::Job<1, 1, ISR1, R2, R1, R4>;
+using J2 = rtfm::Job<2, 2, ISR2, R2, R3, R4>;
+using J3 = rtfm::Job<3, 3, ISR3, R1, R3, R4>;
+
+
+namespace rtfm
+{
+using system_job_list = brigand::list<J1, J2, J3>;
+}
+
+#include "rtfm/srp_prioirty_ceiling.hpp"
+
+
+
+/* TODO: Implement "get vector table" from job list. */
+
+
+
+
 
 EIGEN_DONT_INLINE
 double test_eigen(const double a[2])
@@ -36,24 +55,27 @@ double test_eigen(const double a[2])
 
 void test_rtfm()
 {
-  rtfm::srp::lock< brigand::integral_constant<unsigned, 1> > lock;
-  /* Lock */
+  //rtfm::srp::lock< brigand::integral_constant<unsigned, 1> > lock;
+  ///* Lock */
 
-  asm volatile("nop");
-  asm volatile("nop");
-  asm volatile("nop");
-  asm volatile("nop");
+  //asm volatile("nop");
+  //asm volatile("nop");
+  //asm volatile("nop");
+  //asm volatile("nop");
 
   /* Automatic unlock via RAII */
 }
 
 int main()
 {
-  //using Jlist = brigand::list<J1, J2, J3>;
-  //print_list<Jlist>("Jobs");
+  print_list<rtfm::system_job_list>("System Jobs");
 
-  //using Rft = make_resource_tree<Jlist>::result;
-  //print_list<Rft>("Full transform");
+  print_list<rtfm::details::resource_tree>("Resource tree");
+
+  //std::cout << "\nresult: " << type_name< Rft >() << std::endl;
+
+  using ceiling = rtfm::get_priority_ceiling< R4 >;
+  std::cout << "\nceiling: " << type_name< ceiling >() << std::endl;
 
   return 0;
 };

@@ -4,6 +4,8 @@
 #include "brigand/brigand.hpp"
 #include "util/utils.hpp"
 
+namespace rtfm
+{
 namespace details
 {
 /**
@@ -26,7 +28,7 @@ using Index = brigand::integral_constant<unsigned int, I>;
 template <ISRFunctionPointer P, typename I>
 struct ISR
 {
-  static_assert(always_false< I >::value, "Index type error");
+  static_assert(util::always_false< I >::value, "Index type error");
 };
 
 /**
@@ -42,7 +44,7 @@ struct ISR<P, Index<I>>
   using type = ISR<P, Index<I>>;
   using index = Index<I>;
 };
-}
+} /* END namespace details */
 
 /**
  * @brief Wrapper of an ISR type for ease of use.
@@ -64,3 +66,5 @@ public:
     while (1);
   }
 };
+
+}
