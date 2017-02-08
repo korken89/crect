@@ -31,6 +31,7 @@ using resource_tree = make_resource_tree<system_job_list>::result;
 template <typename Resource>
 struct find_resource_impl
 {
+  /* Searches the resource tree for the same Resource ID. */
   using type = brigand::find< resource_tree,
                               brigand::bind<
                                 details::_same_id,
@@ -48,7 +49,8 @@ struct find_resource_impl
  * @tparam Resource  Resource to find.
  */
 template <typename Resource>
-using find_resource = brigand::front< typename find_resource_impl<Resource>::type >;
+using find_resource = brigand::front<
+                                typename find_resource_impl<Resource>::type >;
 
 template <typename... Ts>
 struct job_to_priority

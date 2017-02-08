@@ -45,7 +45,8 @@ using _compare_job_ids = brigand::bool_< (std::is_same<typename Lhs::UID, typena
 template <typename... Ts>
 struct _merge_resources_impl
 {
-  static_assert(util::always_false<Ts...>::value, "Merging different resources are not allowed");
+  static_assert(util::always_false<Ts...>::value,
+                "Merging different resources are not allowed");
 };
 
 
@@ -65,8 +66,10 @@ struct _merge_resources_impl< Resource<ID, Ts1...>, Resource<ID, T, Ts2...> >
         brigand::list<Ts1...>,
         brigand::bind< _compare_job_ids, T, brigand::_1 >
     >::value < 1), // Only merge Jobs if it is not already in the resource claim
-    typename _merge_resources_impl< Resource<ID, Ts1..., T>, Resource<ID, Ts2...> >::result::type,
-    typename _merge_resources_impl< Resource<ID, Ts1...>, Resource<ID, Ts2...> >::result::type >;
+    typename _merge_resources_impl< Resource<ID, Ts1..., T>,
+                                    Resource<ID, Ts2...> >::result::type,
+    typename _merge_resources_impl< Resource<ID, Ts1...>,
+                                    Resource<ID, Ts2...> >::result::type >;
 };
 
 /**
