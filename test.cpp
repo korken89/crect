@@ -1,23 +1,9 @@
 
-#include <Eigen/Dense>
 #include "rtfm/rtfm_srp.hpp"
 //#include "util/print_types.hpp"
 
 /* TODO: Implement "get vector table" from job list. */
 
-EIGEN_DONT_INLINE
-auto test_eigen(const float a[2])
-{
-  using namespace Eigen;
-
-  const auto v = (Vector2f() << 2, 1).finished();
-  Map<const Vector2f> m(a);
-  //const Vector2f m = (Vector2f() << a[0], a[1]).finished();
-  //const auto m = Vector2d(a[0], a[1]);
-  float ret = v.dot( m.asDiagonal() * v );
-
-  return ret;
-}
 
 void test_rtfm()
 {
