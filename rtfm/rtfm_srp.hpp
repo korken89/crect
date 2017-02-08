@@ -24,6 +24,7 @@ using R1 = rtfm::Resource<SPI1>;
 using R2 = rtfm::Resource<SPI2>;
 using R3 = rtfm::Resource<I2C1>;
 using R4 = rtfm::Resource<I2C2>;
+using Rn = rtfm::Resource<int>;
 
 using J1 = rtfm::Job<1, 1, ISR1, R2, R1, R4>;
 using J2 = rtfm::Job<2, 2, ISR2, R2, R3, R4>;

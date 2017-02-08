@@ -23,17 +23,31 @@ namespace details
 using resource_tree = make_resource_tree<system_job_list>::result;
 
 /**
- * @brief Finds a resource in the resource tree.
+ * @brief Finds a resource in the resource tree (implementation).
  *
  * @tparam Resource  Resource to find.
  */
 template <typename Resource>
-using find_resource = brigand::front< brigand::find< resource_tree,
-                                   brigand::bind<
-                                     details::_same_id,
-                                     typename Resource::ID,
-                                     brigand::_1
-                                   > > >;
+struct find_resource_impl
+{
+  using type = brigand::find< resource_tree,
+                              brigand::bind<
+                                details::_same_id,
+                                typename Resource::ID,
+                                brigand::_1
+                              > >;
+
+  static_assert(!std::is_same< type, brigand::list<> >::value,
+                "The resource in not registered in RTFM");
+};
+
+/**
+ * @brief Finds a resource in the resource tree (alias).
+ *
+ * @tparam Resource  Resource to find.
+ */
+template <typename Resource>
+using find_resource = brigand::front< typename find_resource_impl<Resource>::type >;
 
 template <typename... Ts>
 struct job_to_priority
