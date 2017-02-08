@@ -1,4 +1,4 @@
-INCLUDE = -I../brigand -I../eigen -I./
+INCLUDE = -I../brigand -I./
 DEFS = -DBRIGAND_NO_BOOST_SUPPORT -DNDEBUG
 FLAGS = -std=c++14 -Wall -Wextra -O2
 ARM_FLAGS = $(FLAGS) -c -fno-rtti -fno-exceptions -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb -fomit-frame-pointer -falign-functions=16
