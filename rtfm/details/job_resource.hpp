@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "brigand/brigand.hpp"
+
 namespace rtfm
 {
 

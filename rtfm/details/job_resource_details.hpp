@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "brigand/brigand.hpp"
 #include "util/utils.hpp"
 #include "rtfm/details/job_resource.hpp"
 

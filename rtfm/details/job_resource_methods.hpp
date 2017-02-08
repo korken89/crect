@@ -3,8 +3,8 @@
 
 
 #include "brigand/brigand.hpp"
-#include "rtfm/details/interrupts.hpp"
 #include "util/utils.hpp"
+#include "rtfm/details/interrupts.hpp"
 #include "rtfm/details/job_resource.hpp"
 #include "rtfm/details/job_resource_details.hpp"
 
