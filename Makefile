@@ -1,12 +1,16 @@
 INCLUDE = -I../brigand -I./
 DEFS = -DBRIGAND_NO_BOOST_SUPPORT -DNDEBUG
-FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -pedantic -O2
-ARM_FLAGS = $(FLAGS) -c -fno-rtti -fno-exceptions -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb -fomit-frame-pointer -falign-functions=16
+FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -O2
+FLAGS2 = -fno-rtti -fno-exceptions -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb -fomit-frame-pointer -falign-functions=16 -mno-thumb-interwork
+ARM_FLAGS = -c $(FLAGS) $(FLAGS2)
+LDFLAGS = $(FLAGS2) -T link.ld -Wl,-Map=build/output.map --specs=nosys.specs -nostdlib
 
 all:
 		@mkdir -p build
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) test.cpp -o build/test.o
-		arm-none-eabi-objdump -D build/test.o > build/test.dmp
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) rtfm/rtfm_vector_table.cpp -o build/vector.o
+		arm-none-eabi-g++ $(LDFLAGS) build/test.o build/vector.o -o build/test.elf
+		arm-none-eabi-objdump -D build/test.elf > build/test.dmp
 
 clean:
 		rm -rf build

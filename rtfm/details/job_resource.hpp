@@ -14,11 +14,12 @@ namespace rtfm
  * @tparam ISR    ISR definition.
  * @tparam Res    Parameter pack of resources.
  */
-template <int UID_, int Prio_, typename ISR, typename... Res>
+template <int UID_, int Prio_, typename ISR_, typename... Res>
 struct Job
 {
   using UID = brigand::integral_constant<int, UID_>;
   using P = brigand::integral_constant<int, Prio_>;
+  using ISR = ISR_;
   using resources = brigand::flatten< brigand::list<Res...> >;
 };
 

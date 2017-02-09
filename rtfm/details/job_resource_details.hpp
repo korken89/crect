@@ -40,6 +40,14 @@ struct job_to_resource_impl< Job<I1, I2, ISR, Res...> >
 template <typename Lhs, typename Rhs>
 using _compare_job_ids = brigand::bool_< (std::is_same<typename Lhs::UID, typename Rhs::UID>::value) >;
 
+/**
+ * @brief Alias to compare two Job IDs.
+ *
+ * @tparam Lhs   Left hand side.
+ * @tparam Rhs   Right hand side.
+ */
+template  <typename UID, typename Rhs>
+using _compare_job_ids_to_constant = brigand::bool_< (UID::value == Rhs::UID::value) >;
 
 
 template <typename... Ts>
@@ -165,6 +173,14 @@ struct merge_resource_list< brigand::list<R> >
 };
 
 
+/**
+ * @brief Checks if the left-hand side is the same as the Resource ID.
+ *
+ * @tparam Lhs   Left hand side.
+ * @tparam Rhs   Right hand side.
+ */
+//template <typename Lhs, typename Rhs>
+//using _same_job_uid = brigand::bool_< (std::is_same<Lhs, typename Rhs::ID>::value) >;
 
 /**
  * @brief Checks if the left-hand side is the same as the Resource ID.
