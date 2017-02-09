@@ -6,6 +6,26 @@
 #endif
 
 /**
+ * @brief Unhandled exception definition.
+ */
+extern "C" {
+void _unhandled_exception(void) {
+  while (true) {  }
+}
+}
+
+void Reset_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
+void NMI_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
+void HardFault_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
+void MemManage_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
+void BusFault_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
+void UsageFault_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
+void SVCall_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
+void DebugMon_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
+void PendSV_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
+void SysTick_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
+
+/**
  * @brief Used to find an ISR from a Job ID.
  *
  * @tparam JobID  integral_constant containing the Job ID.
@@ -60,26 +80,6 @@ struct vector_table
   const rtfm::details::ISRFunctionPointer arm_vectors[16]; /* SysTick Handler */
   const rtfm::details::ISRFunctionPointer vectors[__MCU_NUM_VECTORS];
 };
-
-/**
- * @brief Unhandled exception definition.
- */
-extern "C" {
-void _unhandled_exception(void) {
-  while (true) {  }
-}
-}
-
-void Reset_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
-void NMI_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
-void HardFault_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
-void MemManage_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
-void BusFault_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
-void UsageFault_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
-void SVCall_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
-void DebugMon_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
-void PendSV_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
-void SysTick_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
 
 
 /**
