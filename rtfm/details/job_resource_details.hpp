@@ -61,11 +61,16 @@ struct _merge_resources_impl
 template <typename ID, typename... Jobs1, typename... Jobs2, typename Job>
 struct _merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job, Jobs2...> >
 {
-  using result = std::conditional<
-    (brigand::count_if<
+  using count = brigand::count_if<
         brigand::list<Jobs1...>,
         brigand::bind< _compare_job_ids, Job, brigand::_1 >
-    >::value < 1), // Only merge Jobs if it is not already in the resource claim
+    >;
+
+  static_assert(count::value < 1,
+      "Duplicate jobs defined, each job must have a unique ID");
+
+  using result = std::conditional<
+    (count::value < 1), // Only merge Jobs if it is not already in the resource claim
     typename _merge_resources_impl< Resource<ID, Jobs1..., Job>,
                                     Resource<ID, Jobs2...> >::result::type,
     typename _merge_resources_impl< Resource<ID, Jobs1...>,
@@ -82,11 +87,16 @@ struct _merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job, Jobs2...
 template <typename ID, typename... Jobs1, typename Job>
 struct _merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job> >
 {
-  using result = std::conditional<
-    (brigand::count_if<
+  using count = brigand::count_if<
         brigand::list<Jobs1...>,
         brigand::bind< _compare_job_ids, Job, brigand::_1 >
-    >::value < 1), // Only merge a Job if it is not already in the resource claim
+    >;
+
+  static_assert(count::value < 1,
+      "Duplicate jobs defined, each job must have a unique ID");
+
+  using result = std::conditional<
+    (count::value < 1), // Only merge a Job if it is not already in the resource claim
     Resource<ID, Jobs1..., Job>,
     Resource<ID, Jobs1...> >;
 };
