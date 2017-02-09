@@ -14,15 +14,15 @@ namespace rtfm
 /**
  * @brief Interface to make_resource_tree_impl.
  *
- * @tparam Res   Pack of resources.
+ * @tparam Jobs   Pack of Jobs.
  */
-template <typename... Res>
+template <typename... Jobs>
 struct make_resource_tree
 {
   /* Take all the job<resources> and transform to resource<jobs> */
   using j2r = brigand::flatten<
                 brigand::transform<
-                  brigand::flatten< brigand::list< Res... > >,
+                  brigand::flatten< brigand::list< Jobs... > >,
                   details::job_to_resource_impl<brigand::_1>
                 > >;
 

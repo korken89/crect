@@ -64,10 +64,10 @@ struct job_to_priority
  * @tparam ID   Job unique ID.
  * @tparam PRIO Priority.
  * @tparam ISR  ISR definition.
- * @tparam Ts   Parameter pack of resources.
+ * @tparam Res  Parameter pack of resources.
  */
-template <int ID, int PRIO, typename ISR, typename... Ts>
-struct job_to_priority< Job<ID, PRIO, ISR, Ts...> > : brigand::integral_constant<int, PRIO>
+template <int ID, int PRIO, typename ISR, typename... Res>
+struct job_to_priority< Job<ID, PRIO, ISR, Res...> > : brigand::integral_constant<int, PRIO>
 {
 };
 

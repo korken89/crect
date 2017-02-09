@@ -22,12 +22,12 @@ struct job_to_resource_impl
  * @tparam I1   Job unique ID.
  * @tparam I2   Priority.
  * @tparam ISR  ISR definition.
- * @tparam Ts   Parameter pack of jobs.
+ * @tparam Res  Parameter pack of resources.
  */
-template <int I1, int I2, typename ISR, typename... Ts>
-struct job_to_resource_impl< Job<I1, I2, ISR, Ts...> >
+template <int I1, int I2, typename ISR, typename... Res>
+struct job_to_resource_impl< Job<I1, I2, ISR, Res...> >
 {
-  using type = brigand::list< Resource<typename Ts::ID, Job<I1, I2, ISR> >... >;
+  using type = brigand::list< Resource<typename Res::ID, Job<I1, I2, ISR> >... >;
 };
 
 
@@ -54,41 +54,41 @@ struct _merge_resources_impl
  * @brief Merges resources of same ID.
  *
  * @tparam ID    Type of the ID.
- * @tparam Ts1   Left hand side pack of jobs.
- * @tparam Ts2   Right hand side pack of jobs.
- * @tparam T     Right hand side first job.
+ * @tparam Jobs1   Left hand side pack of jobs.
+ * @tparam Jobs2   Right hand side pack of jobs.
+ * @tparam Job     Right hand side first job.
  */
-template <typename ID, typename... Ts1, typename... Ts2, typename T>
-struct _merge_resources_impl< Resource<ID, Ts1...>, Resource<ID, T, Ts2...> >
+template <typename ID, typename... Jobs1, typename... Jobs2, typename Job>
+struct _merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job, Jobs2...> >
 {
   using result = std::conditional<
     (brigand::count_if<
-        brigand::list<Ts1...>,
-        brigand::bind< _compare_job_ids, T, brigand::_1 >
+        brigand::list<Jobs1...>,
+        brigand::bind< _compare_job_ids, Job, brigand::_1 >
     >::value < 1), // Only merge Jobs if it is not already in the resource claim
-    typename _merge_resources_impl< Resource<ID, Ts1..., T>,
-                                    Resource<ID, Ts2...> >::result::type,
-    typename _merge_resources_impl< Resource<ID, Ts1...>,
-                                    Resource<ID, Ts2...> >::result::type >;
+    typename _merge_resources_impl< Resource<ID, Jobs1..., Job>,
+                                    Resource<ID, Jobs2...> >::result::type,
+    typename _merge_resources_impl< Resource<ID, Jobs1...>,
+                                    Resource<ID, Jobs2...> >::result::type >;
 };
 
 /**
  * @brief Merges resources of same ID.
  *
  * @tparam ID    Type of the ID.
- * @tparam Ts1   Left hand side pack of jobs.
- * @tparam T     Right hand side last job.
+ * @tparam Jobs1 Left hand side pack of jobs.
+ * @tparam Job     Right hand side last job.
  */
-template <typename ID, typename... Ts1, typename T>
-struct _merge_resources_impl< Resource<ID, Ts1...>, Resource<ID, T> >
+template <typename ID, typename... Jobs1, typename Job>
+struct _merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job> >
 {
   using result = std::conditional<
     (brigand::count_if<
-        brigand::list<Ts1...>,
-        brigand::bind< _compare_job_ids, T, brigand::_1 >
+        brigand::list<Jobs1...>,
+        brigand::bind< _compare_job_ids, Job, brigand::_1 >
     >::value < 1), // Only merge a Job if it is not already in the resource claim
-    Resource<ID, Ts1..., T>,
-    Resource<ID, Ts1...> >;
+    Resource<ID, Jobs1..., Job>,
+    Resource<ID, Jobs1...> >;
 };
 
 /**
