@@ -19,11 +19,11 @@ void test_rtfm()
 }
 
 template <int I>
-constexpr auto get_vector_from_position()
+struct get_vector_from_position : brigand::integral_constant<int, I>
 {
   //return reinterpret_cast<void (*)(void)>(2 + I);
-  return I;
-}
+  //static I;
+};
 
 struct vector_table
 {
@@ -33,7 +33,7 @@ struct vector_table
 template <typename T, T... Is>
 const constexpr vector_table table_test(std::integer_sequence<T, Is...>)
 {
-  return {{ get_vector_from_position<Is>()... }};
+  return {{ get_vector_from_position<Is>::value... }};
   //return {{ apply_test(1), apply_test(2), apply_test(3) }};
 }
 
