@@ -7,7 +7,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include "rtfm/job_resource.hpp"
+#include "rtfm/details/job_resource.hpp"
 #include "brigand/brigand.hpp"
 
 template <class T>
