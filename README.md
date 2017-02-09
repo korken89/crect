@@ -13,7 +13,7 @@ to the compile time creation of the scheduler, the resource requirements are
 runtime are minimal with only a few instructions.
 
 In this
-implementation of RTFM, heavy use of C++ Metaprogramming and C++14 allows,
+implementation of RTFM, heavy use of **C++ metaprogramming** and **C++14** allows,
 among other things, priority ceilings and interrupt masks to be automatically
 calculated at compile time, while resource locks are handled through RAII.
 This minimizes user error without the need for an external extra compile step,
