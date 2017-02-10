@@ -78,7 +78,7 @@ struct get_vector_from_position
 struct vector_table
 {
   const rtfm::details::ISRFunctionPointer arm_vectors[16]; /* SysTick Handler */
-  const rtfm::details::ISRFunctionPointer vectors[__MCU_NUM_VECTORS];
+  const rtfm::details::ISRFunctionPointer mcu_vectors[__MCU_NUM_VECTORS];
 };
 
 
@@ -100,13 +100,13 @@ const constexpr vector_table generate_vector_table(
               MemManage_Handler,  /* MPU Fault Handler */
               BusFault_Handler,   /* Bus Fault Handler */
               UsageFault_Handler, /* Usage Fault Handler */
-              0,                  /* Reserved */
-              0,                  /* Reserved */
-              0,                  /* Reserved */
-              0,                  /* Reserved */
+              nullptr,            /* Reserved */
+              nullptr,            /* Reserved */
+              nullptr,            /* Reserved */
+              nullptr,            /* Reserved */
               SVCall_Handler,     /* SVCall Handler */
               DebugMon_Handler,   /* Debug Monitor Handler */
-              0,                  /* Reserved */
+              nullptr,            /* Reserved */
               PendSV_Handler,     /* PendSV Handler */
               SysTick_Handler     /* SysTick Handler */
           },
@@ -119,5 +119,5 @@ const constexpr vector_table generate_vector_table(
 __attribute__((used, section(".isr_vectors")))
 const constexpr vector_table system_vectors = generate_vector_table(
     std::make_integer_sequence<
-        unsigned, sizeof(vector_table::vectors) /
+        unsigned, sizeof(vector_table::mcu_vectors) /
                       sizeof(rtfm::details::ISRFunctionPointer)>{});
