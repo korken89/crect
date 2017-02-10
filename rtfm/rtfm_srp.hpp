@@ -3,6 +3,8 @@
 
 #include "brigand/brigand.hpp"
 
+#include "stm32f411xe.h"
+
 /*
  * Place MCU definition file here.
  *
@@ -23,7 +25,7 @@
  * User defines here.
  ****************************************************************************/
 
-#include "util/fake_hw.hpp"
+//#include "util/fake_hw.hpp"
 #include "util/string_hash.hpp"
 
 static void Used1()
@@ -40,10 +42,10 @@ using ISR1 = rtfm::MakeISR<&Used1, 2>;
 using ISR2 = rtfm::MakeISR<&Used2, 1>;
 using ISR3 = rtfm::MakeISR<&Used3, 32>;
 
-using R1 = rtfm::Resource<SPI1>;
-using R2 = rtfm::Resource<SPI2>;
-using R3 = rtfm::Resource<I2C1>;
-using R4 = rtfm::Resource<I2C2>;
+using R1 = rtfm::Resource<char>;
+using R2 = rtfm::Resource<float>;
+using R3 = rtfm::Resource<double>;
+using R4 = rtfm::Resource<unsigned>;
 using Rn = rtfm::Resource<int>;
 
 using J1 = rtfm::Job<1, 1, ISR1, R2, R1, R4>;
