@@ -5,6 +5,10 @@
 #define __MCU_NUM_VECTORS 5
 #endif
 
+#ifndef __STACK_END
+#define __STACK_END 0
+#endif
+
 /**
  * @brief Unhandled exception definition.
  */
@@ -93,7 +97,7 @@ const constexpr vector_table generate_vector_table(
     std::integer_sequence<T, Is...>)
 {
   return {{
-              0,                  /* Stack */
+              __STACK_END,        /* Stack */
               Reset_Handler,      /* Reset Handler */
               NMI_Handler,        /* NMI Handler */
               HardFault_Handler,  /* Hard Fault Handler */
