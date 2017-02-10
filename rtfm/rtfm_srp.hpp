@@ -16,6 +16,7 @@
 #include "rtfm/details/job_resource.hpp"
 #include "rtfm/details/job_resource_methods.hpp"
 #include "rtfm/srp/srp_locks.hpp"
+#include "rtfm/srp/job_primitives.hpp"
 
 
 /****************************************************************************
