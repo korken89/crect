@@ -5,7 +5,7 @@ MEMORY
 	ABHSRAM (rwx) : ORIGIN = 0x2007c000, LENGTH = 32k
 }
 
-ENTRY(main)
+ENTRY(Reset_Handler)
 
 SECTIONS
 {

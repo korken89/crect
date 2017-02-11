@@ -20,7 +20,7 @@ void test_rtfm()
   /* Automatic unlock via RAII */
 }
 
-void main2()
+int main()
 {
   //print_list<rtfm::system_job_list>("System Jobs");
 
@@ -30,12 +30,13 @@ void main2()
 
   while(1);
 
-
+  return 0;
 }
 
+extern "C" {
 void Reset_Handler()
 {
 
-  test_rtfm();
 
+}
 }
