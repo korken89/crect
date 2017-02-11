@@ -11,6 +11,8 @@ all:
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../rtfm/rtfm_vector_table.cpp -o build/vector.o
 		arm-none-eabi-g++ $(LDFLAGS) build/test.o build/vector.o -o build/test.elf
 		arm-none-eabi-objdump -D build/test.elf > build/test.dmp
+		@echo " "
+		@arm-none-eabi-size --format=berkeley build/test.elf
 
 clean:
 		rm -rf build
