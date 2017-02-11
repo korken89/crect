@@ -10,7 +10,12 @@ scheduler based on the papers by:
 which utilizes the Nested Vector Interrupt Controller (NVIC) in Cortex-M
 processors to implement a Stack Resource Policy (SRP) based scheduler. Thanks
 to the compile time creation of the scheduler, the resource requirements are
-runtime are minimal with only a few instructions.
+runtime are minimal with:
+
+* 4-6 instructions for a lock.
+* 1-3 instructions for an unlock.
+* 1-2 instructions for `pend` / `clear`
+* xx-xx instructions for `async`
 
 In this
 implementation of RTFM, heavy use of **C++ metaprogramming** and **C++14** allows,
