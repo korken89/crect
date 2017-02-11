@@ -63,7 +63,11 @@ public:
 /**
  * @brief Asynchronous pend of an RTFM job.
  *
- * @tparam Job  The job to clear.
+ * @tparam Job          The job to pend in the future.
+ * @tparam Rep          Representation of the duration.
+ * @tparam Period       Period of the duration.
+ *
+ * @param[in] duration  The time until the job shall be executed.
  */
 template <typename Job, typename Rep, typename Period>
 constexpr void async(std::chrono::duration<Rep, Period> duration)
