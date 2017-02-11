@@ -8,7 +8,7 @@ extern "C" {
 void _unhandled_exception(void) {
   while (true) {  }
 }
-}
+
 
 void Reset_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
 void NMI_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
@@ -20,7 +20,7 @@ void SVCall_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
 void DebugMon_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
 void PendSV_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
 void SysTick_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
-
+}
 /**
  * @brief Used to find an ISR from a Job ID.
  *
