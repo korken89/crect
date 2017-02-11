@@ -5,13 +5,14 @@
 
 #include "rtfm/rtfm_srp.hpp"
 
+using namespace std::chrono_literals;
 
 
 void test_rtfm()
 {
   using namespace rtfm::srp;
 
-  //rtfm::srp::lock< R4 > lock;
+  //lock< R4 > lock;
   /* Lock */
 
 

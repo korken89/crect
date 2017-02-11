@@ -1,7 +1,7 @@
 INCLUDE = -I../../brigand -I../ -I./inc
 DEFS = -DBRIGAND_NO_BOOST_SUPPORT -DNDEBUG
 FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -O1 -ggdb
-FLAGS2 = -fno-rtti -fno-exceptions -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb -fomit-frame-pointer -falign-functions=16 -mno-thumb-interwork
+FLAGS2 = -fno-rtti -fno-exceptions -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb -fomit-frame-pointer -falign-functions=16 -mno-thumb-interwork -fno-threadsafe-statics
 ARM_FLAGS = -c $(FLAGS) $(FLAGS2)
 LDFLAGS = $(FLAGS2) -T link.ld -Wl,-Map=build/output.map --specs=nosys.specs -nostdlib
 
