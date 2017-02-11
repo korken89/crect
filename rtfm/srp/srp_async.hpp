@@ -4,6 +4,10 @@
 #include "rtfm/details/job_resource.hpp"
 #include <chrono>
 
+#ifndef __RTFM_ASYNC_QUEUE_SIZE
+#   define __RTFM_ASYNC_QUEUE_SIZE 10
+#endif
+
 namespace rtfm
 {
 namespace srp
@@ -20,12 +24,32 @@ using timer_ticks = std::chrono::duration<uint64_t, std::ratio<1, __F_CPU>>;
 class async_queue final
 {
 private:
-  std::array<int, 100> _queue;
+
+  struct async_queue_element {
+    int32_t baseline;
+    uint32_t id;
+    struct async_queue_element* next;
+  };
+
+  async_queue_element _queue[__RTFM_ASYNC_QUEUE_SIZE];
+  async_queue_element* _queue_head;    // head pointer
+  async_queue_element* _queue_free;    // free pointer
+  async_queue_element* _queue_new;     // new
+  async_queue_element* _queue_current; // current
 
   /**
-  * @brief Empty constructor.
+  * @brief Initialization function for the queue.
   */
-  async_queue() {}
+  void init_memory()
+  {
+    for (int i = 0; i < __RTFM_ASYNC_QUEUE_SIZE - 1; i++)
+      _queue[i].next = &_queue[i + 1];
+
+    _queue[__RTFM_ASYNC_QUEUE_SIZE - 1].next = nullptr;
+
+    _queue_head = nullptr;
+    _queue_free = _queue;
+  }
 
 public:
 
@@ -40,11 +64,12 @@ public:
     return queue;
   }
 
-  /**
-  * @brief Make sure no copies can be made.
-  */
-  async_queue(async_queue const&)    = delete;
-  void operator=(async_queue const&) = delete;
+  static void initialize()
+  {
+    auto& queue = async_queue::get();
+    queue.init_memory();
+  }
+
 };
 
 /**

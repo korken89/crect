@@ -12,12 +12,11 @@ void test_rtfm()
 {
   using namespace rtfm::srp;
 
-  //lock< R4 > lock;
   /* Lock */
+  //lock< R4 > lock;
 
 
   async<J1>( 10ms );
-
 
   // asm volatile("nop");
   // asm volatile("nop");
@@ -33,6 +32,9 @@ int main()
 
   //print_list<rtfm::details::resource_tree>("Resource tree");
 
+  rtfm::srp::async_queue::initialize();
+
+  //async<J1>( 10ms );
 
   //std::cout << "Ticks: " << ticks << std::endl;
 
