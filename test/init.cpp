@@ -117,6 +117,9 @@ void Reset_Handler()
 
   __DSB();
 
+  // Setup the NVIC
+  NVIC_SetPriorityGrouping(0);
+
   __enable_irq();
   __ISB();
 
