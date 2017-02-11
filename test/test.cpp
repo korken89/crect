@@ -1,16 +1,19 @@
 
-#include "rtfm/rtfm_srp.hpp"
-//#include "util/print_types.hpp"
+#ifdef __clang__
+#include "util/print_types.hpp"
+#endif
 
-/* TODO: Implement "get vector table" from job list. */
+#include "rtfm/rtfm_srp.hpp"
+
 
 
 void test_rtfm()
 {
-  rtfm::srp::lock< R4 > lock;
+  //rtfm::srp::lock< R4 > lock;
   /* Lock */
 
-  rtfm::srp::pend< J1 >();
+  rtfm::srp::async<J1>( 10ms );
+
 
   // asm volatile("nop");
   // asm volatile("nop");
@@ -26,9 +29,8 @@ int main()
 
   //print_list<rtfm::details::resource_tree>("Resource tree");
 
-  rtfm::srp::pend< J1 >();
 
-  while(1);
+  //std::cout << "Ticks: " << ticks << std::endl;
 
   return 0;
 }
