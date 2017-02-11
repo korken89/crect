@@ -9,10 +9,10 @@ scheduler based on the papers by:
 
 which utilizes the Nested Vector Interrupt Controller (NVIC) in Cortex-M
 processors to implement a Stack Resource Policy (SRP) based scheduler. Thanks
-to the compile time creation of the scheduler, the resource requirements are
+to the compile time creation of the scheduler, the resource requirements at
 runtime are minimal with:
 
-* 4-6 instructions for a lock.
+* 4-6 instructions + 4 bytes of RAM for a lock.
 * 1-3 instructions for an unlock.
 * 1-2 instructions for `pend` / `clear`
 * xx-xx instructions for `async`
