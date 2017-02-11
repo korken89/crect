@@ -9,10 +9,13 @@
 
 void test_rtfm()
 {
+  using namespace rtfm::srp;
+
   //rtfm::srp::lock< R4 > lock;
   /* Lock */
 
-  rtfm::srp::async<J1>( 10ms );
+
+  async<J1>( 10ms );
 
 
   // asm volatile("nop");

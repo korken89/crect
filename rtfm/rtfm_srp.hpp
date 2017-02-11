@@ -24,7 +24,8 @@
 #include "rtfm/details/job_resource.hpp"
 #include "rtfm/details/job_resource_methods.hpp"
 #include "rtfm/srp/srp_locks.hpp"
-#include "rtfm/srp/job_primitives.hpp"
+#include "rtfm/srp/srp_pend_clear.hpp"
+#include "rtfm/srp/srp_async.hpp"
 
 
 /****************************************************************************
@@ -72,7 +73,7 @@ namespace rtfm
 
 using system_job_list = brigand::list<J1, J2, J3>;
 
-}
+} /* END namespace rtfm */
 
 /* Needs to be included after the definition of the rtfm::system_job_list. */
 #include "rtfm/srp/srp_prioirty_ceiling.hpp"
@@ -90,5 +91,5 @@ namespace srp
 template <typename Resource>
 using lock = lock_impl< get_priority_ceiling< Resource > >;
 
-}
-}
+} /* END namespace srp */
+} /* END namespace rtfm */
