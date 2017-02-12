@@ -36,6 +36,9 @@ struct job_to_nvic_printer
 template <typename JobList>
 constexpr void initialize_jobs_impl()
 {
+  /* Enable DWT */
+  DWT->CTRL |= (1 << DWT_CTRL_CYCCNTENA_Pos);
+
   /* Set all bits to preemtion. */
   NVIC_SetPriorityGrouping(0);
 
