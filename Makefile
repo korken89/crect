@@ -1,9 +1,9 @@
-MFLAGS =
-Q := @
 
 all:
-	$(Q)$(MAKE) $(MFLAGS) -C test
+	make -C test
 
 clean:
-	$(Q)$(MAKE) $(MFLAGS) -C test $@
+	make -C test $@
 
+test:
+	make -C test $@
