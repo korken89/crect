@@ -39,9 +39,6 @@ constexpr void initialize_jobs_impl()
   /* Enable DWT */
   DWT->CTRL |= (1 << DWT_CTRL_CYCCNTENA_Pos);
 
-  /* Set all bits to preemtion. */
-  NVIC_SetPriorityGrouping(0);
-
   /* Fill the ISR settings. */
   brigand::for_each<JobList>(job_to_nvic_printer{});
 }
