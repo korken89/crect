@@ -30,6 +30,6 @@ gdb:
 clean:
 		rm -rf build
 
-test:
+pc_test:
 		@mkdir -p build
 		clang++ $(INCLUDE) $(DEFS) -DPC_DEBUG $(FLAGS) test.cpp -o build/test

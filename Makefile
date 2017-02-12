@@ -1,9 +1,9 @@
 
 all:
-	make -C test
+	make all -C test
 
 clean:
-	make -C test $@
+	make clean -C test
 
-test:
-	make -C test $@
+pc_test:
+	make pc_test -C test
