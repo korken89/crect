@@ -36,6 +36,10 @@ struct job_to_nvic_printer
 template <typename JobList>
 constexpr void initialize_jobs_impl()
 {
+  /* Set all bits to preemtion. */
+  NVIC_SetPriorityGrouping(0);
+
+  /* Fill the ISR settings. */
   brigand::for_each<JobList>(job_to_nvic_printer{});
 }
 
