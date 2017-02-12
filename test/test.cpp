@@ -1,5 +1,5 @@
 
-#ifdef __clang__
+#ifndef PC_DEBUG
 #include "util/print_types.hpp"
 #endif
 
@@ -27,6 +27,7 @@ void test_rtfm()
 }
 
 
+#ifndef PC_DEBUG
 void InitLED()
 {
   // Setup GPIO Port A, Pin 5 (LED)
@@ -51,17 +52,21 @@ inline void ToggleLED()
   // Toggle GPIO Port A, Pin 5 (LED)
   GPIOA->ODR ^= (1 << GPIO_OTYPER_OT5_Pos);   // Toggle LED
 }
+#endif
 
 __attribute__ ((noinline))
 int main()
 {
+#ifndef PC_DEBUG
   InitLED();
-  
+#endif
+
 
   //print_list<rtfm::system_job_list>("System Jobs");
 
   //print_list<rtfm::details::resource_tree>("Resource tree");
 
+  //rtfm::srp::initialize();
   rtfm::srp::async_queue::initialize();
 
   //async<J1>( 10ms );
@@ -71,10 +76,12 @@ int main()
   /* Blink a LED! */
   while(1)
   {
+#ifndef PC_DEBUG
     ToggleLED();
 
     for (uint32_t i = 0; i < 1000000; i++)
       asm volatile("nop");
+#endif
   }
 
   return 0;

@@ -15,8 +15,8 @@ namespace srp
 template <typename Job>
 constexpr void pend()
 {
+#ifndef PC_DEBUG
   using ISRn = typename Job::ISR::index;
-#ifndef __clang__
   NVIC->ISPR[ISRn::value >> 5UL] = (1UL << (ISRn::value & 0x1FUL));
 #endif
 }
@@ -29,8 +29,8 @@ constexpr void pend()
 template <typename Job>
 constexpr void clear()
 {
+#ifndef PC_DEBUG
   using ISRn = typename Job::ISR::index;
-#ifndef __clang__
   NVIC->ICPR[ISRn::value >> 5UL] = (1UL << (ISRn::value & 0x1FUL));
 #endif
 }
