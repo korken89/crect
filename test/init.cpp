@@ -160,9 +160,6 @@ void Reset_Handler()
 
   __DSB();
 
-  // Setup the NVIC
-  NVIC_SetPriorityGrouping(0);
-
   // Setup clocks
   InitClocks();
 

@@ -110,7 +110,10 @@ inline void initialize()
 {
   __disable_irq();
 
+  /* Initialize the queue for the async commands. */
   async_queue::initialize();
+
+  /* Initialize the NVIC settings, enable ISRs, set priorities. */
   initialize_jobs_impl<system_job_list>();
 
   __enable_irq();
