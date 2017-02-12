@@ -20,19 +20,23 @@ namespace details
 
 /**
  * @brief Alias for the entire system's resource tree.
+ *
+ * @tparam  JobList   The system's job list.
  */
-using resource_tree = make_resource_tree<system_job_list>::result;
+template <typename JobList>
+using resource_tree = typename make_resource_tree<JobList>::result;
 
 /**
  * @brief Finds a resource in the resource tree (implementation).
  *
- * @tparam Resource  Resource to find.
+ * @tparam  JobList   The system's job list.
+ * @tparam Resource   Resource to find.
  */
-template <typename Resource>
+template <typename JobList, typename Resource>
 struct find_resource_impl
 {
   /* Searches the resource tree for the same Resource ID. */
-  using type = brigand::find< resource_tree,
+  using type = brigand::find< resource_tree<JobList>,
                               brigand::bind<
                                 details::_same_id,
                                 typename Resource::ID,
@@ -46,11 +50,12 @@ struct find_resource_impl
 /**
  * @brief Finds a resource in the resource tree (alias).
  *
- * @tparam Resource  Resource to find.
+ * @tparam  JobList   The system's job list.
+ * @tparam Resource   Resource to find.
  */
-template <typename Resource>
+template <typename JobList, typename Resource>
 using find_resource = brigand::front<
-                                typename find_resource_impl<Resource>::type >;
+                      typename find_resource_impl<JobList, Resource>::type >;
 
 template <typename... Ts>
 struct job_to_priority
@@ -74,12 +79,13 @@ struct job_to_priority< Job<ID, PRIO, ISR, Res...> > : brigand::integral_constan
 /**
  * @brief Extracts the priorities of the jobs connected to the resource.
  *
- * @tparam Resource  Resource to get priority list from.
+ * @tparam  JobList   The system's job list.
+ * @tparam Resource   Resource to get priority list from.
  */
-template <typename Resource>
+template <typename JobList, typename Resource>
 using resource_to_priority_list =
                 brigand::flatten< brigand::transform<
-                  brigand::flatten< typename find_resource<Resource>::jobs >,
+                  brigand::flatten< typename find_resource<JobList, Resource>::jobs >,
                   job_to_priority<brigand::_1>
                 > >;
 
@@ -88,12 +94,13 @@ using resource_to_priority_list =
 /**
  * @brief Extracts the priority ceiling of the jobs connected to the resource.
  *
- * @tparam Resource  Resource to get priority ceiling for.
+ * @tparam  JobList   The system's job list.
+ * @tparam Resource   Resource to get priority ceiling for.
  */
-template <typename Resource>
+template <typename JobList, typename Resource>
 using get_priority_ceiling =
                 brigand::fold<
-                  details::resource_to_priority_list<Resource>,
+                  details::resource_to_priority_list<JobList, Resource>,
                   brigand::integral_constant<int, 0>,
                   brigand::max<brigand::_state, brigand::_element>
                 >;

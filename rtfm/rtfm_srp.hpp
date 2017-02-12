@@ -101,7 +101,7 @@ namespace srp
  * @tparam Resource   The resource to lock.
  */
 template <typename Resource>
-using lock = lock_impl< get_priority_ceiling< Resource > >;
+using lock = lock_impl< get_priority_ceiling< system_job_list, Resource > >;
 
 /**
  * @brief  A convenience definition of the initialization of RTFM.
