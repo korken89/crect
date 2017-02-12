@@ -38,7 +38,7 @@ extern uint32_t __all_end, __stack;
 #include "rtfm/srp/srp_locks.hpp"
 #include "rtfm/srp/srp_pend_clear.hpp"
 #include "rtfm/srp/srp_async.hpp"
-
+#include "rtfm/srp/srp_init.hpp"
 
 /****************************************************************************
  * User defines here.
@@ -102,6 +102,16 @@ namespace srp
  */
 template <typename Resource>
 using lock = lock_impl< get_priority_ceiling< Resource > >;
+
+/**
+ * @brief  A convenience definition of the initialization of RTFM.
+ */
+inline void initialize()
+{
+  async_queue::initialize();
+  initialize_jobs_impl<system_job_list>();
+}
+
 
 } /* END namespace srp */
 } /* END namespace rtfm */

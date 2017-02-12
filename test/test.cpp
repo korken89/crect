@@ -15,8 +15,7 @@ void test_rtfm()
   /* Lock */
   //lock< R4 > lock;
 
-
-  async<J1>( 10ms );
+  //async<J1>( 10ms );
 
   // asm volatile("nop");
   // asm volatile("nop");
@@ -54,6 +53,7 @@ inline void ToggleLED()
 }
 #endif
 
+
 __attribute__ ((noinline))
 int main()
 {
@@ -61,17 +61,16 @@ int main()
   InitLED();
 #endif
 
+  rtfm::srp::initialize();
+
+  test_rtfm();
 
   //print_list<rtfm::system_job_list>("System Jobs");
-
   //print_list<rtfm::details::resource_tree>("Resource tree");
 
-  //rtfm::srp::initialize();
-  rtfm::srp::async_queue::initialize();
+
 
   //async<J1>( 10ms );
-
-  //std::cout << "Ticks: " << ticks << std::endl;
 
   /* Blink a LED! */
   while(1)
