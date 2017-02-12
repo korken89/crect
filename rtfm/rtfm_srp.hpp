@@ -108,8 +108,12 @@ using lock = lock_impl< get_priority_ceiling< Resource > >;
  */
 inline void initialize()
 {
+  __disable_irq();
+
   async_queue::initialize();
   initialize_jobs_impl<system_job_list>();
+
+  __enable_irq();
 }
 
 
