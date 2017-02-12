@@ -1,5 +1,5 @@
 
-#ifndef PC_DEBUG
+#ifdef PC_DEBUG
 #include "util/print_types.hpp"
 #endif
 
