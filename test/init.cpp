@@ -62,7 +62,7 @@ void my_exec_array(uint32_t *from, uint32_t *to)
 
   while (from < to)
   {
-    vptr from_f = (vptr)from;
+    vptr from_f = (vptr)(*from);
     from_f();
     from++;
   }
