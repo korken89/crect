@@ -150,7 +150,8 @@ void Reset_Handler()
   __ISB();
 
   //Copy data from Flash to SRAM
-  my_memcpy(&__data_start, &__text_end, (uint32_t)&__data_end - (uint32_t)&__data_start);
+  my_memcpy(&__data_start, &__text_end,
+            (uint32_t)&__data_end - (uint32_t)&__data_start);
 
   // Clear the BSS segment
   my_memset(&__bss_start, &__bss_end, 0);
@@ -169,6 +170,7 @@ void Reset_Handler()
   int main();
 
   main();
+
 
   // Runc ctors
   // my_exec_array(&__fini_array_start, &__fini_array_end);
