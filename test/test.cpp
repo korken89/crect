@@ -33,6 +33,9 @@ int main()
 
   //print_list<rtfm::details::resource_tree>("Resource tree");
 
+  asm volatile("nop");
+  asm volatile("nop");
+
   rtfm::srp::async_queue::initialize();
 
   //async<J1>( 10ms );

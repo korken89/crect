@@ -5,67 +5,42 @@ extern "C" {
 
 void NMI_Handler(void)
 {
-  while(1)
-  {
-    __BKPT();
-  }
+  while(1);
 }
 void HardFault_Handler(void)
 {
-  while(1)
-  {
-    __BKPT();
-  }
+  while(1);
 }
 void MemManage_Handler(void)
 {
-  while(1)
-  {
-    __BKPT();
-  }
+  while(1);
 }
 void BusFault_Handler(void)
 {
-  while(1)
-  {
-    __BKPT();
-  }
+  while(1);
 }
 void UsageFault_Handler(void)
 {
-  while(1)
-  {
-    __BKPT();
-  }
+  while(1);
 }
 void SVCall_Handler(void)
 {
-  while(1)
-  {
-    __BKPT();
-  }
+  while(1);
 }
 void DebugMon_Handler(void)
 {
-  while(1)
-  {
-    __BKPT();
-  }
+  while(1);
 }
 void PendSV_Handler(void)
 {
-  while(1)
-  {
-    __BKPT();
-  }
+  while(1);
 }
 void SysTick_Handler(void)
 {
-  while(1)
-  {
-    __BKPT();
-  }
+  while(1);
 }
+
+__attribute__ ((noinline))
 void my_memset(uint32_t *from, uint32_t *to, uint32_t val)
 {
   while (from < to)
