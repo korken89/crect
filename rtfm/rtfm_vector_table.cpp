@@ -113,7 +113,7 @@ const constexpr vector_table generate_vector_table(
 /**
  * @brief Save vector table to the correct location.
  */
-__attribute__((used, section(".isr_vectors")))
+__attribute__((used, section(".isr_vector")))
 const constexpr vector_table system_vectors = generate_vector_table(
     std::make_integer_sequence<
         unsigned, sizeof(vector_table::mcu_vectors) /

@@ -10,8 +10,11 @@ ENTRY(Reset_Handler)
 
 SECTIONS
 {
-	.text : {
-		*(.isr_vectors)
+  .isr_vector : ALIGN(4) {
+    KEEP(*(.isr_vector))
+  } > ROM
+
+	.text : ALIGN(4) {
 		*(.text*)
 		. = ALIGN(4);
 		*(.rodata*)
@@ -51,7 +54,7 @@ SECTIONS
 		__data_end = .;
 	} > RAM AT > ROM
 
-	.bss : {
+	.bss (NOLOAD) : {
     __bss_start = .;
 		*(.bss*)
 		*(COMMON)
