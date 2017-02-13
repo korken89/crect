@@ -120,11 +120,11 @@ void Reset_Handler()
 
   __DSB();
 
-  // Prefetch /  chache
-  FLASH->ACR |= FLASH_ACR_PRFTEN | FLASH_ACR_ICEN | FLASH_ACR_DCEN;
-
   // Setup clocks
   InitClocks();
+
+  // Enable prefetch /  cache
+  FLASH->ACR |= FLASH_ACR_PRFTEN | FLASH_ACR_ICEN | FLASH_ACR_DCEN;
 
   __enable_irq();
   __ISB();
