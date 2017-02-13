@@ -96,7 +96,6 @@ void InitClocks()
 }
 
 extern "C" {
-  
 __attribute__((naked))
 void Reset_Handler()
 {
@@ -120,6 +119,9 @@ void Reset_Handler()
   my_exec_array(&__init_array_start, &__init_array_end);
 
   __DSB();
+
+  // Prefetch /  chache
+  FLASH->ACR |= FLASH_ACR_PRFTEN | FLASH_ACR_ICEN | FLASH_ACR_DCEN;
 
   // Setup clocks
   InitClocks();

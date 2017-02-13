@@ -31,7 +31,6 @@ extern uint32_t __all_end, __stack;
  * End MCU definitions.
  ****************************************************************************/
 
-
 #include "rtfm/details/interrupts.hpp"
 #include "rtfm/details/job_resource.hpp"
 #include "rtfm/details/job_resource_methods.hpp"
@@ -84,6 +83,10 @@ namespace rtfm
  ****************************************************************************/
 
 using system_job_list = brigand::list<J1, J2, J3>;
+
+/****************************************************************************
+ * Add user defined jobs to the list.
+ ****************************************************************************/
 
 } /* END namespace rtfm */
 
