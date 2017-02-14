@@ -16,6 +16,7 @@ run-time are minimal with:
 * 1-3 instructions for an unlock.
 * 2-4 instructions for `pend` / `clear`
 * xx-xx instructions for `async`
+* 4-5 instructions / job for initialization.
 
 In this implementation of RTFM, heavy use of **C++ metaprogramming** and **C++14** allows, among other things, priority ceilings and interrupt masks to be automatically calculated at compile time, while resource locks are handled through RAII. This minimizes user error without the need for an external extra compile step, as is currently being investigated in the RTFM-core language (www.rtfm-lang.org).
 
