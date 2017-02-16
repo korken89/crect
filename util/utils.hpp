@@ -29,5 +29,5 @@ constexpr T priority_to_NVIC_priority(T priority)
   return ((N - priority) << (8 - __NVIC_PRIO_BITS)) & 0xFF;
 }
 
-} /* END namespace details */
+} /* END namespace util */
 } /* END namespace rtfm */
