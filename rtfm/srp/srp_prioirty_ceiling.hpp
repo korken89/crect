@@ -71,7 +71,7 @@ struct job_to_priority
  * @tparam ISR  ISR definition.
  * @tparam Res  Parameter pack of resources.
  */
-template <int ID, int PRIO, typename ISR, typename... Res>
+template <unsigned ID, unsigned PRIO, typename ISR, typename... Res>
 struct job_to_priority< Job<ID, PRIO, ISR, Res...> > : brigand::integral_constant<int, PRIO>
 {
 };
@@ -101,7 +101,7 @@ template <typename JobList, typename Resource>
 using get_priority_ceiling =
                 brigand::fold<
                   details::resource_to_priority_list<JobList, Resource>,
-                  brigand::integral_constant<int, 0>,
+                  brigand::integral_constant<unsigned, 0>,
                   brigand::max<brigand::_state, brigand::_element>
                 >;
 

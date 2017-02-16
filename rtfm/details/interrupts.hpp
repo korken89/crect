@@ -17,7 +17,7 @@ using ISRFunctionPointer = void (*)(void);
  * @brief ISR index alias.
  */
 template <unsigned I>
-using Index = brigand::integral_constant<unsigned int, I>;
+using Index = brigand::integral_constant<unsigned, I>;
 
 /**
  * @brief Base definition of an ISR type, should not be used.
