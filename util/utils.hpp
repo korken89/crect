@@ -24,12 +24,7 @@ struct always_false : brigand::integral_constant<bool, false>
 template <typename T>
 constexpr T priority_to_NVIC_priority(T priority)
 {
-  /* TODO: Only for testing, shall be removed. */
-  #ifndef __NVIC_PRIO_BITS
-  # define __NVIC_PRIO_BITS 4
-  # warning "__NVIC_PRIO_BITS not defined."
-  #endif
-
+  /* Max priority */
   auto N = (1 << __NVIC_PRIO_BITS) - 1;
   return ((N - priority) << (8 - __NVIC_PRIO_BITS)) & 0xFF;
 }
