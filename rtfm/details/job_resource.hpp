@@ -3,8 +3,16 @@
 
 #include "brigand/brigand.hpp"
 
+#include "util/utils.hpp"
+
 namespace rtfm
 {
+
+/**
+ * @brief Job maximum priority.
+ */
+using max_priority = brigand::integral_constant<int,
+                                                (1 << __NVIC_PRIO_BITS) - 1>;
 
 /**
  * @brief Job type definition.
@@ -21,6 +29,8 @@ struct Job
   using P = brigand::integral_constant<int, Prio_>;
   using ISR = ISR_;
   using resources = brigand::flatten< brigand::list<Res...> >;
+
+  static_assert(Prio_ < max_priority::value, "Priority is higher than the max");
 };
 
 

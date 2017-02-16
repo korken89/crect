@@ -1,4 +1,4 @@
-INCLUDE = -I../../brigand -I../ -I./inc
+INCLUDE = -I../../brigand -I../ -I./inc -I.
 DEFS = -DBRIGAND_NO_BOOST_SUPPORT -DNDEBUG
 FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -ggdb -O1
 COMMON = -fno-rtti -fno-exceptions -mcpu=cortex-m4 -mfloat-abi=hard
