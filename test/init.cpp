@@ -1,7 +1,6 @@
 
 #include "rtfm/rtfm_srp.hpp"
 
-
 void my_memset(uint32_t *from, uint32_t *to, uint32_t val)
 {
   while (from < to)
@@ -102,28 +101,31 @@ void Reset_Handler()
 
   __disable_irq();
 
+  /* Set the stack pointer. */
   __set_PSP((uint32_t)&__stack);
 
-  // Enable FPU ( Set bits 20-23 to enable CP10 and CP11 coprocessors)
+  /* Enable FPU ( Set bits 20-23 to enable CP10 and CP11 coprocessors) */
   SCB->CPACR |= (0xF << 20);
   __ISB();
 
-  //Copy data from Flash to SRAM
+  /* Copy data from Flash to SRAM, assumes 4 byte alignment of DATA must be
+     correct in the link file. */
   my_memcpy(&__data_start, &__text_end,
             (uint32_t)&__data_end - (uint32_t)&__data_start);
 
-  // Clear the BSS segment
+  /* Clear the BSS segment, assumes 4 byte alignment of BSS must be correct in
+     the link file. */
   my_memset(&__bss_start, &__bss_end, 0);
 
-  // Runc ctors
+  /* Runc ctors */
   my_exec_array(&__init_array_start, &__init_array_end);
 
   __DSB();
 
-  // Setup clocks
+  /* Setup clocks */
   InitClocks();
 
-  // Enable prefetch /  cache
+  /* Enable prefetch /  cache */
   FLASH->ACR |= FLASH_ACR_PRFTEN | FLASH_ACR_ICEN | FLASH_ACR_DCEN;
 
   __enable_irq();
@@ -134,7 +136,7 @@ void Reset_Handler()
   main();
 
 
-  // Runc ctors
+  /* Runc ctors */
   // my_exec_array(&__fini_array_start, &__fini_array_end);
 
 }

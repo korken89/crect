@@ -54,6 +54,8 @@ SECTIONS
     __data_end = .;
   } > RAM AT > ROM
 
+  . = ALIGN(4);
+
   .bss (NOLOAD) : {
     __bss_start = .;
     *(.bss*)
