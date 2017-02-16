@@ -13,12 +13,9 @@
 #include "stm32f411xe.h"
 
 /**
- * @brief Symbols exported by the linker script:
+ * @brief Stack definition.
  */
-extern uint32_t __preinit_array_start, __preinit_array_end, __init_array_start;
-extern uint32_t __init_array_end, __fini_array_start, __fini_array_end;
-extern uint32_t __text_end, __data_start, __data_end, __bss_start, __bss_end;
-extern uint32_t __all_end, __stack;
+extern uint32_t __stack;
 
 
 #define __STACK_END         &__stack
