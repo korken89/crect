@@ -26,8 +26,8 @@ template <typename T>
 constexpr T priority_to_NVIC_priority(T priority)
 {
   /* Max priority */
-  auto N = (1 << __NVIC_PRIO_BITS) - 1;
-  return ((N - priority) << (8 - __NVIC_PRIO_BITS)) & 0xFF;
+  auto N = (1U << __NVIC_PRIO_BITS) - 1U;
+  return ((N - priority) << (8U - __NVIC_PRIO_BITS)) & 0xFFU;
 }
 
 } /* END namespace util */
