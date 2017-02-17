@@ -3,6 +3,7 @@
 #pragma once
 
 #include "brigand/brigand.hpp"
+#include "util/string_hash.hpp"
 
 namespace rtfm
 {
