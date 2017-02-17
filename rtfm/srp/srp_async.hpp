@@ -83,6 +83,9 @@ public:
  *
  * @param[in] duration  The time until the job shall be executed.
  */
+
+/* TODO: Write custom clock, to use std::chrono::time_point and then a
+         specialization taking duration, converting to time_point */ 
 template <typename Job, typename Rep, typename Period,
           typename TimerTicks = timer_ticks>
 constexpr void async(std::chrono::duration<Rep, Period> duration)
