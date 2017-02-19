@@ -12,8 +12,8 @@ namespace time
 /**
  * @brief     The definition of the system clock.
  * @details   It is based on the DWT cycle counter for calculating time, this
- *            means that system_clock::now() needs to be called atleats once per
- *            overflow of the DWT, else the time will not be correct.
+ *            means that system_clock::now() needs to be called at least once
+ *            per overflow of the DWT, else the time will not be correct.
  *            It is also possible to replace this function with another timer
  *            implementation.
  */
@@ -37,28 +37,28 @@ struct system_clock
   static time_point now() noexcept
   {
     /* Holds the current offset from start time due to DWT overflows. */
-    static uint64_t base = 0;
+    static volatile uint32_t base = 0;
 
     /* Holds the old DWT value to check for overflows. */
-    static uint32_t old_dwt = 0;
+    static volatile uint32_t old_dwt = 0;
 
     uint32_t dwt = DWT->CYCCNT;
 
     /* START CRITICAL SECTION */
-    //__disable_irq();
-    //__ISB(); // Is the ISB needed to make __disable_irq take hold?
+    /* TODO: Fix critical section... */
 
     /* If the DWT has overflowed, update the base. */
     if (old_dwt > dwt)
-      base += 0xffffffff;
+      base += 1;
 
     /* Save old DWT. */
     old_dwt = dwt;
 
     /* END CRITICAL SECTION */
-    //__enable_irq();
 
-    return time_point(duration(base + dwt));
+    return time_point(duration(
+      (static_cast<uint64_t>(base) << 32U) + static_cast<uint64_t>(dwt)
+    ));
   }
 };
 
