@@ -16,14 +16,14 @@ using R1 = rtfm::Resource<char>;
 using J1 = rtfm::Job<
               rtfm::util::hashit("Job1"), // Unique ID
               1,                          // Priority
-              rtfm::MakeISR<&job1, 1>,    // ISR connection and location
+              rtfm::MakeISR<job1, 1>,     // ISR connection and location
               R1                          // Possible resouce claims
             >;
 
 using J2 = rtfm::Job<
               rtfm::util::hashit("Job2"), // Unique ID
               2,                          // Priority
-              rtfm::MakeISR<&job2, 2>,    // ISR connection and location
+              rtfm::MakeISR<job2, 2>,     // ISR connection and location
               R1                          // Possible resouce claims
             >;
 
