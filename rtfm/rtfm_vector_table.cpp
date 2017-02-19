@@ -61,10 +61,11 @@ struct isr_selector<brigand::list<>>
  *
  * @tparam I   Position to extract the ISR rom.
  */
-template <int I>
+template <unsigned I>
 struct get_vector_from_position
     : isr_selector<
-          typename find_job_isr<brigand::integral_constant<int, I>>::type>::isr
+        typename find_job_isr<brigand::integral_constant<unsigned, I>>::type
+      >::isr
 {
 };
 
