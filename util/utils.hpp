@@ -15,6 +15,7 @@ struct always_false : brigand::integral_constant<bool, false>
 {
 };
 
+
 /**
  * @brief   Takes a user priority (0 = lowest, increasing numbers means higher
  *          priority) and transforms to NVIC priority (0 = highest, increasing

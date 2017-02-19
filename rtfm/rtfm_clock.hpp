@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <chrono>
+#include "rtfm/srp/srp_locks.hpp"
 
 namespace rtfm
 {
@@ -37,15 +38,15 @@ struct system_clock
   static time_point now() noexcept
   {
     /* Holds the current offset from start time due to DWT overflows. */
-    static volatile uint32_t base = 0;
+    static uint32_t base = 0;
 
     /* Holds the old DWT value to check for overflows. */
-    static volatile uint32_t old_dwt = 0;
-
-    uint32_t dwt = DWT->CYCCNT;
+    static uint32_t old_dwt = 0;
 
     /* START CRITICAL SECTION */
-    /* TODO: Fix critical section... */
+    srp::lock_impl< brigand::uint32_t< 0 > > lock;
+
+    uint32_t dwt = DWT->CYCCNT;
 
     /* If the DWT has overflowed, update the base. */
     if (old_dwt > dwt)
@@ -54,11 +55,14 @@ struct system_clock
     /* Save old DWT. */
     old_dwt = dwt;
 
+    /* Calculate return. */
+    auto ret = duration(
+      (static_cast<uint64_t>(base) << 32U) + static_cast<uint64_t>(dwt)
+    );
+
     /* END CRITICAL SECTION */
 
-    return time_point(duration(
-      (static_cast<uint64_t>(base) << 32U) + static_cast<uint64_t>(dwt)
-    ));
+    return time_point(ret);
   }
 };
 
