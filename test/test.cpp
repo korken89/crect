@@ -13,6 +13,7 @@ void test_rtfm()
 {
   using namespace rtfm::srp;
 
+  volatile auto test = rtfm::time::system_clock::now();
   /* Lock */
   //lock< R4 > lock;
 

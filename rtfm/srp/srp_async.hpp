@@ -13,8 +13,6 @@ namespace rtfm
 namespace srp
 {
 
-/** @brief  Definition of timer ticks running at MCU clock. */
-using timer_ticks = std::chrono::duration<uint64_t, std::ratio<1, __F_CPU>>;
 
 /**
  * @brief Timer queue class for async, implemented as a Singleton.
@@ -85,16 +83,16 @@ public:
  */
 
 /* TODO: Write custom clock, to use std::chrono::time_point and then a
-         specialization taking duration, converting to time_point */ 
-template <typename Job, typename Rep, typename Period,
-          typename TimerTicks = timer_ticks>
-constexpr void async(std::chrono::duration<Rep, Period> duration)
-{
-  using namespace std::chrono;
-
-  auto ticks = duration_cast<TimerTicks>(duration);
-  auto& queue = async_queue::get();
-}
+         specialization taking duration, converting to time_point */
+// template <typename Job, typename Rep, typename Period,
+//           typename TimerTicks = timer_ticks>
+// constexpr void async(std::chrono::duration<Rep, Period> duration)
+// {
+//   using namespace std::chrono;
+//
+//   auto ticks = duration_cast<TimerTicks>(duration);
+//   auto& queue = async_queue::get();
+// }
 
 } /* END namespace srp */
 } /* END namespace rtfm */

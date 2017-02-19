@@ -11,6 +11,7 @@
 #include "rtfm/details/job_resource_methods.hpp"
 #include "rtfm/srp/srp_locks.hpp"
 #include "rtfm/srp/srp_pend_clear.hpp"
+#include "rtfm/rtfm_clock.hpp"
 #include "rtfm/srp/srp_async.hpp"
 #include "rtfm/srp/srp_init.hpp"
 
