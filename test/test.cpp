@@ -6,7 +6,7 @@
 #include "rtfm/rtfm_srp.hpp"
 #include "led.hpp"
 
-using namespace std::chrono_literals;
+// using namespace std::chrono_literals;
 
 /* Lower priority job */
 void job1()
@@ -15,6 +15,7 @@ void job1()
 
   EnableLED();
 
+  /* Hold the lock for a long time to force long priority inversion */
   for (uint32_t i = 0; i < 5000000; i++)
     asm volatile("nop");
 }
@@ -53,10 +54,10 @@ int main()
   while(1)
   {
 #ifndef PC_DEBUG
-    //ToggleLED();
+    // ToggleLED();
 
-    for (uint32_t i = 0; i < 5000000; i++)
-      asm volatile("nop");
+    // for (uint32_t i = 0; i < 5000000; i++)
+    //   asm volatile("nop");
 #endif
   }
 
