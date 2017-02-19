@@ -11,13 +11,21 @@
 void job1(void);
 void job2(void);
 
-using ISR1 = rtfm::MakeISR<&job1, 1>;
-using ISR2 = rtfm::MakeISR<&job2, 2>;
-
 using R1 = rtfm::Resource<char>;
 
-using J1 = rtfm::Job<1, 1, ISR1, R1>;
-using J2 = rtfm::Job<2, 2, ISR2, R1>;
+using J1 = rtfm::Job<
+              rtfm::util::hashit("Job1"), // Unique ID
+              1,                          // Priority
+              rtfm::MakeISR<&job1, 1>,    // ISR connection and location
+              R1                          // Possible resouce claims
+            >;
+
+using J2 = rtfm::Job<
+              rtfm::util::hashit("Job2"), // Unique ID
+              2,                          // Priority
+              rtfm::MakeISR<&job2, 2>,    // ISR connection and location
+              R1                          // Possible resouce claims
+            >;
 
 /****************************************************************************
  * End User Job and Resource defines.
