@@ -43,10 +43,10 @@ struct system_clock
     /* Holds the old DWT value to check for overflows. */
     static uint32_t old_dwt = 0;
 
+    uint32_t dwt = DWT->CYCCNT;
+
     /* START CRITICAL SECTION */
     srp::lock_impl< brigand::uint32_t< 0 > > lock;
-
-    uint32_t dwt = DWT->CYCCNT;
 
     /* If the DWT has overflowed, update the base. */
     if (old_dwt > dwt)
