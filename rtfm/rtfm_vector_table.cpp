@@ -48,6 +48,7 @@ struct find_job_isr
 template <typename Job>
 struct isr_selector
 {
+  /* TODO: Check so the ISR is unique... */
   using isr = typename brigand::front<Job>::ISR;
 };
 
