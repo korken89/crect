@@ -7,8 +7,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include "rtfm/details/job_resource.hpp"
-#include "brigand/brigand.hpp"
+#include "rtfm/rtfm_srp.hpp"
 
 template <class T>
 std::string type_name()
