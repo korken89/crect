@@ -46,7 +46,7 @@ struct system_clock
     uint32_t dwt = DWT->CYCCNT;
 
     /* START CRITICAL SECTION */
-    srp::lock_impl< brigand::uint32_t< 0 > > lock;
+    srp::lock_impl< max_priority > lock;
 
     /* If the DWT has overflowed, update the base. */
     if (old_dwt > dwt)
