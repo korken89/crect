@@ -12,7 +12,7 @@ namespace rtfm
  * @brief Job maximum priority.
  */
 using max_priority = brigand::integral_constant<unsigned,
-                                                (1 << __NVIC_PRIO_BITS) - 1>;
+                                                (1U << __NVIC_PRIO_BITS) - 1U>;
 
 /**
  * @brief Job type definition.
