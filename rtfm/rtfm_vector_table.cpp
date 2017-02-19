@@ -26,14 +26,18 @@ void SysTick_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
  *
  * @tparam JobID  integral_constant containing the Job ID.
  */
-template <typename JobID>
+template <typename ISR_ID>
 struct find_job_isr
 {
-  /* Searches the resource tree for the same Resource ID. */
+  template  <typename UID, typename Rhs>
+  using compare_isrpos_to_constant =
+    brigand::bool_< (UID::value == Rhs::ISR::index::value) >;
+
+  /* Searches the resource tree for the Job with the correct ISR. */
   using type =
       brigand::find<rtfm::system_job_list,
-                    brigand::bind<rtfm::details::_compare_job_ids_to_constant,
-                                  JobID, brigand::_1>>;
+                    brigand::bind<compare_isrpos_to_constant,
+                                  ISR_ID, brigand::_1>>;
 };
 
 /**
