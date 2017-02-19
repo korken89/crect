@@ -43,13 +43,13 @@ struct find_job_isr
 /**
  * @brief Extracts the ISR from a Job.
  *
- * @tparam Job  Job to get ISR from.
+ * @tparam JobList  Job list to get ISR from.
  */
-template <typename Job>
+template <typename JobList>
 struct isr_selector
 {
   /* TODO: Check so the ISR is unique... */
-  using isr = typename brigand::front<Job>::ISR;
+  using isr = typename brigand::front<JobList>::ISR;
 };
 
 /**
