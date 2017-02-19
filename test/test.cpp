@@ -8,21 +8,29 @@
 
 using namespace std::chrono_literals;
 
+/* Lower priority job */
+void job1()
+{
+  rtfm::srp::lock< R1 > lock;
+
+  EnableLED();
+
+  for (uint32_t i = 0; i < 5000000; i++)
+    asm volatile("nop");
+}
+
+/* Higher priority job */
+void job2()
+{
+  rtfm::srp::lock< R1 > lock;
+
+  DisableLED();
+}
 
 void test_rtfm()
 {
-  using namespace rtfm::srp;
-
-  volatile auto test = rtfm::time::system_clock::now();
   /* Lock */
-  //lock< R4 > lock;
-
-  //async<J1>( 10ms );
-
-  // asm volatile("nop");
-  // asm volatile("nop");
-  // asm volatile("nop");
-  // asm volatile("nop");
+  //rtfm::srp::lock< R4 > lock;
 
   /* Automatic unlock via RAII */
 }
@@ -35,19 +43,17 @@ int main()
   InitLED();
 #endif
 
+  /* Initialization code */
   rtfm::srp::initialize();
-  test_rtfm();
 
-  //print_list<rtfm::system_job_list>("System Jobs");
-  //print_list<rtfm::details::resource_tree>("Resource tree");
-
-  //async<J1>( 10ms );
+  /* This will block the higher prio job */
+  rtfm::srp::pend<J1>();
 
   /* Blink a LED! */
   while(1)
   {
 #ifndef PC_DEBUG
-    ToggleLED();
+    //ToggleLED();
 
     for (uint32_t i = 0; i < 5000000; i++)
       asm volatile("nop");
