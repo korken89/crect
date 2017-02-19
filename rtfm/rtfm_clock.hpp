@@ -35,6 +35,7 @@ struct system_clock
    *
    * @return  Returns the current time.
    */
+  __attribute__((noinline))
   static time_point now() noexcept
   {
     /* Holds the current offset from start time due to DWT overflows. */
@@ -55,14 +56,11 @@ struct system_clock
     /* Save old DWT. */
     old_dwt = dwt;
 
-    /* Calculate return. */
-    auto ret = duration(
+    return time_point(duration(
       (static_cast<uint64_t>(base) << 32U) + static_cast<uint64_t>(dwt)
-    );
+    ));
 
     /* END CRITICAL SECTION */
-
-    return time_point(ret);
   }
 };
 
