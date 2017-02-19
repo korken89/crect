@@ -24,7 +24,7 @@ struct job_to_resource_impl
  * @tparam ISR  ISR definition.
  * @tparam Res  Parameter pack of resources.
  */
-template <int I1, int I2, typename ISR, typename... Res>
+template <unsigned I1, unsigned I2, typename ISR, typename... Res>
 struct job_to_resource_impl< Job<I1, I2, ISR, Res...> >
 {
   using type = brigand::list< Resource<typename Res::ID, Job<I1, I2, ISR> >... >;
