@@ -22,11 +22,11 @@ void PendSV_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
 void SysTick_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
 }
 /**
- * @brief Used to find an ISR from a Job ID.
+ * @brief Used to find an ISR from a ISR position.
  *
- * @tparam JobID  integral_constant containing the Job ID.
+ * @tparam ISR_POS    integral_constant containing the ISR position to find,
  */
-template <typename ISR_ID>
+template <typename ISR_POS>
 struct find_job_isr
 {
   template  <typename UID, typename Rhs>
@@ -37,7 +37,7 @@ struct find_job_isr
   using type =
       brigand::find<rtfm::system_job_list,
                     brigand::bind<compare_isrpos_to_constant,
-                                  ISR_ID, brigand::_1>>;
+                                  ISR_POS, brigand::_1>>;
 };
 
 /**
