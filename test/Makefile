@@ -1,7 +1,8 @@
 INCLUDE = -I../brigand -I../ -I./inc -I.
 DEFS = -DBRIGAND_NO_BOOST_SUPPORT -DNDEBUG
-FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -ggdb -O1
+FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -ggdb -Os
 COMMON = -fno-rtti -fno-non-call-exceptions -fno-exceptions
+COMMON += -finline-small-functions -findirect-inlining # Use when -Os
 COMMON += -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb
 COMMON += -ffreestanding -fomit-frame-pointer -falign-functions=16 -fno-common
 COMMON += -mno-thumb-interwork -fno-threadsafe-statics -nostartfiles
