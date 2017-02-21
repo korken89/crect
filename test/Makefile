@@ -1,8 +1,9 @@
-INCLUDE = -I../../brigand -I../ -I./inc -I.
+INCLUDE = -I../brigand -I../ -I./inc -I.
 DEFS = -DBRIGAND_NO_BOOST_SUPPORT -DNDEBUG
 FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -ggdb -O1
-COMMON = -fno-rtti -fno-exceptions -mcpu=cortex-m4 -mfloat-abi=hard
-COMMON += -mfpu=fpv4-sp-d16 -mthumb -fomit-frame-pointer -falign-functions=16
+COMMON = -fno-rtti -fno-non-call-exceptions -fno-exceptions
+COMMON += -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb
+COMMON += -ffreestanding -fomit-frame-pointer -falign-functions=16 -fno-common
 COMMON += -mno-thumb-interwork -fno-threadsafe-statics -nostartfiles
 COMMON += -fsigned-char -fno-move-loop-invariants -ffunction-sections
 COMMON += -fdata-sections -Xlinker --gc-sections

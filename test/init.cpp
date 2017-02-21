@@ -14,17 +14,16 @@ void my_memcpy(uint32_t *to, const uint32_t *from, uint32_t size)
     *(to++) = *(from++);
 }
 
-void my_exec_array(uint32_t *from, uint32_t *to)
+void my_exec_array()
 {
-  typedef void(*vptr)(void);
+  /* Start and end points of the constructor list. */
+  extern void (*__init_array_start)();
+  extern void (*__init_array_end)();
 
-  while (from < to)
-  {
-    vptr from_f = (vptr)(*from);
-    from_f();
-    from++;
+  /* Call each function in the list. */
+  for (void (**p)() = &__init_array_start; p < &__init_array_end; ++p) {
+    (*p)();
   }
-
 }
 
 void InitClocks()
@@ -96,8 +95,6 @@ void InitClocks()
 
 extern "C" {
 
-extern uint32_t __preinit_array_start, __preinit_array_end, __init_array_start;
-extern uint32_t __init_array_end, __fini_array_start, __fini_array_end;
 extern uint32_t __text_end, __data_start, __data_end, __bss_start, __bss_end;
 extern uint32_t __all_end;
 
@@ -124,7 +121,7 @@ void Reset_Handler()
   my_memset(&__bss_start, &__bss_end, 0);
 
   /* Runc ctors */
-  my_exec_array(&__init_array_start, &__init_array_end);
+  my_exec_array();
 
   __DSB();
 

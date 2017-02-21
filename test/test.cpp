@@ -37,7 +37,6 @@ void test_rtfm()
 }
 
 
-__attribute__ ((noinline))
 int main()
 {
 #ifndef PC_DEBUG
@@ -49,6 +48,10 @@ int main()
 
   /* This will block the higher prio job */
   rtfm::srp::pend<J1>();
+  __ISB();
+
+  /* Pend high prio job as well */
+  rtfm::srp::pend<J2>();
 
   /* Blink a LED! */
   while(1)
