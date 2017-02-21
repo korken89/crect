@@ -1,20 +1,30 @@
 
 #include "rtfm/rtfm_srp.hpp"
 
-void my_memset(uint32_t *from, uint32_t *to, uint32_t val)
+inline void bss_init()
 {
+  extern uint32_t __bss_start, __bss_end;
+  
+  uint32_t *from = &__bss_start;
+  uint32_t *to = &__bss_end;
+
   while (from < to)
-    *(from++) = val;
+    *(from++) = 0;
 }
 
-void my_memcpy(uint32_t *to, const uint32_t *from, uint32_t size)
+inline void data_init()
 {
-  size /= 4;
+  extern uint32_t __text_end, __data_start, __data_end;
+
+  uint32_t *to = &__data_start;
+  const uint32_t *from = &__text_end;
+  uint32_t size = ((uint32_t)&__data_end - (uint32_t)&__data_start) / 4;
+
   while (size--)
     *(to++) = *(from++);
 }
 
-void my_exec_array()
+inline void constructor_init()
 {
   /* Start and end points of the constructor list. */
   extern void (*__init_array_start)();
@@ -26,7 +36,7 @@ void my_exec_array()
   }
 }
 
-void InitClocks()
+inline void InitClocks()
 {
   RCC->APB1ENR |= RCC_APB1ENR_PWREN;  // Enable power control clocks
   PWR->CR |= (3 << PWR_CR_VOS_Pos);   // Voltage Scale 1 (<= 100 MHz)
@@ -113,15 +123,14 @@ void Reset_Handler()
 
   /* Copy data from Flash to SRAM, assumes 4 byte alignment of DATA must be
      correct in the link file. */
-  my_memcpy(&__data_start, &__text_end,
-            (uint32_t)&__data_end - (uint32_t)&__data_start);
+  data_init();
 
   /* Clear the BSS segment, assumes 4 byte alignment of BSS must be correct in
      the link file. */
-  my_memset(&__bss_start, &__bss_end, 0);
+  bss_init();
 
   /* Runc ctors */
-  my_exec_array();
+  constructor_init();
 
   __DSB();
 
