@@ -30,7 +30,7 @@ struct Job
   using ISR = ISR_;
   using resources = brigand::flatten< brigand::list<Res...> >;
 
-  static_assert(Prio_ < max_priority::value, "Priority is higher than the max");
+  static_assert(Prio_ <= max_priority::value, "Priority is higher than the max");
 };
 
 
