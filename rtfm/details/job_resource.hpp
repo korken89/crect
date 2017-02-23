@@ -37,7 +37,7 @@ struct Job
 /**
  * @brief Resource type definition.
  *
- * @tparam ID_    Job unique ID.
+ * @tparam ID_    Resouce "ID", a unique type that identifies the resouce.
  * @tparam Jobs   Parameter pack of jobs.
  */
 template <typename ID_, typename... Jobs>
