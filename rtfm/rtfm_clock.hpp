@@ -21,7 +21,8 @@ namespace time
 struct system_clock
 {
   /** @brief  Definition of the duration of timer ticks running at MCU clock. */
-  using duration = std::chrono::duration<uint64_t, std::ratio<1, __F_CPU>>;
+  using duration = std::chrono::duration<int64_t, std::ratio<1, __F_CPU>>;
+  using small_duration = std::chrono::duration<int32_t, std::ratio<1, __F_CPU>>;
   using rep = duration::rep;
   using period = duration::period;
   using time_point = std::chrono::time_point<system_clock>;
