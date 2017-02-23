@@ -29,9 +29,12 @@ struct system_clock
 
   /**
    * @brief   Extraction of the current time in clock ticks using the DWT.
+   *
    * @note    This function MUST be called more often than the time for an
    *          overflow of the DWT counter, else the system time will be
    *          incorrect.
+   *
+   * @note    This is a shared resouce, must be accessed from within a lock.
    *
    * @return  Returns the current time.
    */
@@ -45,9 +48,6 @@ struct system_clock
 
     uint32_t dwt = DWT->CYCCNT;
 
-    /* START CRITICAL SECTION */
-    srp::lock_impl< max_priority > lock;
-
     /* If the DWT has overflowed, update the base. */
     if (old_dwt > dwt)
       base += 1;
@@ -58,10 +58,14 @@ struct system_clock
     return time_point(duration(
       (static_cast<uint64_t>(base) << 32U) + static_cast<uint64_t>(dwt)
     ));
-
-    /* END CRITICAL SECTION */
   }
 };
 
 } /* END namespace time */
+
+/**
+ * @brief   Convenience definition of the clock resource.
+ */
+using Rsystem_clock = Resource<time::system_clock>;
+
 } /* END namespace rtfm */
