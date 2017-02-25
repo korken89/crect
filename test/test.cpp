@@ -14,10 +14,6 @@ void job1()
   rtfm::srp::lock< R1 > lock;
 
   EnableLED();
-
-  /* Hold the lock for a long time to force long priority inversion */
-  for (uint32_t i = 0; i < 5000000; i++)
-    asm volatile("nop");
 }
 
 /* Higher priority job */
@@ -28,40 +24,35 @@ void job2()
   DisableLED();
 }
 
-void test_rtfm()
-{
-  /* Lock */
-  //rtfm::srp::lock< R4 > lock;
-
-  /* Automatic unlock via RAII */
-}
-
 
 int main()
 {
-#ifndef PC_DEBUG
   InitLED();
-#endif
 
   /* Initialization code */
   rtfm::srp::initialize();
 
-  /* This will block the higher prio job */
+  /* Convoluted way to blink a LED. */
   rtfm::srp::pend<J1>();
-  __ISB();
 
-  /* Pend high prio job as well */
+  for (uint32_t i = 0; i < 15000000; i++)
+     asm volatile("nop");
+
+  /* Convoluted way to blink a LED. */
   rtfm::srp::pend<J2>();
+
 
   /* Blink a LED! */
   while(1)
   {
-#ifndef PC_DEBUG
+
+
     // ToggleLED();
 
-    // for (uint32_t i = 0; i < 5000000; i++)
-    //   asm volatile("nop");
-#endif
+    for (uint32_t i = 0; i < 15000000; i++)
+       asm volatile("nop");
+
+
   }
 
   return 0;
