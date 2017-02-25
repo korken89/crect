@@ -24,16 +24,16 @@ class async_queue final
 private:
 
   struct async_queue_element {
-    int32_t baseline;
-    uint32_t id;
+    time::system_clock::time_point baseline;
+    uint32_t job_isr_id;
     struct async_queue_element* next;
   };
 
   async_queue_element _queue[__RTFM_ASYNC_QUEUE_SIZE];
   async_queue_element* _queue_head;    // head pointer
   async_queue_element* _queue_free;    // free pointer
-  async_queue_element* _queue_new;     // new
-  async_queue_element* _queue_current; // current
+  // async_queue_element* _queue_new;     // new
+  // async_queue_element* _queue_current; // current
 
   /**
   * @brief Initialization function for the queue.
@@ -50,6 +50,67 @@ private:
   }
 
 public:
+
+  void enqueue(time::system_clock::time_point t, uint32_t id)
+  {
+
+    // lock< Rasync > lock;
+
+    //if (_queue_free == NULL) panic();
+
+    auto _queue_new = _queue_free;
+
+    // allocate and fill new node
+    _queue_new->baseline = t;
+    _queue_new->job_isr_id = id;
+    _queue_free = _queue_free->next;
+
+    if (_queue_head == nullptr || _queue_head->baseline >= t)
+    {
+      // put first in list
+      _queue_new->next = _queue_head;
+      _queue_head = _queue_new;
+
+      // T_ENABLE();
+      // T_PEND();
+
+      // return;
+    }
+    else
+    {
+      // insert in middle or last
+      auto _queue_current = _queue_head;
+
+      while ((_queue_current->next != nullptr) &&
+             (_queue_current->next->baseline < t))
+        _queue_current = _queue_current->next;
+
+      _queue_new->next = _queue_current->next;
+      _queue_current->next = _queue_new;
+
+      //RT_unlock(lq);
+    }
+  }
+
+  async_queue_element* dequeue()
+  {
+
+    auto _queue_current = _queue_head;
+
+    if (_queue_head != nullptr)
+    {
+      _queue_head = _queue_head->next;
+      _queue_current->next = _queue_free;
+      _queue_free = _queue_current;
+    }
+
+    return _queue_head;
+  }
+
+  async_queue_element* top()
+  {
+    return _queue_head;
+  }
 
   /**
   * @brief Static getter to the async queue.
