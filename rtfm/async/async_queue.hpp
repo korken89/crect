@@ -5,6 +5,8 @@
 #include "rtfm/rtfm_clock.hpp"
 #include "rtfm/rtfm_timer.hpp"
 
+extern "C" void _unhandled_exception(void);
+
 namespace rtfm
 {
 
@@ -39,6 +41,12 @@ public:
   void push(time::system_clock::time_point t, uint32_t id)
   {
     auto _new = _free;
+
+
+    /* Out of elements, panic. */
+    if (_free == nullptr)
+      _unhandled_exception();
+
 
     /* Fill in the new node. */
     _new->baseline = t;
