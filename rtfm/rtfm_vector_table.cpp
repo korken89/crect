@@ -58,7 +58,7 @@ struct isr_selector
 template <>
 struct isr_selector<brigand::list<>>
 {
-  using isr = rtfm::MakeISR<&rtfm::DefaultISR::UnusedISR, 0>;
+  using isr = rtfm::MakeISR<_unhandled_exception, 0>;
 };
 
 /**

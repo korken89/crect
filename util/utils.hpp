@@ -23,8 +23,7 @@ struct always_false : brigand::integral_constant<bool, false>
  *
  * @return  The transformed priority.
  */
-template <typename T>
-constexpr T priority_to_NVIC_priority(T priority)
+constexpr auto priority_to_NVIC_priority(unsigned priority)
 {
   /* Max priority */
   auto N = (1U << __NVIC_PRIO_BITS) - 1U;

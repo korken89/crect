@@ -11,49 +11,46 @@
 /* Lower priority job */
 void job1()
 {
-  rtfm::srp::lock< R1 > lock;
+  using namespace std::chrono_literals;
 
-  EnableLED();
+  {
+    rtfm::srp::lock< R1 > lock;
+    EnableLED();
+  }
+
+  rtfm::srp::async<J2>(1000ms); // Disable led in 1000ms
 }
 
 /* Higher priority job */
 void job2()
 {
-  rtfm::srp::lock< R1 > lock;
+  using namespace std::chrono_literals;
 
-  DisableLED();
+  {
+    rtfm::srp::lock< R1 > lock;
+    DisableLED();
+  }
+
+  rtfm::srp::async<J1>(1000ms); // Enable led in 1000ms
 }
 
 
-int main()
+void main()
 {
+
   InitLED();
 
   /* Initialization code */
   rtfm::srp::initialize();
 
-  /* Convoluted way to blink a LED. */
+  /*
+   * Convoluted way to blink a LED
+   */
   rtfm::srp::pend<J1>();
 
-  for (uint32_t i = 0; i < 15000000; i++)
-     asm volatile("nop");
 
-  /* Convoluted way to blink a LED. */
-  rtfm::srp::pend<J2>();
-
-
-  /* Blink a LED! */
   while(1)
   {
-
-
-    // ToggleLED();
-
-    for (uint32_t i = 0; i < 15000000; i++)
-       asm volatile("nop");
-
-
+    __WFI();
   }
-
-  return 0;
 }

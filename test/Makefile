@@ -22,7 +22,8 @@ all:
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) test.cpp -o build/test.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) init.cpp -o build/init.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../rtfm/rtfm_vector_table.cpp -o build/vector.o
-		arm-none-eabi-g++ $(LDFLAGS) build/test.o build/vector.o build/init.o -o build/test.elf
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../rtfm/rtfm_async.cpp -o build/async.o
+		arm-none-eabi-g++ $(LDFLAGS) build/test.o build/async.o build/vector.o build/init.o -o build/test.elf
 		arm-none-eabi-objdump -D --source build/test.elf > build/test.dmp
 		@echo " "
 		@arm-none-eabi-size --format=berkeley build/test.elf

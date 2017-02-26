@@ -22,6 +22,18 @@ constexpr void pend()
 }
 
 /**
+ * @brief Synchronous pend of an RTFM job.
+ *
+ * @param[in] id    The interrupt ID to pend.
+ */
+inline void pend(unsigned id)
+{
+#ifndef PC_DEBUG
+  NVIC->ISPR[id >> 5UL] = (1UL << (id & 0x1FUL));
+#endif
+}
+
+/**
  * @brief Clear an pending RTFM job.
  *
  * @tparam Job  The job to clear.
@@ -32,6 +44,18 @@ constexpr void clear()
 #ifndef PC_DEBUG
   using ISRn = typename Job::ISR::index;
   NVIC->ICPR[ISRn::value >> 5UL] = (1UL << (ISRn::value & 0x1FUL));
+#endif
+}
+
+/**
+ * @brief Clear an pending RTFM job.
+ *
+ * @param[in] id    The interrupt ID to clear.
+ */
+inline void clear(unsigned id)
+{
+#ifndef PC_DEBUG
+  NVIC->ICPR[id >> 5UL] = (1UL << (id & 0x1FUL));
 #endif
 }
 

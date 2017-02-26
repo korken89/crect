@@ -62,11 +62,13 @@ struct system_clock
   }
 };
 
+
 } /* END namespace time */
 
 /**
  * @brief   Convenience definition of the clock resource.
  */
 using Rsystem_clock = Resource<time::system_clock>;
+
 
 } /* END namespace rtfm */

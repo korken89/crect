@@ -12,14 +12,15 @@
 #include "rtfm/srp/srp_locks.hpp"
 #include "rtfm/srp/srp_pend_clear.hpp"
 #include "rtfm/rtfm_clock.hpp"
-#include "rtfm/srp/srp_async.hpp"
 #include "rtfm/srp/srp_init.hpp"
+#include "rtfm/rtfm_timer.hpp"
 
 /* RTFM job/system_job_list configuration. */
 #include "rtfm_user_config.hpp"
 
 /* Needs to be included after the definition of the rtfm::system_job_list. */
 #include "rtfm/srp/srp_prioirty_ceiling.hpp"
+
 
 namespace rtfm
 {
@@ -41,15 +42,20 @@ inline void initialize()
 {
   __disable_irq();
 
-  /* Initialize the queue for the async commands. */
-  async_queue::initialize();
-
   /* Initialize the NVIC settings, enable ISRs, set priorities. */
   initialize_jobs_impl<system_job_list>();
+
+  /* Initialize SysTick */
+  timer::initialize();
 
   __enable_irq();
 }
 
 
 } /* END namespace srp */
+
+
+
 } /* END namespace rtfm */
+
+#include "rtfm/srp/srp_async.hpp"

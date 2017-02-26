@@ -4,7 +4,7 @@
 inline void bss_init()
 {
   extern uint32_t __bss_start, __bss_end;
-  
+
   uint32_t *from = &__bss_start;
   uint32_t *to = &__bss_end;
 
@@ -143,7 +143,7 @@ void Reset_Handler()
   __enable_irq();
   __ISB();
 
-  int main();
+  void main();
 
   main();
 
