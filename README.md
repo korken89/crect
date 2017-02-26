@@ -57,7 +57,7 @@ using J1 = rtfm::Job<
               R1, Rasync                  // List of possible resouce claims
             >;
 ```
-Each job need to be added to the `system_job_list< Jobs... >` in `rtfm_user_config.hpp`. 
+Each job need to be added to the `system_job_list< Jobs... >` in `rtfm_user_config.hpp`.
 
 #### ISR definition
 The ISR definitions available are split in the Peripheral ISRs (I >= 0), and System ISRs (I < 0).
@@ -72,7 +72,7 @@ using MakeSystemISR = rtfm::details::ISR<nullptr, rtfm::details::Index<I>>;
 ```
 
 #### pend
-Pend directly set a job for execution and will be as soon as it's priority is the highest.
+Pend directly sets a job for execution and will be as soon as it's priority is the highest.
 ```C++
 // Compile time constant pend
 rtfm::srp::pend<JobToPend>();
