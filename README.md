@@ -3,9 +3,9 @@
 **RTFM++** is a C++ library for generating a compile time
 scheduler for Cortex-M series MCUs, which guarantees dead-lock free execution, based on the papers by:
 
-* T.P. Baker, **"A Stack-Based Resource Allocation Policy for Realtime Processes"**,
-* Johan Eriksson et. al., **"Real-Time For the Masses, Step 1: Programming API and Static Priority SRP Kernel Primitives"**,
-* Per Lindgren et. al., **"Abstract Timers and their Implementation onto the ARM Cortex-M family of MCUs"**,
+* T.P. Baker, **"A Stack-Based Resource Allocation Policy for Realtime Processes"**, (general theory of SRP)
+* Johan Eriksson et. al., **"Real-Time For the Masses, Step 1: Programming API and Static Priority SRP Kernel Primitives"**, (SRP primitives)
+* Per Lindgren et. al., **"Abstract Timers and their Implementation onto the ARM Cortex-M family of MCUs"**, (async idea)
 
 which utilizes the Nested Vector Interrupt Controller (NVIC) in Cortex-M
 processors to implement a Stack Resource Policy (SRP) based scheduler. Thanks
