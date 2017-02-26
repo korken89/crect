@@ -44,8 +44,10 @@ using R1 = rtfm::Resource<some_type>;
 A job definition consists of a few parts:
   1. A unique ID, used for static checking.
   2. The priority of the Job, from 0 meaning low, to max_priority meaning max.
-  3. An ISR the Job is connected to (peripheral ISRs, 0 is the lowest, negative numbers are the system ISRs). If it is not connected to any, take any random ISR number for now.
+  3. An ISR the Job is connected to (peripheral ISRs, 0 is the lowest, negative numbers are the system ISRs). If it is not connected to any, take any random ISR number for now, in the future this will be automatic.j
   4. The list of resources that the Job may claim.
+
+The Job definitions are placed (directly or via include) in `rtfm_user_config.hpp`.
 ```C++
 void job1(void);
 using J1 = rtfm::Job<
@@ -55,6 +57,7 @@ using J1 = rtfm::Job<
               R1, Rasync                  // List of possible resouce claims
             >;
 ```
+Each job need to be added to the `system_job_list< Jobs... >` in `rtfm_user_config.hpp`. 
 
 #### ISR definition
 The ISR definitions available are split in the Peripheral ISRs (I >= 0), and System ISRs (I < 0).
