@@ -1,6 +1,6 @@
 # RTFM++: A proof-of-concept C++ implementation of the Stack Resource Policy (SRP) based Real-Time For the Masses (RTFM) kernel
 
-**RTFM++** is a C++ library for generating a compile time
+**RTFM++** is a proof-of-concept C++ library for generating a compile time
 scheduler for Cortex-M series MCUs, which guarantees dead-lock free execution, based on the papers by:
 
 * T.P. Baker, **"A Stack-Based Resource Allocation Policy for Realtime Processes"**, (general theory of SRP)
