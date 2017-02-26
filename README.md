@@ -44,7 +44,7 @@ using R1 = rtfm::Resource<some_type>;
 A job definition consists of a few parts:
   1. A unique ID, used for static checking.
   2. The priority of the Job, from 0 meaning low, to max_priority meaning max.
-  3. An ISR the Job is connected to (peripheral ISRs, 0 is the lowest, negative numbers are the system ISRs). If it is not connected to any, take any random ISR number for now, in the future this will be automatic.j
+  3. An ISR the Job is connected to (peripheral ISRs, 0 is the lowest, negative numbers are the system ISRs). If it is not connected to any, take any random ISR number for now, in the future this will be automatic.
   4. The list of resources that the Job may claim.
 
 The Job definitions are placed (directly or via include) in `rtfm_user_config.hpp`.
@@ -72,7 +72,7 @@ using MakeSystemISR = rtfm::details::ISR<nullptr, rtfm::details::Index<I>>;
 ```
 
 #### pend
-Pend directly sets a job for execution and will be as soon as it's priority is the highest.
+Pend directly sets a job for execution and will be as soon as its priority is the highest.
 ```C++
 // Compile time constant pend
 rtfm::srp::pend<JobToPend>();
@@ -104,7 +104,7 @@ rtfm::srp::async(time_to_execute, JobToPend_ISR_ID);
 void job()
 {
   // Lock the LED resource, remember locks are very cheap -- sprinkle them everywhere!
-  rtfm::srp::lock< Rled > lock;
+  rtfm::srp::lock< Rled > lock; // Locks are made in the constructor of the lock
   ToggleLED();
 
   // Unlock is automatic in the destructor of lock
