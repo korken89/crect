@@ -15,6 +15,13 @@
 #include "rtfm/srp/srp_init.hpp"
 #include "rtfm/rtfm_timer.hpp"
 
+/* Async resource definition for now... */
+namespace rtfm
+{
+struct async_resource;
+using Rasync = rtfm::Resource< async_resource >;
+}
+
 /* RTFM job/system_job_list configuration. */
 #include "rtfm_user_config.hpp"
 
@@ -53,9 +60,6 @@ inline void initialize()
 
 
 } /* END namespace srp */
-
-
-
 } /* END namespace rtfm */
 
 #include "rtfm/srp/srp_async.hpp"

@@ -12,6 +12,7 @@
 
 extern rtfm::async_queue<__RTFM_ASYNC_QUEUE_SIZE> rtfm_async_queue;
 
+
 namespace rtfm
 {
 namespace srp
@@ -33,6 +34,7 @@ static void async_impl_dur(rtfm::time::system_clock::duration dur, unsigned isr)
     return rtfm::time::system_clock::now();
   }();
 
+  rtfm::srp::lock<rtfm::Rasync> lock;
   rtfm_async_queue.push(current_time + dur, isr);
 }
 
@@ -45,6 +47,7 @@ static void async_impl_dur(rtfm::time::system_clock::duration dur, unsigned isr)
 static void async_impl_time(rtfm::time::system_clock::time_point time, unsigned isr)
 {
   /* Always get the current time. */
+  rtfm::srp::lock<rtfm::Rasync> lock;
   rtfm_async_queue.push(time, isr);
 }
 
