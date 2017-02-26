@@ -13,11 +13,17 @@ namespace timer
 static const constexpr auto max_systick_duration =
   rtfm::time::system_clock::duration{SysTick_LOAD_RELOAD_Msk};
 
+/**
+ * @brief   Convenience definition to pend SysTick.
+ */
 inline void pend()
 {
   SCB->ICSR |= SCB_ICSR_PENDSTSET_Msk;
 }
 
+/**
+ * @brief   Convenience definition to set up SysTick.
+ */
 inline void initialize()
 {
   SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk;

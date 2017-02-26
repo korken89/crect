@@ -12,7 +12,6 @@
 
 void job1(void);
 void job2(void);
-extern "C" void SysTick_Handler();
 
 struct Rasync_type{};
 using Rasync = rtfm::Resource< Rasync_type >;
@@ -33,10 +32,10 @@ using J2 = rtfm::Job<
             >;
 
 using Jasync = rtfm::Job<
-              rtfm::util::hashit("JobAsync"), // Unique ID
-              0,                          // Priority
-              rtfm::MakeSystemISR<SysTick_IRQn>,     // ISR connection and location
-              Rasync, rtfm::Rsystem_clock            // Possible resouce claims
+              rtfm::util::hashit("JobAsync"),     // Unique ID
+              0,                                  // Priority
+              rtfm::MakeSystemISR<SysTick_IRQn>,  // ISR connection and location
+              Rasync, rtfm::Rsystem_clock         // Possible resouce claims
             >;
 
 /****************************************************************************

@@ -1,6 +1,9 @@
 
 #include "rtfm/rtfm_srp.hpp"
 
+/**
+ * @brief   Init the BSS segment.
+ */
 inline void bss_init()
 {
   extern uint32_t __bss_start, __bss_end;
@@ -12,6 +15,9 @@ inline void bss_init()
     *(from++) = 0;
 }
 
+/**
+ * @brief   Init the data segment.
+ */
 inline void data_init()
 {
   extern uint32_t __text_end, __data_start, __data_end;
@@ -24,6 +30,9 @@ inline void data_init()
     *(to++) = *(from++);
 }
 
+/**
+ * @brief   Run global constructors.
+ */
 inline void constructor_init()
 {
   /* Start and end points of the constructor list. */
@@ -36,6 +45,9 @@ inline void constructor_init()
   }
 }
 
+/**
+ * @brief   Initialize the system clock and start the PLL.
+ */
 inline void InitClocks()
 {
   RCC->APB1ENR |= RCC_APB1ENR_PWREN;  // Enable power control clocks
@@ -105,9 +117,6 @@ inline void InitClocks()
 
 extern "C" {
 
-extern uint32_t __text_end, __data_start, __data_end, __bss_start, __bss_end;
-extern uint32_t __all_end;
-
 __attribute__((naked))
 void Reset_Handler()
 {
@@ -137,7 +146,7 @@ void Reset_Handler()
   /* Setup clocks */
   InitClocks();
 
-  /* Enable prefetch /  cache */
+  /* Enable prefetch / cache */
   FLASH->ACR |= FLASH_ACR_PRFTEN | FLASH_ACR_ICEN | FLASH_ACR_DCEN;
 
   __enable_irq();

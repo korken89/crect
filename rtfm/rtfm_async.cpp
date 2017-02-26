@@ -11,14 +11,19 @@ namespace rtfm
 namespace timer
 {
 
-inline void set(time::system_clock::time_point baseline)
+/**
+ * @brief   Sets the reload of SysTick to a specific time.
+ *
+ * @param[in] time    The time to set the SysTick to execute.
+ */
+inline void set(time::system_clock::time_point time)
 {
   auto current_time = [](){
     rtfm::srp::lock<rtfm::Rsystem_clock> lock;
     return rtfm::time::system_clock::now();
   }();
 
-  auto diff = baseline - current_time;
+  auto diff = time - current_time;
 
   if (diff > timer::max_systick_duration)
   {
@@ -39,6 +44,9 @@ inline void set(time::system_clock::time_point baseline)
 
 }
 
+/**
+ * @brief   Sets the reload of SysTick to its max value.
+ */
 inline void set_max()
 {
   /* Set load to maximum time. */
@@ -51,6 +59,9 @@ inline void set_max()
 } /* END namespace rtfm */
 
 
+/**
+ * @brief   The SysTick handler, implements the Async queue.
+ */
 extern "C" void SysTick_Handler()
 {
   /* Always get the current time. */
