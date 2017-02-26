@@ -29,15 +29,71 @@ In this implementation of RTFM, heavy use of **C++ metaprogramming** and **C++14
 
 More description will come...
 
-### Contributors
-
-* Emil Fresk
-
-_Contributors are most welcome! Contact me and we can have a chat._
 
 ## Usage
 
+Small description on how to use this.
 
+#### Resource definition
+A resource definition is simple as follows, where `some_type` is a type that symbolizes the resource.
+```C++
+using R1 = rtfm::Resource<some_type>;
+```
+
+#### Job definition
+A job definition consists of a few parts:
+  1. A unique ID.
+  2. The priority of the Job, from 0 meaning low, to max_priority meaning max.
+  3. An ISR the Job is connected to (peripheral ISRs, 0 is the lowest, negative numbers are the system ISRs). If it is not connected to any, take any random ISR number for now.
+  4. The list of resources that the Job may claim.
+```C++
+void job1(void);
+using J1 = rtfm::Job<
+              rtfm::util::hashit("Job1"), // Unique ID
+              1,                          // Priority (0 = low)
+              rtfm::MakeISR<job1, 1>,     // ISR connection and location
+              R1, Rasync                  // List of possible resouce claims
+            >;
+```
+
+#### ISR definition
+```C++
+// Peripheral ISR definition (I >= 0)
+template <rtfm::details::ISRFunctionPointer P, int I>
+using MakeISR = rtfm::details::ISR<P, details::Index<I>>;
+
+// System ISR definition (I < 0)
+template <int I>
+using MakeSystemISR = rtfm::details::ISR<nullptr, rtfm::details::Index<I>>;
+```
+
+#### pend
+Pend directly set a job for execution and will be as soon as it's priority is the highest.
+```C++
+// Compile time constant pend
+rtfm::srp::pend<JobToPend>();
+
+// Runtime dependent pend
+rtfm::srp::pend(JobToPend_ISR_ID);
+```
+
+#### async
+Async defers a jobs execution to some specific time.
+```C++
+// Using chrono to relate the system to time, the current max time is somewhere around 1500 years, depending on MCU :)
+using namespace std::chrono_literals;
+
+// Async in some specific duration using chrono
+rtfm::srp::async<JobToPend>(100ms);
+
+// Async in some specific time using a specific time
+auto time_to_execute = rtfm::time::system_clock::now() + some_duration;
+rtfm::srp::async<JobToPend>(time_to_execute);
+
+// Async can be used as pend for runtime dependent execution
+rtfm::srp::async(100ms, JobToPend_ISR_ID);
+rtfm::srp::async(time_to_execute, JobToPend_ISR_ID);
+```
 
 ## Definitions
 **Job:**
