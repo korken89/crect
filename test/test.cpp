@@ -35,7 +35,7 @@ void job2()
 }
 
 
-void main()
+int main()
 {
 
   InitLED();

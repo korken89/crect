@@ -152,7 +152,7 @@ void Reset_Handler()
   __enable_irq();
   __ISB();
 
-  void main();
+  int main();
 
   main();
 
