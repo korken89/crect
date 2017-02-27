@@ -71,7 +71,7 @@ extern "C" void SysTick_Handler()
   }();
 
   /* Access the async queue. */
-  rtfm::srp::lock<Rasync> lock;
+  rtfm::srp::lock<rtfm::Rasync> lock;
 
   /* Check if there is any job in the async queue. */
   if (rtfm_async_queue.front() != nullptr)
