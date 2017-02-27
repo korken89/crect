@@ -32,7 +32,23 @@ struct ISR
 };
 
 /**
- * @brief Specialization of an ISR type, main usage definition.
+ * @brief Specialization of an ISR type, system ISR definition.
+ *
+ * @tparam I  Index value.
+ */
+template <int I>
+struct ISR<nullptr, Index<I>>
+{
+  static_assert((I < 0), // System ISR
+               "A system ISR must have a negative Index.");
+
+  static constexpr const ISRFunctionPointer value = nullptr;
+  using type = ISR<nullptr, Index<I>>;
+  using index = Index<I>;
+};
+
+/**
+ * @brief Specialization of an ISR type, peripheral ISR definition.
  *
  * @tparam P  Function pointer.
  * @tparam I  Index value.
@@ -40,15 +56,8 @@ struct ISR
 template <ISRFunctionPointer P, int I>
 struct ISR<P, Index<I>>
 {
-  // 1) (I < 0) || (I >= 0 && P != nullptr)    Peripheral ISR
-  // 2) (I >= 0) || (I < 0 && P == nullptr)    System ISR
-  
-  static_assert(((I < 0) || (I >= 0 && P != nullptr)), // Peripheral ISR
-                "A peripheral ISR cannot have a nullptr as function.");
-
-  static_assert(((I >= 0) || (I < 0 && P == nullptr)), // System ISR
-               "A system ISR must have a nullptr as function, the pointer is " \
-               "not used in the generation of the vector table.");
+  static_assert((I >= 0), // Peripheral ISR
+                "A peripheral ISR must have a non-negaive Index.");
 
   static constexpr const ISRFunctionPointer value = P;
   using type = ISR<P, Index<I>>;
