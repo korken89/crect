@@ -26,7 +26,11 @@ all:
 		arm-none-eabi-g++ $(LDFLAGS) build/test.o build/async.o build/vector.o build/init.o -o build/test.elf
 		arm-none-eabi-objdump -D --source build/test.elf > build/test.dmp
 		@echo " "
+		@echo "Total size:"
 		@arm-none-eabi-size --format=berkeley build/test.elf
+		@echo " "
+		@echo "Each object size:"
+		@arm-none-eabi-size --format=berkeley build/test.o build/async.o build/vector.o build/init.o
 
 
 gdb:
