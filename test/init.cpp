@@ -117,7 +117,6 @@ inline void InitClocks()
 
 extern "C" {
 
-__attribute__((naked))
 void Reset_Handler()
 {
 
@@ -152,7 +151,7 @@ void Reset_Handler()
   __enable_irq();
   __ISB();
 
-  int main();
+  int main(void);
 
   main();
 
