@@ -2,6 +2,7 @@
 #pragma once
 
 #include <chrono>
+#include <array>
 #include "rtfm/rtfm_clock.hpp"
 #include "rtfm/rtfm_timer.hpp"
 
