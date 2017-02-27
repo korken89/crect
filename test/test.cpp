@@ -13,12 +13,13 @@ void job1()
 {
   using namespace std::chrono_literals;
 
-  {
+  [](){
     rtfm::srp::lock< R1 > lock;
     EnableLED();
-  }
+  }();
 
-  rtfm::srp::async<J2>(1000ms); // Disable led in 1000ms
+  // Disable led in 1000ms
+  rtfm::srp::async<J2>(1000ms);
 }
 
 /* Higher priority job */
@@ -26,12 +27,13 @@ void job2()
 {
   using namespace std::chrono_literals;
 
-  {
+  [](){
     rtfm::srp::lock< R1 > lock;
     DisableLED();
-  }
+  }();
 
-  rtfm::srp::async<J1>(1000ms); // Enable led in 1000ms
+  // Enable led in 1000ms
+  rtfm::srp::async<J1>(1000ms);
 }
 
 
