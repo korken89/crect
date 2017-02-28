@@ -76,14 +76,10 @@ A lock keeps the system from running a job which will lock the same resource.
 The analysis to determine which job can take which resource is done at
 compile-time, which makes the lock very cheap to use as indicated at the start of this document.
 ```C++
-void job()
-{
-  // Lock the LED resource, remember locks are very cheap -- sprinkle them everywhere!
-  rtfm::srp::lock< Rled > lock; // Locks are made in the constructor of the lock
-  ToggleLED();
-
-  // Unlock is automatic in the destructor of lock
-}
+// Lock the LED resource, remember locks are very cheap -- sprinkle them everywhere!
+rtfm::srp::lock< Rled > lock; // Locks are made in the constructor of the lock
+ToggleLED();
+// Unlock is automatic in the destructor of lock
 ```
 
 To guarantee the lock for resources with a return a lambda can be used (for
