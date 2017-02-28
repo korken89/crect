@@ -16,7 +16,7 @@ run-time are minimal with:
 
 * 4-5 instructions / job for initialization of the NVIC.
 * 2-3 instructions / queue element for initializing the `async` queue.
-* The static requirement for `async` is about 500 bytes (the linked list implementation).
+* The static requirement for `async` is about 400 bytes (the linked list and SysTick implementation).
 
 **Runtime:**
 
@@ -29,6 +29,32 @@ In this implementation of RTFM, heavy use of **C++ metaprogramming** and **C++14
 
 More description will come...
 
+## Give it a test
+
+In `./test` a test project is setup for the NUCLEO-F411 board, that will blink a LED every one seconds.
+It also contains an example of `rtfm_system_config.hpp` and `rtfm_user_config.hpp`, providing examples.
+
+If there are any questions on the usage, throw me a message.
+
+## Definitions
+**Job:**
+
+* A function that runs to completion in a finite time (no forever loop),
+ not as a "normal" thread that has a forever loop.
+* Has a settable priority which indicates the urgency of the Job.
+
+**Resource:**
+
+* An entity symbolizing something lockable, _i.e._ any locked Resource may
+only be accessed by a single Job at a time.
+
+**Lock (Stack Resource Policy):**
+
+* A lock on a resource keeps other jobs, that will also take said resource,
+from running through manipulation of the systems NVIC/basepri settings. A lock
+can only be held within a job and must be released before the exit of a job.
+
+---
 
 ## Usage
 
@@ -129,22 +155,3 @@ rtfm::srp::async(time_to_execute, JobToPend_ISR_ID);
 ```
 Don't do this in practice, `system_clock::now()` is a shared resource and this
 can cause a data-race. See **lock** on how to get the time in a safe way.
-
-
-## Definitions
-**Job:**
-
-* A function that runs to completion in a finite time (no forever loop),
- not as a "normal" thread that has a forever loop.
-* Has a settable priority which indicates the urgency of the Job.
-
-**Resource:**
-
-* An entity symbolizing something lockable, i.e. any locked Resource may
-only be accessed by a single Job at a time.
-
-**Lock (Stack Resource Policy):**
-
-* A lock on a resource keeps other jobs, that will also take said resource,
-from running through manipulation of the systems ISR settings. A lock can only
-be held within a job and must be released before the exit of a job.
