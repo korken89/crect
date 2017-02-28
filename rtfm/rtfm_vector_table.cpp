@@ -91,8 +91,7 @@ struct vector_table
  * @tparam Is  Integer sequence.
  */
 template <typename T, T... Is>
-const vector_table generate_vector_table(
-    std::integer_sequence<T, Is...>)
+constexpr vector_table generate_vector_table(std::integer_sequence<T, Is...>)
 {
   return {{
               reinterpret_cast<rtfm::details::ISRFunctionPointer>(
@@ -120,7 +119,7 @@ const vector_table generate_vector_table(
  * @brief Save vector table to the correct location.
  */
 __attribute__((used, section(".isr_vector")))
-const vector_table system_vectors = generate_vector_table(
+constexpr const vector_table system_vectors = generate_vector_table(
     std::make_integer_sequence<
         unsigned, sizeof(vector_table::mcu_vectors) /
                       sizeof(rtfm::details::ISRFunctionPointer)>{});
