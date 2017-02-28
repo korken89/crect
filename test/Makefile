@@ -19,18 +19,18 @@ GDB_FLAGS = -tui -ex "target remote | $(OPENOCD) -c \"gdb_port pipe; log_output 
 
 all:
 		@mkdir -p build
-		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) test.cpp -o build/test.o
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) main.cpp -o build/main.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) init.cpp -o build/init.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../rtfm/rtfm_vector_table.cpp -o build/vector.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../rtfm/rtfm_async.cpp -o build/async.o
-		arm-none-eabi-g++ $(LDFLAGS) build/test.o build/async.o build/vector.o build/init.o -o build/test.elf
+		arm-none-eabi-g++ $(LDFLAGS) build/main.o build/async.o build/vector.o build/init.o -o build/test.elf
 		arm-none-eabi-objdump -D --source build/test.elf > build/test.dmp
 		@echo " "
 		@echo "Total size:"
 		@arm-none-eabi-size --format=berkeley build/test.elf
 		@echo " "
 		@echo "Each object size:"
-		@arm-none-eabi-size --format=berkeley build/test.o build/async.o build/vector.o build/init.o
+		@arm-none-eabi-size --format=berkeley build/main.o build/async.o build/vector.o build/init.o
 
 
 gdb:
