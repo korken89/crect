@@ -66,9 +66,17 @@ __attribute__((always_inline)) static inline void barrier_entry()
    * Instructions - Application Note 321", paragraph 4.8, the barrier
    * instructions are not needed for Cortex-M >= M3.
    */
-
-  //asm volatile("dsb 0xF\nisb 0xF\n" ::: "memory");
+#if __CORTEX_M  >= 3
+  /* No synchronization as >= Cortex-M3 uses the MSR instruction to manipulate
+   * priorities.
+   */
   asm volatile("" ::: "memory");
+#else
+  /* Synchronization instructions are only needed with the Cortex-M0, as it is
+   * using source masing in the NVIC to manipulate priorities.
+   */
+  asm volatile("dsb 0xF\nisb 0xF\n" ::: "memory");
+#endif
 }
 
 
