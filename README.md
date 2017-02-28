@@ -20,7 +20,7 @@ run-time are minimal with:
 
 **Runtime:**
 
-* 5-6 instructions + 4 bytes of stack for a `lock`.
+* 3-4 instructions + 4 bytes of stack for a `lock`.
 * 1-3 instructions for an unlock.
 * 2-4 instructions for `pend` / `clear`.
 * About 20-30 instructions * number of items in queue for `async`.
