@@ -62,7 +62,13 @@ static inline void set_BASEPRI_MAX(uint32_t value)
  */
 __attribute__((always_inline)) static inline void barrier_entry()
 {
-  asm volatile("dsb 0xF\nisb 0xF\n" ::: "memory");
+  /* According to the "ARM Cortex-M Programming Guide to Memory Barrier
+   * Instructions - Application Note 321", paragraph 4.8, the barrier
+   * instructions are not needed for Cortex-M >= M3.
+   */
+
+  //asm volatile("dsb 0xF\nisb 0xF\n" ::: "memory");
+  asm volatile("" ::: "memory");
 }
 
 
