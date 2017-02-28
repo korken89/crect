@@ -41,10 +41,10 @@ using R1 = rtfm::Resource<some_type>;
 ```
 Currently 2 system resources exists:
 
-1. The access to the async queue and is protected via `rtfm::Rasync`.
+1. The access to the async queue is protected via `rtfm::Rasync`.
 2. For getting the current time via `rtfm::clock::system::now()` is protected via `rtfm::Rsystem_clock`.
 
-Any job using these resources need to have the corresponding resource in its resource claim in `rtfm_user_config.hpp`.
+Any job **using these resources** need to have the corresponding resource **in its resource claim** in `rtfm_user_config.hpp`.
 
 #### Job definition
 A job definition consists of a few parts:
@@ -57,10 +57,10 @@ The Job definitions are placed (directly or via include) in `rtfm_user_config.hp
 ```C++
 void job1(void);
 using J1 = rtfm::Job<
-              rtfm::util::hashit("Job1"), // Unique ID through a hash of text
+              rtfm::util::hashit("Job1"), // Unique ID (here through a hash of text)
               1,                          // Priority (0 = low)
               rtfm::MakeISR<job1, 1>,     // ISR connection and location
-              R1, rtfm::Rasync            // List of possible resouce claims
+              R1, rtfm::Rasync            // List of possible resource claims
             >;
 ```
 Each job need to be added to the `system_job_list< Jobs... >` in `rtfm_user_config.hpp`.
