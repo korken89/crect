@@ -20,7 +20,7 @@ run-time are minimal with:
 
 **Runtime:**
 
-* 4-6 instructions + 4 bytes of stack for a `lock`.
+* 5-6 instructions + 4 bytes of stack for a `lock`.
 * 1-3 instructions for an unlock.
 * 2-4 instructions for `pend` / `clear`.
 * About 20-30 instructions * number of items in queue for `async`.
@@ -98,8 +98,13 @@ rtfm::srp::async<JobToPend>(time_to_execute);
 rtfm::srp::async(100ms, JobToPend_ISR_ID);
 rtfm::srp::async(time_to_execute, JobToPend_ISR_ID);
 ```
+Don't do this in practice, `system_clock::now()` is a shared resource and this
+can cause a data-race. See **lock** on how to get the time in a safe way.
 
 #### lock
+A lock keeps the system from running a job which will lock the same resource.
+The analysis to determine which job can take which resource is done at
+compile-time, which makes the lock very cheap to use as indicated at the start of this document.
 ```C++
 void job()
 {
@@ -109,6 +114,16 @@ void job()
 
   // Unlock is automatic in the destructor of lock
 }
+```
+
+To guarantee the lock for resources with a return a lambda can be used (for
+  example when getting the current time, as the system time is a shared resource):
+```C++
+// Lock and release the system_clock resource within the lambda, no risk of a data-race.
+auto current_time = [](){
+  rtfm::srp::lock<rtfm::Rsystem_clock> lock;
+  return rtfm::time::system_clock::now();
+}();
 ```
 
 ## Definitions
