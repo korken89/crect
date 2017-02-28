@@ -51,7 +51,7 @@ The Job definitions are placed (directly or via include) in `rtfm_user_config.hp
 ```C++
 void job1(void);
 using J1 = rtfm::Job<
-              rtfm::util::hashit("Job1"), // Unique ID
+              rtfm::util::hashit("Job1"), // Unique ID through a hash of text
               1,                          // Priority (0 = low)
               rtfm::MakeISR<job1, 1>,     // ISR connection and location
               R1, Rasync                  // List of possible resouce claims
@@ -103,7 +103,7 @@ auto current_time = [](){
 rtfm::srp::pend<JobToPend>();
 rtfm::srp::clear<JobToPend>();
 
-// Runtime dependent pend
+// Runtime dependent pend/clear
 rtfm::srp::pend(JobToPend_ISR_ID);
 rtfm::srp::clear(JobToPend_ISR_ID);
 ```
