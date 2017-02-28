@@ -79,8 +79,9 @@ struct get_vector_from_position
  */
 struct vector_table
 {
-  const rtfm::details::ISRFunctionPointer arm_vectors[16]; /* SysTick Handler */
-  const rtfm::details::ISRFunctionPointer mcu_vectors[__MCU_NUM_VECTORS];
+  uint32_t *stack_end;
+  rtfm::details::ISRFunctionPointer arm_vectors[15];
+  rtfm::details::ISRFunctionPointer mcu_vectors[__MCU_NUM_VECTORS];
 };
 
 
@@ -93,9 +94,9 @@ struct vector_table
 template <typename T, T... Is>
 constexpr vector_table generate_vector_table(std::integer_sequence<T, Is...>)
 {
-  return {{
-              reinterpret_cast<rtfm::details::ISRFunctionPointer>(
-                __STACK_END),     /* Stack */
+  return {
+            __STACK_END,
+            {
               Reset_Handler,      /* Reset Handler */
               NMI_Handler,        /* NMI Handler */
               HardFault_Handler,  /* Hard Fault Handler */
@@ -112,7 +113,10 @@ constexpr vector_table generate_vector_table(std::integer_sequence<T, Is...>)
               PendSV_Handler,     /* PendSV Handler */
               SysTick_Handler     /* SysTick Handler */
           },
-          {get_vector_from_position<Is>::value...}};
+          {
+            get_vector_from_position<Is>::value...
+          }
+        };
 }
 
 /**
