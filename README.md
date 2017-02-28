@@ -71,14 +71,41 @@ template <int I>
 using MakeSystemISR = rtfm::details::ISR<nullptr, rtfm::details::Index<I>>;
 ```
 
-#### pend
-Pend directly sets a job for execution and will be as soon as its priority is the highest.
+#### lock
+A lock keeps the system from running a job which will lock the same resource.
+The analysis to determine which job can take which resource is done at
+compile-time, which makes the lock very cheap to use as indicated at the start of this document.
 ```C++
-// Compile time constant pend
+void job()
+{
+  // Lock the LED resource, remember locks are very cheap -- sprinkle them everywhere!
+  rtfm::srp::lock< Rled > lock; // Locks are made in the constructor of the lock
+  ToggleLED();
+
+  // Unlock is automatic in the destructor of lock
+}
+```
+
+To guarantee the lock for resources with a return a lambda can be used (for
+example when getting the current time, as the system time is a shared resource):
+```C++
+// Lock and release the system_clock resource within the lambda, no risk of a data-race.
+auto current_time = [](){
+  rtfm::srp::lock<rtfm::Rsystem_clock> lock;
+  return rtfm::time::system_clock::now();
+}();
+```
+
+#### pend / clear
+`pend` directly sets a job for execution and will be as soon as its priority is the highest, while `clear` removes the job for execution.
+```C++
+// Compile time constant pend/clear
 rtfm::srp::pend<JobToPend>();
+rtfm::srp::clear<JobToPend>();
 
 // Runtime dependent pend
 rtfm::srp::pend(JobToPend_ISR_ID);
+rtfm::srp::clear(JobToPend_ISR_ID);
 ```
 
 #### async
@@ -101,30 +128,6 @@ rtfm::srp::async(time_to_execute, JobToPend_ISR_ID);
 Don't do this in practice, `system_clock::now()` is a shared resource and this
 can cause a data-race. See **lock** on how to get the time in a safe way.
 
-#### lock
-A lock keeps the system from running a job which will lock the same resource.
-The analysis to determine which job can take which resource is done at
-compile-time, which makes the lock very cheap to use as indicated at the start of this document.
-```C++
-void job()
-{
-  // Lock the LED resource, remember locks are very cheap -- sprinkle them everywhere!
-  rtfm::srp::lock< Rled > lock; // Locks are made in the constructor of the lock
-  ToggleLED();
-
-  // Unlock is automatic in the destructor of lock
-}
-```
-
-To guarantee the lock for resources with a return a lambda can be used (for
-  example when getting the current time, as the system time is a shared resource):
-```C++
-// Lock and release the system_clock resource within the lambda, no risk of a data-race.
-auto current_time = [](){
-  rtfm::srp::lock<rtfm::Rsystem_clock> lock;
-  return rtfm::time::system_clock::now();
-}();
-```
 
 ## Definitions
 **Job:**
