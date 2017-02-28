@@ -31,10 +31,12 @@ More description will come...
 
 ## Give it a test
 
-In `./test` a test project is setup for the NUCLEO-F411 board, that will blink a LED every one seconds.
+In `./test` a test project is setup for the NUCLEO-F411RE board, that will blink a LED every one seconds.
 It also contains an example of `rtfm_system_config.hpp` and `rtfm_user_config.hpp`, providing examples.
 
 If there are any questions on the usage, throw me a message.
+
+_Tested on Manjaro Linux using GCC 6.3.0 (arm-none-eabi) and a NUCLEO-F411RE for hardware testing. It is currently not working on Cortex-M0 devices._
 
 ## Definitions
 **Job:**
