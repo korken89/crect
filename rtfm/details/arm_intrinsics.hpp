@@ -32,7 +32,7 @@ static inline uint32_t get_BASEPRI(void)
  * @brief     Set Base Priority
  * @details   Assigns the given value to the Base Priority register.
  *
- * @param [in] value    Base Priority value to set
+ * @param[in] value     Base Priority value to set.
  */
 __attribute__((always_inline))
 static inline void set_BASEPRI(uint32_t value)
@@ -47,7 +47,7 @@ static inline void set_BASEPRI(uint32_t value)
  *            BASEPRI masking is disabled, or the new value increases the
  *            BASEPRI priority level.
  *
- * @param [in]    basePri  Base Priority value to set
+ * @param[in] value     Base Priority value to set, if about current value.
  */
 __attribute__((always_inline))
 static inline void set_BASEPRI_MAX(uint32_t value)
