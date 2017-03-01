@@ -3,7 +3,6 @@
 
 #include "brigand/brigand.hpp"
 #include "rtfm/details/arm_intrinsics.hpp"
-#include "util/utils.hpp"
 
 namespace rtfm
 {

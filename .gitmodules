@@ -2,3 +2,6 @@
 	path = brigand
 	url = https://github.com/edouarda/brigand.git
 	branch = master
+[submodule "deps/brigand"]
+	path = deps/brigand
+	url = git@github.com:edouarda/brigand.git
