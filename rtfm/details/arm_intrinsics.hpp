@@ -47,7 +47,7 @@ static inline void set_BASEPRI(uint32_t value)
  *            BASEPRI masking is disabled, or the new value increases the
  *            BASEPRI priority level.
  *
- * @param[in] value     Base Priority value to set, if about current value.
+ * @param[in] value     Base Priority value to set, if above current value.
  */
 __attribute__((always_inline))
 static inline void set_BASEPRI_MAX(uint32_t value)
@@ -55,6 +55,34 @@ static inline void set_BASEPRI_MAX(uint32_t value)
   asm volatile ("MSR basepri_max, %0" : : "r" (value) : "memory");
 }
 
+/**
+ * @brief     Set Base Priority
+ * @details   Assigns the given value to the Base Priority register.
+ *
+ * @tparam I    Base Priority value to set.
+ */
+template <unsigned I>
+__attribute__((always_inline))
+static inline void set_BASEPRI(void)
+{
+  asm volatile ("MSR basepri, %0" : : "r" (I) : "memory");
+}
+
+
+/**
+ * @brief     Set Base Priority with condition
+ * @details   Assigns the given value to the Base Priority register only if
+ *            BASEPRI masking is disabled, or the new value increases the
+ *            BASEPRI priority level.
+ *
+ * @tparam I    Base Priority value to set, if above current value.
+ */
+template <unsigned I>
+__attribute__((always_inline))
+static inline void set_BASEPRI_MAX(void)
+{
+  asm volatile ("MSR basepri_max, %0" : : "r" (I) : "memory");
+}
 
 /**
  * @brief  Start of a instruction and data barrier, used to guarantee the

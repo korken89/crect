@@ -39,9 +39,9 @@ public:
      * C++ Standard §12.6.2 */
   {
     /* Lock the resource. */
-    arm_intrinsics::set_BASEPRI_MAX(
+    arm_intrinsics::set_BASEPRI_MAX<
       util::priority_to_NVIC_priority( ResourcePriority::value )
-    );
+    >();
 
     /* Barriers to guarantee the instruction took hold before continuing. */
     arm_intrinsics::barrier_entry();
