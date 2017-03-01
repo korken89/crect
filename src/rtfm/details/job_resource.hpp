@@ -3,7 +3,6 @@
 
 #include "brigand/brigand.hpp"
 
-#include "util/utils.hpp"
 
 namespace rtfm
 {

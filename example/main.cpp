@@ -1,7 +1,4 @@
 
-#ifdef PC_DEBUG
-#include "util/print_types.hpp"
-#endif
 
 #include "rtfm/rtfm_srp.hpp"
 #include "led.hpp"

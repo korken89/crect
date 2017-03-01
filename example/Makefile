@@ -1,4 +1,4 @@
-INCLUDE = -I../brigand -I../ -I./inc -I.
+INCLUDE = -I../deps/brigand -I../src -I./inc -I.
 DEFS = -DBRIGAND_NO_BOOST_SUPPORT -DNDEBUG
 FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -ggdb -O1
 COMMON = -fno-rtti -fno-non-call-exceptions -fno-exceptions
@@ -21,8 +21,8 @@ all:
 		@mkdir -p build
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) main.cpp -o build/main.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) init.cpp -o build/init.o
-		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../rtfm/rtfm_vector_table.cpp -o build/vector.o
-		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../rtfm/rtfm_async.cpp -o build/async.o
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../src/rtfm/rtfm_vector_table.cpp -o build/vector.o
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../src/rtfm/rtfm_async.cpp -o build/async.o
 		arm-none-eabi-g++ $(LDFLAGS) build/main.o build/async.o build/vector.o build/init.o -o build/test.elf
 		arm-none-eabi-objdump -D --source build/test.elf > build/test.dmp
 		@echo " "
