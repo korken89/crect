@@ -19,14 +19,18 @@ using J1 = rtfm::Job<
               rtfm::util::hashit("Job1"), // Unique ID
               1,                          // Priority
               rtfm::MakeISR<job1, 1>,     // ISR connection and location
-              R1, rtfm::Rasync            // Possible resouce claims
+              R1,                         // Possible resouce claims
+              rtfm::Rsystem_clock, 
+              rtfm::Rasync
             >;
 
 using J2 = rtfm::Job<
               rtfm::util::hashit("Job2"), // Unique ID
               2,                          // Priority
               rtfm::MakeISR<job2, 2>,     // ISR connection and location
-              R1, rtfm::Rasync            // Possible resouce claims
+              R1,                         // Possible resouce claims
+              rtfm::Rsystem_clock,
+              rtfm::Rasync
             >;
 
 using Jasync = rtfm::Job<
