@@ -7,8 +7,7 @@
  * User Job and Resource defines here.
  ****************************************************************************/
 
-// #include "util/fake_hw.hpp"
-#include "util/string_hash.hpp"
+#include "rtfm/rtfm_utils.hpp"
 
 void job1(void);
 void job2(void);
@@ -20,7 +19,7 @@ using J1 = rtfm::Job<
               1,                          // Priority
               rtfm::MakeISR<job1, 1>,     // ISR connection and location
               R1,                         // Possible resouce claims
-              rtfm::Rsystem_clock, 
+              rtfm::Rsystem_clock,
               rtfm::Rasync
             >;
 
