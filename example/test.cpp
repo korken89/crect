@@ -1,4 +1,3 @@
-#include "brigand/brigand.hpp"
 #include <initializer_list>
 
 template <typename T>
@@ -9,7 +8,7 @@ struct _wrapper
 struct code_printer
 {
   template <typename T>
-  void operator()(_wrapper<T>)
+  void operator()(_wrapper<T>) const
   {
     asm volatile("nop");
     *((volatile unsigned *)0x12345678) = 3;
@@ -24,8 +23,6 @@ void for_each()
     ( Fun{}( _wrapper<Ts>{} ), 0)...
   };
 }
-
-using t = brigand::list<int, int, int, int>;
 
 void test()
 {
