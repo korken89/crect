@@ -1,4 +1,4 @@
-INCLUDE = -I../deps/brigand -I../src -I./inc -I.
+INCLUDE = -I../deps/brigand -I../deps/mpl/src -I../src -I./inc -I.
 DEFS = -DBRIGAND_NO_BOOST_SUPPORT -DNDEBUG
 FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -ggdb -O1
 COMMON = -fno-rtti -fno-non-call-exceptions -fno-exceptions
@@ -23,11 +23,11 @@ all:
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) init.cpp -o build/init.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../src/rtfm/rtfm_vector_table.cpp -o build/vector.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../src/rtfm/rtfm_async.cpp -o build/async.o
-		arm-none-eabi-g++ $(LDFLAGS) build/main.o build/async.o build/vector.o build/init.o -o build/test.elf
-		arm-none-eabi-objdump -D --source build/test.elf > build/test.dmp
+		arm-none-eabi-g++ $(LDFLAGS) build/main.o build/async.o build/vector.o build/init.o -o build/example.elf
+		arm-none-eabi-objdump -D --source build/example.elf > build/example.dmp
 		@echo " "
 		@echo "Total size:"
-		@arm-none-eabi-size --format=berkeley build/test.elf
+		@arm-none-eabi-size --format=berkeley build/example.elf
 		@echo " "
 		@echo "Each object size:"
 		@arm-none-eabi-size --format=berkeley build/main.o build/async.o build/vector.o build/init.o
@@ -35,7 +35,7 @@ all:
 
 gdb:
 	@echo "Starting GDB..."
-	@arm-none-eabi-gdb build/test.elf $(GDB_FLAGS)
+	@arm-none-eabi-gdb build/example.elf $(GDB_FLAGS)
 
 
 clean:
@@ -43,4 +43,4 @@ clean:
 
 pc_test:
 		@mkdir -p build
-		clang++ $(INCLUDE) $(DEFS) -DPC_DEBUG $(FLAGS) test.cpp -o build/test
+		clang++ $(INCLUDE) $(DEFS) -DPC_DEBUG $(FLAGS) example.cpp -o build/example
