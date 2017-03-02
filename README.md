@@ -65,6 +65,8 @@ can only be held within a job and must be released before the exit of a job.
 For example `rtfm::Rasync` will always take the `rtfm::Rsystem_clock`, should be enough to only write the `rtfm::Rasync` in the resource claim.
 * Support for resource claims over job boundaries (_ex._ one start job [lock], one finished job [release]).
 * Make the async implementation switchable (not to force the use of SysTick)
+* Add claim `Resource< pointer >` for use with returning lambda
+* Non-shared resource to support lock over boundaries, only one thread can take it
 
 ---
 
