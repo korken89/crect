@@ -5,3 +5,7 @@
 [submodule "deps/brigand"]
 	path = deps/brigand
 	url = git@github.com:edouarda/brigand.git
+[submodule "deps/mpl"]
+	path = deps/mpl
+	url = https://github.com/kvasir-io/mpl.git
+	branch = development
