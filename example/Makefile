@@ -43,4 +43,4 @@ clean:
 
 pc_test:
 		@mkdir -p build
-		clang++ $(INCLUDE) $(DEFS) -DPC_DEBUG $(FLAGS) example.cpp -o build/example
+		clang++ $(INCLUDE) $(DEFS) -DPC_DEBUG -D__NVIC_PRIO_BITS=4 $(FLAGS) test.cpp -o build/test
