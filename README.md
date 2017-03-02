@@ -31,7 +31,7 @@ More description will come...
 
 ## Give it a test
 
-In `./test` a test project is setup for the NUCLEO-F411RE board, that will blink a LED every one seconds.
+In `./example` an example project is setup for the NUCLEO-F411RE board, that will blink a LED every one seconds.
 It also contains an example of `rtfm_system_config.hpp` and `rtfm_user_config.hpp`, providing examples.
 
 If there are any questions on the usage, throw me a message.
@@ -108,7 +108,7 @@ The ISR definitions available are split in the Peripheral ISRs (I >= 0), and Sys
 ```C++
 // Peripheral ISR definition (I >= 0)
 template <rtfm::details::ISRFunctionPointer P, int I>
-using MakeISR = rtfm::details::ISR<P, details::Index<I>>;
+using MakeISR = rtfm::details::ISR<P, rtfm::details::Index<I>>;
 
 // System ISR definition (I < 0)
 template <int I>
