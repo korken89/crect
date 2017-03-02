@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "brigand/brigand.hpp"
+#include "kvasir/mpl/mpl.hpp"
 
 
 namespace rtfm
@@ -10,7 +10,7 @@ namespace rtfm
 /**
  * @brief Job maximum priority.
  */
-using max_priority = brigand::integral_constant<unsigned,
+using max_priority = kvasir::mpl::integral_constant<unsigned,
                                                 (1U << __NVIC_PRIO_BITS) - 1U>;
 
 /**
@@ -24,12 +24,12 @@ using max_priority = brigand::integral_constant<unsigned,
 template <unsigned UID_, unsigned Prio_, typename ISR_, typename... Res>
 struct Job
 {
-  using UID = brigand::integral_constant<unsigned, UID_>;
-  using P = brigand::integral_constant<unsigned, Prio_>;
+  using UID = kvasir::mpl::integral_constant<unsigned, UID_>;
+  using P = kvasir::mpl::integral_constant<unsigned, Prio_>;
   using ISR = ISR_;
-  using resources = brigand::flatten< brigand::list<Res...> >;
+  using resources = kvasir::mpl::flatten< kvasir::mpl::list<Res...> >;
 
-  static_assert(Prio_ <= max_priority::value, "Priority is higher than the max");
+  static_assert(Prio_ <= max_priority(), "Priority is higher than the max");
 };
 
 
@@ -44,7 +44,7 @@ struct Resource
 {
   using ID = ID_;
   using type = ID_;
-  using jobs = brigand::flatten< brigand::list<Jobs...> >;
+  using jobs = kvasir::mpl::flatten< kvasir::mpl::list<Jobs...> >;
 };
 
 } /* END namespace rtfm */

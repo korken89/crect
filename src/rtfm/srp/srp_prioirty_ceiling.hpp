@@ -9,7 +9,7 @@
  *
  ****************************************************************************/
 
-#include "brigand/brigand.hpp"
+#include "kvasir/mpl/mpl.hpp"
 #include "rtfm/details/job_resource.hpp"
 
 namespace rtfm
@@ -35,14 +35,14 @@ template <typename JobList, typename Resource>
 struct find_resource_impl
 {
   /* Searches the resource tree for the same Resource ID. */
-  using type = brigand::find< resource_tree<JobList>,
-                              brigand::bind<
+  using type = kvasir::mpl::find< resource_tree<JobList>,
+                              kvasir::mpl::bind<
                                 details::_same_id,
                                 typename Resource::ID,
-                                brigand::_1
+                                kvasir::mpl::_1
                               > >;
 
-  static_assert(!std::is_same< type, brigand::list<> >::value,
+  static_assert(!std::is_same< type, kvasir::mpl::list<> >::value,
                 "The resource in not registered in RTFM");
 };
 
@@ -53,7 +53,7 @@ struct find_resource_impl
  * @tparam Resource   Resource to find.
  */
 template <typename JobList, typename Resource>
-using find_resource = brigand::front<
+using find_resource = kvasir::mpl::front<
                       typename find_resource_impl<JobList, Resource>::type >;
 
 template <typename... Ts>
@@ -71,7 +71,7 @@ struct job_to_priority
  * @tparam Res  Parameter pack of resources.
  */
 template <unsigned ID, unsigned PRIO, typename ISR, typename... Res>
-struct job_to_priority< Job<ID, PRIO, ISR, Res...> > : brigand::integral_constant<int, PRIO>
+struct job_to_priority< Job<ID, PRIO, ISR, Res...> > : kvasir::mpl::integral_constant<int, PRIO>
 {
 };
 
@@ -83,9 +83,9 @@ struct job_to_priority< Job<ID, PRIO, ISR, Res...> > : brigand::integral_constan
  */
 template <typename JobList, typename Resource>
 using resource_to_priority_list =
-                brigand::flatten< brigand::transform<
-                  brigand::flatten< typename find_resource<JobList, Resource>::jobs >,
-                  job_to_priority<brigand::_1>
+                kvasir::mpl::flatten< kvasir::mpl::transform<
+                  kvasir::mpl::flatten< typename find_resource<JobList, Resource>::jobs >,
+                  job_to_priority<kvasir::mpl::_1>
                 > >;
 
 } /* END namespace details */
@@ -98,10 +98,10 @@ using resource_to_priority_list =
  */
 template <typename JobList, typename Resource>
 using get_priority_ceiling =
-                brigand::fold<
+                kvasir::mpl::fold<
                   details::resource_to_priority_list<JobList, Resource>,
-                  brigand::integral_constant<unsigned, 0>,
-                  brigand::max<brigand::_state, brigand::_element>
+                  kvasir::mpl::integral_constant<unsigned, 0>,
+                  kvasir::mpl::max<kvasir::mpl::_state, kvasir::mpl::_element>
                 >;
 
 } /* END namespace rtfm */
