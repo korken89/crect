@@ -25,7 +25,7 @@ struct make_resource_tree
                   kvasir::mpl::flatten< JobList >
                 > >;
 
-  using result = typename details::make_resource_tree_impl<j2r>::f;
+  //using result = typename details::make_resource_tree_impl<j2r>::f;
 };
 
 } /* END namespace rtfm */

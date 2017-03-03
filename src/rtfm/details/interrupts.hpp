@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "brigand/brigand.hpp"
+#include "kvasir/mpl/mpl.hpp"
 #include "rtfm/rtfm_utils.hpp"
 
 namespace rtfm
@@ -17,7 +17,7 @@ using ISRFunctionPointer = void (*)(void);
  * @brief ISR index alias.
  */
 template <int I>
-using Index = brigand::integral_constant<int, I>;
+using Index = kvasir::mpl::integral_constant<int, I>;
 
 /**
  * @brief Base definition of an ISR type, should not be used.

@@ -29,7 +29,9 @@ struct Job
   using ISR = ISR_;
   using resources = kvasir::mpl::flatten< kvasir::mpl::list<Res...> >;
 
-  static_assert(Prio_ <= max_priority(), "Priority is higher than the max");
+  /* Using < for now, comes from setting basepri = 0 has no effect. */
+  static_assert(Prio_ < max_priority{},
+                "Priority is higher than the max allowed");
 };
 
 
