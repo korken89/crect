@@ -1,8 +1,9 @@
 
 #pragma once
 
-#include "brigand/brigand.hpp"
+#include "kvasir/mpl/mpl.hpp"
 #include "rtfm/details/arm_intrinsics.hpp"
+#include "rtfm/rtfm_utils.hpp"
 
 namespace rtfm
 {

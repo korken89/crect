@@ -2,21 +2,12 @@
 
 #pragma once
 
-#include "brigand/brigand.hpp"
+#include "kvasir/mpl/mpl.hpp"
 
 namespace rtfm
 {
 namespace util
 {
-
-/**
- * @brief  A convenience function for generating a false result.
- */
-template <typename... T>
-struct always_false : brigand::integral_constant<bool, false>
-{
-};
-
 
 /**
  * @brief   Takes a user priority (0 = lowest, increasing numbers means higher

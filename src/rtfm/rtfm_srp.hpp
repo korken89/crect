@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "brigand/brigand.hpp"
+#include "kvasir/mpl/mpl.hpp"
 
 /* RTFM system/MCU configuration. */
 #include "rtfm_system_config.hpp"

@@ -1,4 +1,5 @@
 
+#include "kvasir/mpl/mpl.hpp"
 #include "rtfm/rtfm_srp.hpp"
 
 /**
@@ -21,6 +22,19 @@ void DebugMon_Handler(void) __attribute__((weak, alias("_unhandled_exception")))
 void PendSV_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
 void SysTick_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
 }
+
+/**
+ * @brief Compare two Job IDs.
+ *
+ * @tparam A   Integral constant.
+ * @tparam B   Job to check.
+ */
+template <typename A>
+struct _same_isr_value {
+  template <typename B>
+  using f = kvasir::mpl::bool_<A{} ==  typename B::ISR::index{}>;
+};
+
 /**
  * @brief Used to find an ISR from a ISR position.
  *
@@ -29,15 +43,10 @@ void SysTick_Handler(void) __attribute__((weak, alias("_unhandled_exception")));
 template <typename ISR_POS>
 struct find_job_isr
 {
-  template  <typename UID, typename Rhs>
-  using compare_isrpos_to_constant =
-    brigand::bool_< (UID::value == Rhs::ISR::index::value) >;
-
   /* Searches the resource tree for the Job with the correct ISR. */
-  using type =
-      brigand::find<rtfm::system_job_list,
-                    brigand::bind<compare_isrpos_to_constant,
-                                  ISR_POS, brigand::_1>>;
+  using f =
+      kvasir::mpl::find_if<_same_isr_value<ISR_POS>::template f,
+                           rtfm::system_job_list>;
 };
 
 /**
@@ -49,14 +58,14 @@ template <typename JobList>
 struct isr_selector
 {
   /* TODO: Check so the ISR is unique... */
-  using isr = typename brigand::front<JobList>::ISR;
+  using isr = typename kvasir::mpl::pop_front<JobList>::front::ISR;
 };
 
 /**
  * @brief Creates the Unused ISR when there is no Job matching.
  */
 template <>
-struct isr_selector<brigand::list<>>
+struct isr_selector<kvasir::mpl::list<>>
 {
   using isr = rtfm::MakeISR<_unhandled_exception, 0>;
 };
@@ -68,10 +77,10 @@ struct isr_selector<brigand::list<>>
  */
 template <unsigned I>
 struct get_vector_from_position
-    : isr_selector<
-        typename find_job_isr<brigand::integral_constant<unsigned, I>>::type
-      >::isr
 {
+  using f = typename isr_selector<
+        typename find_job_isr<kvasir::mpl::integral_constant<unsigned, I>>::f
+      >::isr;
 };
 
 /**

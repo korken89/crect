@@ -11,7 +11,7 @@ namespace rtfm
 {
 
 /**
- * @brief Interface to make_resource_tree_impl.
+ * @brief Interface to generate the resource tree.
  *
  * @tparam JobList   List of Jobs.
  */
@@ -25,7 +25,8 @@ struct make_resource_tree
                   kvasir::mpl::flatten< JobList >
                 > >;
 
-  //using result = typename details::make_resource_tree_impl<j2r>::f;
+
+  using result = typename details::make_resource_tree_impl<j2r>::f;
 };
 
 } /* END namespace rtfm */
