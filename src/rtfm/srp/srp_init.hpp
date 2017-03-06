@@ -3,8 +3,10 @@
 
 #include <initializer_list>
 #include <type_traits>
+#include <cstdint>
 
 #include "kvasir/mpl/mpl.hpp"
+#include "rtfm/rtfm_utils.hpp"
 
 namespace rtfm
 {
@@ -13,9 +15,18 @@ namespace srp
 namespace details
 {
 
+/**
+ * @brief Type wrapper for the for-each implementation.
+ */
 template <typename T>
 struct _wrapper {};
 
+/**
+ * @brief For-each implementation, executes over every type in a list.
+ *
+ * @tparam Fun  Functor for which each type will be executed in.
+ * @tparam Ts   Pack of types in the list.
+ */
 template <typename Fun, typename... Ts>
 constexpr void for_each_impl(kvasir::mpl::list<Ts...>)
 {
@@ -26,6 +37,12 @@ constexpr void for_each_impl(kvasir::mpl::list<Ts...>)
 
 }
 
+/**
+ * @brief For-each interface, executes over every type in a list.
+ *
+ * @tparam Fun    Functor for which each type will be executed in.
+ * @tparam List   List of types.
+ */
 template <typename Fun, typename List>
 constexpr void for_each(void)
 {
