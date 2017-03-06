@@ -27,7 +27,7 @@ using Index = kvasir::mpl::integral_constant<int, I>;
 template <ISRFunctionPointer P, typename I>
 struct ISR
 {
-  // static_assert(kvasir::mpl::always_false< I >{}, "Index type error");
+  static_assert(kvasir::mpl::always_false< I >{}, "Index type error");
 };
 
 /**

@@ -91,7 +91,7 @@ using resource_to_priority_list =
 
 template <typename A, typename B>
 struct max
-  : kvasir::mpl::integral_constant<typename A::value_type,
+  : kvasir::mpl::integral_constant<unsigned,
                                    ((A{} < B{}) ? B{} : A{})>
 {};
 

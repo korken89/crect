@@ -8,35 +8,6 @@
 #include "rtfm/details/job_resource_details.hpp"
 #include "rtfm/details/job_resource_methods.hpp"
 
-// template <typename T>
-// struct _wrapper
-// {
-// };
-//
-// struct code_printer
-// {
-//   template <typename T>
-//   void operator()(_wrapper<T>) const
-//   {
-//     asm volatile("nop");
-//     *((volatile unsigned *)0x12345678) = 3;
-//   }
-// };
-//
-//
-// template <typename Fun, typename... Ts>
-// void for_each()
-// {
-//   std::initializer_list<int> {
-//     ( Fun{}( _wrapper<Ts>{} ), 0)...
-//   };
-// }
-//
-// void test()
-// {
-//   for_each<code_printer, int, int, int, int>();
-// }
-
 struct sR1;
 struct sR2;
 struct sR3;
@@ -102,11 +73,13 @@ int main()
   using namespace std;
 
 
-
+  using index = kvasir::mpl::integral_constant<int, 10>;
 
   using rtree = rtfm::make_resource_tree< rtfm::system_job_list >;
   //cout << endl << "rtree::j2r: " << type_name<rtree>() << endl << endl;
   //print_list<rtree::j2r>("rtree::j2r");
-  print_list<rtree::result>("rtree::result");
+  //print_list<rtree::result>("rtree::result");
+
+  cout << "integral_constant: " << index{} << endl << endl;
 
 }
