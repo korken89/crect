@@ -86,14 +86,9 @@ template <typename JobList, typename Resource>
 using resource_to_priority_list =
                 kvasir::mpl::flatten< kvasir::mpl::transform<
                   job_to_priority,
-                  kvasir::mpl::flatten< typename find_resource<JobList, Resource>::jobs >
+                  kvasir::mpl::flatten< typename find_resource<JobList,
+                                                               Resource>::jobs >
                 > >;
-
-template <typename A, typename B>
-struct max
-  : kvasir::mpl::integral_constant<unsigned,
-                                   ((A{} < B{}) ? B{} : A{})>
-{};
 
 } /* END namespace details */
 
@@ -106,7 +101,7 @@ struct max
 template <typename JobList, typename Resource>
 using get_priority_ceiling =
                 kvasir::mpl::fold_right<
-                  details::max,
+                  kvasir::mpl::max,
                   kvasir::mpl::integral_constant<unsigned, 0>,
                   details::resource_to_priority_list<JobList, Resource>
                 >;
