@@ -18,6 +18,9 @@ run-time are minimal with:
 * 2-3 instructions / queue element for initializing the `async` queue.
 * The static requirement for `async` is about 400 bytes (the linked list and SysTick implementation).
 
+**Compile time:**
+* Uses the Kvasir MPL library for Metaprogramming.
+
 **Runtime:**
 
 * 3-4 instructions + 4 bytes of stack for a `lock`.
