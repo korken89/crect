@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "brigand/brigand.hpp"
+#include "kvasir/mpl/mpl.hpp"
 #include "rtfm/details/job_resource.hpp"
 
 namespace rtfm
@@ -9,10 +9,14 @@ namespace rtfm
 namespace details
 {
 
+/**
+ * @brief Takes a Job< Resource... > and returns Resource<Job>..., base case
+ *        that always will fail.
+ */
 template <typename... Ts>
 struct job_to_resource_impl
 {
-  static_assert(util::always_false<Ts...>::value, "Should not come here");
+  static_assert(kvasir::mpl::always_false<Ts...>{}, "Should not come here");
 };
 
 /**
@@ -26,62 +30,55 @@ struct job_to_resource_impl
 template <unsigned I1, unsigned I2, typename ISR, typename... Res>
 struct job_to_resource_impl< Job<I1, I2, ISR, Res...> >
 {
-  using type = brigand::list< Resource<typename Res::ID, Job<I1, I2, ISR> >... >;
+  using f = kvasir::mpl::list< Resource<typename Res::ID, Job<I1, I2, ISR> >... >;
 };
 
 
 /**
- * @brief Alias to compare two Job IDs.
+ * @brief Compare two Job IDs.
  *
- * @tparam Lhs   Left hand side.
- * @tparam Rhs   Right hand side.
+ * @tparam A   Left hand side.
+ * @tparam B   Right hand side.
  */
-template <typename Lhs, typename Rhs>
-using _compare_job_ids = brigand::bool_< (std::is_same<typename Lhs::UID, typename Rhs::UID>::value) >;
+template <typename A>
+struct _same_job_id {
+  template <typename B>
+  using f = std::is_same<typename A::UID, typename B::UID>;
+};
 
 /**
- * @brief Alias to compare two Job IDs.
+ * @brief Checks if Resource ID is same.
  *
- * @tparam Lhs   Left hand side.
- * @tparam Rhs   Right hand side.
+ * @tparam A   Left hand side.
+ * @tparam B   Right hand side.
  */
-template  <typename UID, typename Rhs>
-using _compare_job_ids_to_constant = brigand::bool_< (UID::value == Rhs::UID::value) >;
+template <typename A>
+struct _same_resource_id {
+  template <typename B>
+  using f = std::is_same<typename A::ID, typename B::ID>;
+};
+
+/**
+ * @brief Checks if Resource ID is different.
+ *
+ * @tparam A   Left hand side.
+ * @tparam B   Right hand side.
+ */
+template <typename A>
+struct _different_resource_id {
+  template <typename B>
+  using f = kvasir::mpl::invert< std::is_same<typename A::ID, typename B::ID> >;
+};
 
 
+/**
+ * @brief Merges resources of same ID, base case - should not come here.
+ */
 template <typename... Ts>
-struct _merge_resources_impl
+struct merge_resources_impl
 {
-  static_assert(util::always_false<Ts...>::value,
+  static_assert(kvasir::mpl::always_false<Ts...>{},
                 "Merging different resources are not allowed");
-};
-
-
-/**
- * @brief Merges resources of same ID.
- *
- * @tparam ID    Type of the ID.
- * @tparam Jobs1   Left hand side pack of jobs.
- * @tparam Jobs2   Right hand side pack of jobs.
- * @tparam Job     Right hand side first job.
- */
-template <typename ID, typename... Jobs1, typename... Jobs2, typename Job>
-struct _merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job, Jobs2...> >
-{
-  using count = brigand::count_if<
-        brigand::list<Jobs1...>,
-        brigand::bind< _compare_job_ids, Job, brigand::_1 >
-    >;
-
-  static_assert(count::value < 1,
-      "Duplicate jobs defined, each job must have a unique ID");
-
-  using result = std::conditional<
-    (count::value < 1), // Only merge Jobs if it is not already in the resource claim
-    typename _merge_resources_impl< Resource<ID, Jobs1..., Job>,
-                                    Resource<ID, Jobs2...> >::result::type,
-    typename _merge_resources_impl< Resource<ID, Jobs1...>,
-                                    Resource<ID, Jobs2...> >::result::type >;
 };
 
 /**
@@ -92,158 +89,25 @@ struct _merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job, Jobs2...
  * @tparam Job     Right hand side last job.
  */
 template <typename ID, typename... Jobs1, typename Job>
-struct _merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job> >
+struct merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job> >
 {
-  using count = brigand::count_if<
-        brigand::list<Jobs1...>,
-        brigand::bind< _compare_job_ids, Job, brigand::_1 >
-    >;
-
-  static_assert(count::value < 1,
+  static_assert( kvasir::mpl::any< _same_job_id<Job>::template f,
+                                   kvasir::mpl::list<Jobs1...> >{},
       "Duplicate jobs defined, each job must have a unique ID");
 
-  using result = std::conditional<
-    (count::value < 1), // Only merge a Job if it is not already in the resource claim
-    Resource<ID, Jobs1..., Job>,
-    Resource<ID, Jobs1...> >;
-};
-
-/**
- * @brief Implementation for recursive merges of resources.
- *
- * @tparam R1   Current resource.
- * @tparam R2   Next resource to be merged.
- * @tparam Rs   Pack of resources to be merged.
- */
-template <typename R1, typename R2, typename... Rs>
-struct _rec_merge_impl
-{
-  using _res = typename _merge_resources_impl<R1, R2>::result::type;
-  using type = typename _rec_merge_impl<_res, Rs...>::type;
-};
-
-/**
- * @brief Implementation for recursive merges of resources (end case).
- *
- * @tparam R1   Current resource.
- * @tparam R2   Last resource to be merged.
- */
-template <typename R1, typename R2>
-struct _rec_merge_impl<R1, R2>
-{
-  using type = typename _merge_resources_impl<R1, R2>::result::type;
-};
-
-
-
-
-
-/**
- * @brief Merge of resource list interface.
- *
- * @tparam Rs   Pack of resources to be merged.
- */
-template <typename... Rs>
-struct merge_resource_list
-{
-  using type = typename _rec_merge_impl< Rs... >::type;
-};
-
-/**
- * @brief Merge of resource list interface, brigand::list as input.
- *
- * @tparam Rs   Pack of resources to be merged.
- */
-template <typename... Rs>
-struct merge_resource_list< brigand::list<Rs...> >
-{
-  using type = typename _rec_merge_impl< Rs... >::type;
-};
-
-/**
- * @brief Merge of resource list interface, single resource.
- *
- * @tparam R    Pack of resources to be merged.
- */
-template <typename R>
-struct merge_resource_list< brigand::list<R> >
-{
-  using type = R;
+  using f = Resource<ID, Jobs1..., Job>;
 };
 
 
 /**
- * @brief Checks if the left-hand side is the same as the Resource ID.
+ * @brief Work alias that merges resources of same ID.
  *
- * @tparam Lhs   Left hand side.
- * @tparam Rhs   Right hand side.
+ * @tparam Ts    Parameters to be forwarded to merge_resources_impl.
  */
-//template <typename Lhs, typename Rhs>
-//using _same_job_uid = brigand::bool_< (std::is_same<Lhs, typename Rhs::ID>::value) >;
-
-/**
- * @brief Checks if the left-hand side is the same as the Resource ID.
- *
- * @tparam Lhs   Left hand side.
- * @tparam Rhs   Right hand side.
- */
-template <typename Lhs, typename Rhs>
-using _same_id = brigand::bool_< (std::is_same<Lhs, typename Rhs::ID>::value) >;
-
-/**
- * @brief Checks if the Resource ID is same.
- *
- * @tparam Lhs   Left hand side.
- * @tparam Rhs   Right hand side.
- */
-template <typename Lhs, typename Rhs>
-using _same_id_two_resources = _same_id<typename Lhs::ID, Rhs>;
-
-/**
- * @brief Checks if the left-hand side is different from the Resource ID.
- *
- * @tparam Lhs   Left hand side.
- * @tparam Rhs   Right hand side.
- */
-template <typename Lhs, typename Rhs>
-using _different_id = brigand::bool_< !(std::is_same<Lhs, typename Rhs::ID>::value) >;
-
-/**
- * @brief Extracts all the resources of the same ID as the specified resource.
- *
- * @tparam List  List of resources.
- * @tparam Res   Resource to compare with.
- */
-template <typename List, typename Res>
-using keep_resource_if_same_id =  brigand::remove_if< List,
-                                                      brigand::bind<
-                                                        _different_id,
-                                                        Res,
-                                                        brigand::_1
-                                                      > >;
-
-/**
- * @brief Extracts all the resources of different ID to the specified resource.
- *
- * @tparam List  List of resources.
- * @tparam Res   Resource to compare with.
- */
-template <typename List, typename Res>
-using remove_resource_if_same_id =  brigand::remove_if< List,
-                                                        brigand::bind<
-                                                          _same_id,
-                                                          Res,
-                                                          brigand::_1
-                                                      > >;
+template <typename... Ts>
+using merge_resources = typename merge_resources_impl<Ts...>::f;
 
 
-
-
-template <typename... Rs>
-struct make_resource_tree_impl
-{
-  static_assert(util::always_false<Rs...>::value, "Implausible parameters");
-};
 
 /**
  * @brief Creates a list of resources where each job associated do a resource
@@ -252,21 +116,49 @@ struct make_resource_tree_impl
  * @tparam ResList   List of resources.
  */
 template <typename ResList>
-struct make_resource_tree_impl<ResList>
+struct make_resource_tree_impl
 {
-  using _kr = keep_resource_if_same_id< ResList, brigand::front<ResList> >;
-  using _rr = remove_resource_if_same_id< ResList, brigand::front<ResList> >;
-  using type = brigand::flatten< brigand::list<
-                 typename merge_resource_list< _kr >::type,
-                 typename make_resource_tree_impl< _rr >::type
-               > >;
+
+  using _current =  kvasir::mpl::pop_front< kvasir::mpl::remove_if<
+                      _same_resource_id<
+                        typename kvasir::mpl::pop_front<ResList>::front
+                      >::template f,
+                      ResList
+                    > >;
+
+  using _next =     kvasir::mpl::remove_if<
+                      _different_resource_id<
+                        typename kvasir::mpl::pop_front<ResList>::front
+                      >::template f,
+                      ResList
+                    >;
+
+  using f = kvasir::mpl::flatten< kvasir::mpl::list< kvasir::mpl::fold_right<
+                    merge_resources,
+                    typename _current::front,
+                    typename _current::rest
+                  >,
+                  typename make_resource_tree_impl< _next >::f
+            > >;
 };
 
+/**
+ * @brief Creates a list of resources where each job associated do a resource
+ *        is bundled with it.
+ *
+ * @note  End of recursion.
+ */
 template <>
-struct make_resource_tree_impl< brigand::list<> >
+struct make_resource_tree_impl< kvasir::mpl::list<> >
 {
-  using type = brigand::list<>;
+  using f = kvasir::mpl::list<>;
 };
+
 
 } /* END namespace details */
+
+template <typename T>
+using job_to_resource = typename details::job_to_resource_impl<T>::f;
+
+
 } /* END namespace rtfm */

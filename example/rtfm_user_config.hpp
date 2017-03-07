@@ -18,7 +18,7 @@ using J1 = rtfm::Job<
               rtfm::util::hashit("Job1"), // Unique ID
               1,                          // Priority
               rtfm::MakeISR<job1, 1>,     // ISR connection and location
-              R1,                         // Possible resouce claims
+              R1,                         // Possible resource claims
               rtfm::Rsystem_clock,
               rtfm::Rasync
             >;
@@ -27,7 +27,7 @@ using J2 = rtfm::Job<
               rtfm::util::hashit("Job2"), // Unique ID
               2,                          // Priority
               rtfm::MakeISR<job2, 2>,     // ISR connection and location
-              R1,                         // Possible resouce claims
+              R1,                         // Possible resource claims
               rtfm::Rsystem_clock,
               rtfm::Rasync
             >;
@@ -36,7 +36,7 @@ using Jasync = rtfm::Job<
               rtfm::util::hashit("JobAsync"),     // Unique ID
               0,                                  // Priority
               rtfm::MakeSystemISR<SysTick_IRQn>,  // ISR connection and location
-              rtfm::Rasync, rtfm::Rsystem_clock   // Possible resouce claims
+              rtfm::Rasync, rtfm::Rsystem_clock   // Possible resource claims
             >;
 
 /****************************************************************************
@@ -51,7 +51,7 @@ namespace rtfm
  * Add user defined jobs to the list.
  ****************************************************************************/
 
-using system_job_list = brigand::list<Jasync, J1, J2>;
+using system_job_list = kvasir::mpl::list<Jasync, J1, J2>;
 
 /****************************************************************************
  * Add user defined jobs to the list.

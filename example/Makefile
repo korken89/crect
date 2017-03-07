@@ -1,5 +1,5 @@
-INCLUDE = -I../deps/brigand -I../deps/mpl/src -I../src -I./inc -I.
-DEFS = -DBRIGAND_NO_BOOST_SUPPORT -DNDEBUG
+INCLUDE = -I../deps/mpl/src -I../src -I./inc -I.
+DEFS = -DNDEBUG
 FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -ggdb -O1
 COMMON = -fno-rtti -fno-non-call-exceptions -fno-exceptions
 #COMMON += -finline-small-functions -findirect-inlining # Use when -Os
@@ -43,4 +43,4 @@ clean:
 
 pc_test:
 		@mkdir -p build
-		clang++ $(INCLUDE) $(DEFS) -DPC_DEBUG $(FLAGS) example.cpp -o build/example
+		clang++ $(INCLUDE) -I../../mpl_debug/brigand $(DEFS) -DPC_DEBUG -DBRIGAND_NO_BOOST_SUPPORT -D__NVIC_PRIO_BITS=4 $(FLAGS) test.cpp -o build/test

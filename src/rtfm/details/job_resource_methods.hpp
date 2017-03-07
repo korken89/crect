@@ -2,7 +2,7 @@
 #pragma once
 
 
-#include "brigand/brigand.hpp"
+#include "kvasir/mpl/mpl.hpp"
 #include "rtfm/details/interrupts.hpp"
 #include "rtfm/details/job_resource.hpp"
 #include "rtfm/details/job_resource_details.hpp"
@@ -11,21 +11,22 @@ namespace rtfm
 {
 
 /**
- * @brief Interface to make_resource_tree_impl.
+ * @brief Interface to generate the resource tree.
  *
- * @tparam Jobs   Pack of Jobs.
+ * @tparam JobList   List of Jobs.
  */
-template <typename... Jobs>
+template <typename JobList>
 struct make_resource_tree
 {
   /* Take all the job<resources> and transform to resource<jobs> */
-  using j2r = brigand::flatten<
-                brigand::transform<
-                  brigand::flatten< brigand::list< Jobs... > >,
-                  details::job_to_resource_impl<brigand::_1>
+  using j2r = kvasir::mpl::flatten<
+                kvasir::mpl::transform<
+                  job_to_resource,
+                  kvasir::mpl::flatten< JobList >
                 > >;
 
-  using result = typename details::make_resource_tree_impl<j2r>::type;
+
+  using result = typename details::make_resource_tree_impl<j2r>::f;
 };
 
 } /* END namespace rtfm */

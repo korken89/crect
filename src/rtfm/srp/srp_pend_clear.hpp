@@ -17,7 +17,7 @@ constexpr void pend()
 {
 #ifndef PC_DEBUG
   using ISRn = typename Job::ISR::index;
-  NVIC->ISPR[ISRn::value >> 5UL] = (1UL << (ISRn::value & 0x1FUL));
+  NVIC->ISPR[ISRn{} >> 5UL] = (1UL << (ISRn{} & 0x1FUL));
 #endif
 }
 
@@ -43,7 +43,7 @@ constexpr void clear()
 {
 #ifndef PC_DEBUG
   using ISRn = typename Job::ISR::index;
-  NVIC->ICPR[ISRn::value >> 5UL] = (1UL << (ISRn::value & 0x1FUL));
+  NVIC->ICPR[ISRn{} >> 5UL] = (1UL << (ISRn{} & 0x1FUL));
 #endif
 }
 

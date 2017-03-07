@@ -1,8 +1,9 @@
 
 #pragma once
 
-#include "brigand/brigand.hpp"
+#include "kvasir/mpl/mpl.hpp"
 #include "rtfm/details/arm_intrinsics.hpp"
+#include "rtfm/rtfm_utils.hpp"
 
 namespace rtfm
 {
@@ -39,7 +40,7 @@ public:
   {
     /* Lock the resource. */
     arm_intrinsics::set_BASEPRI_MAX<
-      util::priority_to_NVIC_priority( ResourcePriority::value )
+      util::priority_to_NVIC_priority( ResourcePriority{} )
     >();
 
     /* Barriers to guarantee the instruction took hold before continuing. */

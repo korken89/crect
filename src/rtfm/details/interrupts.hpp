@@ -1,8 +1,7 @@
 
 #pragma once
 
-#include "brigand/brigand.hpp"
-#include "rtfm/rtfm_utils.hpp"
+#include "kvasir/mpl/mpl.hpp"
 
 namespace rtfm
 {
@@ -17,7 +16,7 @@ using ISRFunctionPointer = void (*)(void);
  * @brief ISR index alias.
  */
 template <int I>
-using Index = brigand::integral_constant<int, I>;
+using Index = kvasir::mpl::integral_constant<int, I>;
 
 /**
  * @brief Base definition of an ISR type, should not be used.
@@ -28,7 +27,7 @@ using Index = brigand::integral_constant<int, I>;
 template <ISRFunctionPointer P, typename I>
 struct ISR
 {
-  static_assert(util::always_false< I >::value, "Index type error");
+  static_assert(kvasir::mpl::always_false< I >{}, "Index type error");
 };
 
 /**

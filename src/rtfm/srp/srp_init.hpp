@@ -1,11 +1,53 @@
 
 #pragma once
 
+#include <initializer_list>
+#include <type_traits>
+#include <cstdint>
+
+#include "kvasir/mpl/mpl.hpp"
+#include "rtfm/rtfm_utils.hpp"
 
 namespace rtfm
 {
 namespace srp
 {
+namespace details
+{
+
+/**
+ * @brief Type wrapper for the for-each implementation.
+ */
+template <typename T>
+struct _wrapper {};
+
+/**
+ * @brief For-each implementation, executes over every type in a list.
+ *
+ * @tparam Fun  Functor for which each type will be executed in.
+ * @tparam Ts   Pack of types in the list.
+ */
+template <typename Fun, typename... Ts>
+constexpr void for_each_impl(kvasir::mpl::list<Ts...>)
+{
+  std::initializer_list<int> {
+    ( Fun{}( details::_wrapper<Ts>{} ), 0)...
+  };
+}
+
+}
+
+/**
+ * @brief For-each interface, executes over every type in a list.
+ *
+ * @tparam Fun    Functor for which each type will be executed in.
+ * @tparam List   List of types.
+ */
+template <typename Fun, typename List>
+constexpr void for_each(void)
+{
+  details::for_each_impl<Fun>(List{});
+}
 
 /**
  * @brief Code generator for the NVIC initialization code.
@@ -13,29 +55,27 @@ namespace srp
 struct job_to_nvic_printer
 {
   template <typename Job>
-  void operator()(brigand::type_<Job>) const
+  void operator()(details::_wrapper<Job>) const
   {
-#ifndef PC_DEBUG
     using ISRn = typename Job::ISR::index;
     using Prio = typename Job::P;
 
 
-    if (ISRn::value < 0)
+    if (ISRn{} < 0)
     {
-      constexpr auto index = (static_cast<uint32_t>(ISRn::value) & 0xFUL) - 4UL;
+      constexpr auto index = (static_cast<uint32_t>(ISRn{}) & 0xFUL) - 4UL;
 
       /* Enable system interrupt. */
-      SCB->SHP[index] = util::priority_to_NVIC_priority(Prio::value);
+      SCB->SHP[index] = util::priority_to_NVIC_priority(Prio{});
     }
     else
     {
       /* Enable interrupt. */
-      NVIC->ISER[ISRn::value >> 5UL] = (1UL << (ISRn::value & 0x1FUL));
+      NVIC->ISER[ISRn{} >> 5UL] = (1UL << (ISRn{} & 0x1FUL));
 
       /* Set priority */
-      NVIC->IP[ISRn::value] = util::priority_to_NVIC_priority(Prio::value);
+      NVIC->IP[ISRn{}] = util::priority_to_NVIC_priority(Prio{});
     }
-#endif
   }
 };
 
@@ -51,7 +91,7 @@ constexpr void initialize_jobs_impl()
   DWT->CTRL |= (1 << DWT_CTRL_CYCCNTENA_Pos);
 
   /* Fill the ISR settings. */
-  brigand::for_each<JobList>(job_to_nvic_printer{});
+  for_each<job_to_nvic_printer, JobList>();
 }
 
 
