@@ -67,9 +67,10 @@ can only be held within a job and must be released before the exit of a job.
 * Inheritance for resources so one can create an aggregate resource (`Ragg = {R1, R2, R3}`).
 For example `rtfm::Rasync` will always take the `rtfm::Rsystem_clock`, should be enough to only write the `rtfm::Rasync` in the resource claim.
 * Make the async implementation switchable (not to force the use of SysTick)
-* Add claim `Resource< pointer >` for use with returning lambda
+* Add claim `Resource< pointer_or_someting >` for use with monitor pattern
 * Support for resource claims over job boundaries (_ex._ one start job [lock], one finished job [release]).
   * Non-shared resource to support lock over boundaries, only one thread can have it in its resource claim
+* Add a debug mode for `lock` / `claim`, use `IPSR` to check that the ISR number is allowed to take the resource.
 
 ---
 
