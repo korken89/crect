@@ -1,6 +1,7 @@
 
 
 #include <iostream>
+#include <functional>
 #include "../../mpl_debug/print_types.hpp"
 #include "kvasir/mpl/mpl.hpp"
 
@@ -44,10 +45,13 @@ constexpr auto claim(Fun f)
 {
   using obj = typename Resource::object;
 
+  //rtfm::lock<Resource> lock;
+
   return claim_impl<obj{} == nullptr, Fun, obj>{}(f);
 }
 
-int i = 23;
+
+int i = 0;
 
 int main()
 {
@@ -55,14 +59,14 @@ int main()
 
   using tr = MakeLinkedResource<int, decltype(i), &i>;
 
-  auto ret = claim<tr>([](auto &i) {
-    i++;
-    cout << "Hello from lambda... i = " << i << endl << endl;
+  cout << "i is now 1: " << i << endl << endl;
+  auto ret = claim<tr>([](int &j) {
+    j++;
+    cout << "Hello from lambda... j = " << j << endl << endl;
 
-    return i + 1;
+    return j + 100;
   });
 
-  cout << "ret type: " << type_name<decltype(ret)>() << endl << endl;
   cout << "claim return: " << ret << endl << endl;
-  cout << "i is now 3: " << i << endl << endl;
+  cout << "i is now 2: " << i << endl << endl;
 }
