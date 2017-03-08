@@ -85,6 +85,21 @@ static inline void set_BASEPRI_MAX(void)
 }
 
 /**
+ * @brief     Get IPSR
+ * @details   Returns the current value of the IPSR register.
+ *
+ * @return    IPSR register value
+ */
+__attribute__((always_inline))
+static inline uint32_t get_IPSR(void)
+{
+  uint32_t result;
+
+  asm volatile ("MRS %0, ipsr" : "=r" (result) );
+  return(result);
+}
+
+/**
  * @brief  Start of a instruction and data barrier, used to guarantee the
  *         memory order for critical operations.
  */
