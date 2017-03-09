@@ -3,13 +3,22 @@
 #include "../../mpl_debug/print_types.hpp"
 #include "kvasir/mpl/mpl.hpp"
 
+template <typename... T>
+struct GetIntegralType {};
+
+template <typename T, T val>
+struct GetIntegralType<kvasir::mpl::integral_constant<T, val>>
+{
+  using f = T;
+};
+
 template <typename ID_, typename Object, bool Unique, typename... Jobs>
 struct Resource
 {
   static_assert(kvasir::mpl::is_integral<Object>{},
                 "Object must be an integral constant.");
 
-  static_assert(!std::is_pointer<decltype(Object{})>::value,
+  static_assert(std::is_pointer<typename GetIntegralType<Object>::f>::value,
                 "The type of the object must be a pointer.");
 
   using ID = ID_;
@@ -29,6 +38,9 @@ using MakeResource = Resource<ID, Object, false, Jobs...>;
 
 template <typename ID, typename Object, typename... Jobs>
 using MakeUniqueResource = Resource<ID, Object, true, Jobs...>;
+
+template <typename... Resources>
+using MakeResourceAlias = kvasir::mpl::list<Resources...>;
 
 template <bool IsNullPtr, typename Fun, typename Object>
 struct claim_impl
@@ -65,9 +77,8 @@ int main()
   using namespace std;
 
   using tr =
-      MakeResource<int, kvasir::mpl::integral_constant<decltype( &i ), &i> >;
+      MakeResource<int, kvasir::mpl::integral_constant<decltype(&i), &i>>;
 
-  cout << "tr: " << type_name<tr>() << endl << endl;
   cout << "i is now 1: " << i << endl << endl;
 
   auto ret = claim<tr>([](int &j) {
