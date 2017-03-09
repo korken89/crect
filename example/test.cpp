@@ -1,55 +1,62 @@
-
-
-#include <iostream>
 #include <functional>
+#include <iostream>
 #include "../../mpl_debug/print_types.hpp"
 #include "kvasir/mpl/mpl.hpp"
 
-template <typename ID_, typename T, T *Object,
-          bool Unique, typename... Jobs>
+template <typename ID_, typename Object, bool Unique, typename... Jobs>
 struct Resource
 {
+  static_assert(kvasir::mpl::is_integral<Object>{},
+                "Object must be an integral constant.");
+
+  static_assert(!std::is_pointer<decltype(Object{})>::value,
+                "The type of the object must be a pointer.");
+
   using ID = ID_;
   using type = ID_;
-  using object = kvasir::mpl::integral_constant<T *, Object>;
+  using object = Object;
   using is_unique = kvasir::mpl::bool_<Unique>;
   using jobs = kvasir::mpl::flatten<kvasir::mpl::list<Jobs...>>;
 };
 
 template <typename ID, typename... Jobs>
-using MakeResource = Resource<ID, void, nullptr, false, Jobs...>;
+using MakeVirtualResource =
+    Resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+             false, Jobs...>;
 
-template <typename ID, typename T, T *Object, typename... Jobs>
-using MakeLinkedResource = Resource<ID, T, Object, false, Jobs...>;
+template <typename ID, typename Object, typename... Jobs>
+using MakeResource = Resource<ID, Object, false, Jobs...>;
+
+template <typename ID, typename Object, typename... Jobs>
+using MakeUniqueResource = Resource<ID, Object, true, Jobs...>;
 
 template <bool IsNullPtr, typename Fun, typename Object>
 struct claim_impl
 {
-  auto operator()(Fun f) const
+  auto operator()(Fun &&f) const noexcept
   {
-    return f( *Object{} );
+    return f(std::ref(*Object{}));
   }
 };
 
 template <typename Fun, typename Object>
 struct claim_impl<true, Fun, Object>
 {
-  auto operator()(Fun f) const
+  auto operator()(Fun &&f) const noexcept
   {
-    return f( );
+    return f();
   }
 };
 
 template <typename Resource, typename Fun>
-constexpr auto claim(Fun f)
+constexpr auto claim(Fun &&f)
 {
   using obj = typename Resource::object;
 
-  //rtfm::lock<Resource> lock;
+  // rtfm::lock<Resource> lock;
 
-  return claim_impl<obj{} == nullptr, Fun, obj>{}(f);
+  return claim_impl<obj{} == nullptr, Fun, obj>{}(std::forward<Fun>(f));
 }
-
 
 int i = 0;
 
@@ -57,9 +64,12 @@ int main()
 {
   using namespace std;
 
-  using tr = MakeLinkedResource<int, decltype(i), &i>;
+  using tr =
+      MakeResource<int, kvasir::mpl::integral_constant<decltype( &i ), &i> >;
 
+  cout << "tr: " << type_name<tr>() << endl << endl;
   cout << "i is now 1: " << i << endl << endl;
+
   auto ret = claim<tr>([](int &j) {
     j++;
     cout << "Hello from lambda... j = " << j << endl << endl;
