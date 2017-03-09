@@ -28,16 +28,22 @@ struct Resource
   using jobs = kvasir::mpl::flatten<kvasir::mpl::list<Jobs...>>;
 };
 
-template <typename ID, typename... Jobs>
-using MakeVirtualResource =
-    Resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
-             false, Jobs...>;
 
 template <typename ID, typename Object, typename... Jobs>
 using MakeResource = Resource<ID, Object, false, Jobs...>;
 
 template <typename ID, typename Object, typename... Jobs>
 using MakeUniqueResource = Resource<ID, Object, true, Jobs...>;
+
+template <typename ID, typename... Jobs>
+using MakeVirtualResource =
+    Resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+             false, Jobs...>;
+
+template <typename ID, typename... Jobs>
+using MakeUniqueVirtualResource =
+    Resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+             true, Jobs...>;
 
 template <typename... Resources>
 using MakeResourceAlias = kvasir::mpl::list<Resources...>;
