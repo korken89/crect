@@ -29,4 +29,20 @@ struct make_resource_tree
   using result = typename details::make_resource_tree_impl<j2r>::f;
 };
 
+template <typename ID, typename OT, OT *Object>
+using MakeResource = Resource<ID, OT, Object, false>;
+
+template <typename ID, typename OT, OT *Object>
+using MakeUniqueResource = Resource<ID, OT, Object, true>;
+
+template <typename ID>
+using MakeVirtualResource = Resource<ID, decltype(nullptr), nullptr, false>;
+
+template <typename ID>
+using MakeUniqueVirtualResource =
+    Resource<ID, decltype(nullptr), nullptr, true>;
+
+template <typename... Resources>
+using MakeResourceAlias = kvasir::mpl::list<Resources...>;
+
 } /* END namespace rtfm */

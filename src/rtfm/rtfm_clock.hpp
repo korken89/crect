@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <chrono>
+#include "kvasir/mpl/mpl.hpp"
 #include "rtfm/srp/srp_locks.hpp"
 
 namespace rtfm
@@ -68,7 +69,7 @@ struct system_clock
 /**
  * @brief   Convenience definition of the clock resource.
  */
-using Rsystem_clock = Resource<time::system_clock>;
+using Rsystem_clock = MakeVirtualResource<time::system_clock>;
 
 
 } /* END namespace rtfm */
