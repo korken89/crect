@@ -33,6 +33,12 @@ struct IsNullPtr<kvasir::mpl::integral_constant<T, nullptr>>
   using f = kvasir::mpl::bool_<true>;
 };
 
+template <>
+struct IsNullPtr<kvasir::mpl::integral_constant<decltype(nullptr), nullptr>>
+{
+  using f = kvasir::mpl::bool_<true>;
+};
+
 
 
 template <typename ID_, typename Object, bool Unique, typename... Jobs>
@@ -121,7 +127,7 @@ int main()
 
   // Not yet working
   using ii = kvasir::mpl::is_integral< kvasir::mpl::integral_constant< decltype(nullptr), nullptr > >;
-  cout << "ii: " << ii{} << endl << endl;
+  //cout << "ii: " << ii{} << endl << endl;
 
   cout << "i is now 1: " << i << endl << endl;
 
