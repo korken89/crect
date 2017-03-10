@@ -2,7 +2,6 @@
 #pragma once
 
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/rtfm_utils.hpp"
 
 
 namespace rtfm
@@ -39,24 +38,15 @@ struct Job
 /**
  * @brief Resource type definition.
  *
- * @tparam ID_    Resource "ID", a unique type that identifies the resource.
+ * @tparam ID_    Resouce "ID", a unique type that identifies the resouce.
  * @tparam Jobs   Parameter pack of jobs.
  */
-template <typename ID_, typename OT, OT* Object, bool Unique, typename... Jobs>
+template <typename ID_, typename... Jobs>
 struct Resource
 {
-  // static_assert(kvasir::mpl::is_integral<Object>{},
-  //               "Object must be an integral constant.");
-
-  static_assert(std::is_pointer<decltype(Object)>::value,
-                "The type of the object must be a pointer.");
-
   using ID = ID_;
-  using object_type = OT;
-  using object = kvasir::mpl::integral_constant<OT *, Object>;
-  using has_object = kvasir::mpl::bool_<Object != nullptr>;
-  using is_unique = kvasir::mpl::bool_<Unique>;
-  using jobs = kvasir::mpl::flatten<kvasir::mpl::list<Jobs...>>;
+  using type = ID_;
+  using jobs = kvasir::mpl::flatten< kvasir::mpl::list<Jobs...> >;
 };
 
 } /* END namespace rtfm */

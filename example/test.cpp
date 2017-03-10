@@ -4,9 +4,7 @@
 #include "kvasir/mpl/mpl.hpp"
 
 template <typename... T>
-struct GetIntegralType
-{
-};
+struct GetIntegralType {};
 
 template <typename T, T val>
 struct GetIntegralType<kvasir::mpl::integral_constant<T, val>>
@@ -14,41 +12,43 @@ struct GetIntegralType<kvasir::mpl::integral_constant<T, val>>
   using f = T;
 };
 
-template <typename ID_, typename OT, OT *Object, bool Unique, typename... Jobs>
+template <typename ID_, typename Object, bool Unique, typename... Jobs>
 struct Resource
 {
-  using ID = ID_;
+  static_assert(kvasir::mpl::is_integral<Object>{},
+                "Object must be an integral constant.");
 
-  using object_type = OT;
-  using object = kvasir::mpl::integral_constant<OT *, Object>;
-  using has_object = kvasir::mpl::bool_<Object != nullptr>;
+  static_assert(std::is_pointer<typename GetIntegralType<Object>::f>::value,
+                "The type of the object must be a pointer.");
+
+  using ID = ID_;
+  using type = ID_;
+  using object = Object;
   using is_unique = kvasir::mpl::bool_<Unique>;
   using jobs = kvasir::mpl::flatten<kvasir::mpl::list<Jobs...>>;
-
-  // static_assert(kvasir::mpl::is_integral<Object>{},
-  //               "Object must be an integral constant.");
-
-  static_assert(std::is_pointer<decltype(Object)>::value,
-                "The type of the object must be a pointer.");
 };
 
-template <typename ID, typename OT, OT *Object>
-using MakeResource = Resource<ID, OT, Object, false>;
 
-template <typename ID, typename OT, OT *Object>
-using MakeUniqueResource = Resource<ID, OT, Object, true>;
+template <typename ID, typename Object, typename... Jobs>
+using MakeResource = Resource<ID, Object, false, Jobs...>;
 
-template <typename ID>
-using MakeVirtualResource = Resource<ID, decltype(nullptr), nullptr, false>;
+template <typename ID, typename Object, typename... Jobs>
+using MakeUniqueResource = Resource<ID, Object, true, Jobs...>;
 
-template <typename ID>
+template <typename ID, typename... Jobs>
+using MakeVirtualResource =
+    Resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+             false, Jobs...>;
+
+template <typename ID, typename... Jobs>
 using MakeUniqueVirtualResource =
-    Resource<ID, decltype(nullptr), nullptr, true>;
+    Resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+             true, Jobs...>;
 
 template <typename... Resources>
 using MakeResourceAlias = kvasir::mpl::list<Resources...>;
 
-template <bool HasObject, typename Fun, typename Object>
+template <bool IsNullPtr, typename Fun, typename Object>
 struct claim_impl
 {
   auto operator()(Fun &&f) const noexcept
@@ -58,7 +58,7 @@ struct claim_impl
 };
 
 template <typename Fun, typename Object>
-struct claim_impl<false, Fun, Object>
+struct claim_impl<true, Fun, Object>
 {
   auto operator()(Fun &&f) const noexcept
   {
@@ -73,8 +73,7 @@ constexpr auto claim(Fun &&f)
 
   // rtfm::lock<Resource> lock;
 
-  return claim_impl<(typename Resource::has_object){}, Fun, obj>{}(
-      std::forward<Fun>(f));
+  return claim_impl<obj{} == nullptr, Fun, obj>{}(std::forward<Fun>(f));
 }
 
 int i = 0;
@@ -83,10 +82,8 @@ int main()
 {
   using namespace std;
 
-  using tr = MakeResource<int, decltype(i), &i>;
-  using tu = MakeVirtualResource<float>;
-
-  cout << "tu: " << type_name<tu>() << endl << endl;
+  using tr =
+      MakeResource<int, kvasir::mpl::integral_constant<decltype(&i), &i>>;
 
   cout << "i is now 1: " << i << endl << endl;
 

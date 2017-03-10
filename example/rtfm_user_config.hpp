@@ -12,7 +12,7 @@
 void job1(void);
 void job2(void);
 
-using R1 = rtfm::MakeVirtualResource<char>;
+using R1 = rtfm::Resource<char>;
 
 using J1 = rtfm::Job<
               rtfm::util::hashit("Job1"), // Unique ID
