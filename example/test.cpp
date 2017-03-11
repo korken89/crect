@@ -135,12 +135,17 @@ int main()
 
   using R1 =
       MakeResource<int, kvasir::mpl::integral_constant<decltype(&i), &i>>;
+
   using R2 = MakeVirtualResource<float>;
 
-  using nr =
+  using nr1 =
       Resource<typename R1::ID, typename R1::object, typename R1::is_unique{}>;
-  cout << endl << "R1: " << type_name<R1>() << endl;
-  cout << "nr: " << type_name<nr>() << endl << endl;
+  using nr2 =
+      Resource<typename R2::ID, typename R2::object, typename R2::is_unique{}>;
+  cout << endl << "R1 : " << type_name<R1>() << endl;
+  cout << "nr1: " << type_name<nr1>() << endl;
+  cout << "R2 : " << type_name<R2>() << endl;
+  cout << "nr2: " << type_name<nr2>() << endl << endl;
 
 
   cout << "i is now 1: " << i << endl;
