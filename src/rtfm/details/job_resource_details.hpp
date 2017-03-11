@@ -91,7 +91,7 @@ struct merge_resources_impl
 template <typename ID, typename... Jobs1, typename Job>
 struct merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job> >
 {
-  static_assert( kvasir::mpl::any< _same_job_id<Job>::template f,
+  static_assert( !kvasir::mpl::any< _same_job_id<Job>::template f,
                                    kvasir::mpl::list<Jobs1...> >{},
       "Duplicate jobs defined, each job must have a unique ID");
 
@@ -104,13 +104,13 @@ struct merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job> >
  *
  * @tparam Ts    Parameters to be forwarded to merge_resources_impl.
  */
-template <typename... Ts>
-using merge_resources = typename merge_resources_impl<Ts...>::f;
+template <typename R1, typename R2>
+using merge_resources = typename merge_resources_impl<R1, R2>::f;
 
 
 
 /**
- * @brief Creates a list of resources where each job associated do a resource
+ * @brief Creates a list of resources where each job associated to a resource
  *        is bundled with it.
  *
  * @tparam ResList   List of resources.
@@ -120,26 +120,27 @@ struct make_resource_tree_impl
 {
 
   using _current =  kvasir::mpl::pop_front< kvasir::mpl::remove_if<
-                      _same_resource_id<
+                      _different_resource_id<
                         typename kvasir::mpl::pop_front<ResList>::front
                       >::template f,
                       ResList
                     > >;
 
   using _next =     kvasir::mpl::remove_if<
-                      _different_resource_id<
+                      _same_resource_id<
                         typename kvasir::mpl::pop_front<ResList>::front
                       >::template f,
                       ResList
                     >;
 
-  using f = kvasir::mpl::flatten< kvasir::mpl::list< kvasir::mpl::fold_right<
-                    merge_resources,
-                    typename _current::front,
-                    typename _current::rest
-                  >,
-                  typename make_resource_tree_impl< _next >::f
-            > >;
+  using f = kvasir::mpl::join< kvasir::mpl::list<
+              kvasir::mpl::fold_right<
+                merge_resources,
+                typename _current::front,
+                typename _current::rest
+              > >,
+              typename make_resource_tree_impl< _next >::f
+            >;
 };
 
 /**
