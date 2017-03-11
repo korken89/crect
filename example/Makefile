@@ -44,4 +44,4 @@ clean:
 pc_test:
 		@mkdir -p build
 		g++ $(INCLUDE) -I../../mpl_debug/brigand $(DEFS) -DPC_DEBUG -DBRIGAND_NO_BOOST_SUPPORT -D__NVIC_PRIO_BITS=4 $(FLAGS) test.cpp -o build/test
-		clang++ $(INCLUDE) -I../../mpl_debug/brigand $(DEFS) -DPC_DEBUG -DBRIGAND_NO_BOOST_SUPPORT -D__NVIC_PRIO_BITS=4 $(FLAGS) test.cpp -o build/test
+		clang++ $(INCLUDE) -I../../mpl_debug/brigand $(DEFS) -DPC_DEBUG -DBRIGAND_NO_BOOST_SUPPORT -D__NVIC_PRIO_BITS=4 $(FLAGS) test.cpp -o build/test2
