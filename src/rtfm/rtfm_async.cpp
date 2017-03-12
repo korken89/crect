@@ -18,7 +18,7 @@ namespace timer
  */
 inline void set(time::system_clock::time_point time)
 {
-  auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto now){
+  auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
     return now();
   });
 
@@ -64,7 +64,7 @@ inline void set_max()
 extern "C" void SysTick_Handler()
 {
   /* Always get the current time. */
-  auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto now){
+  auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
     return now();
   });
 

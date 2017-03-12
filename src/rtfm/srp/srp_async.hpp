@@ -24,7 +24,7 @@ namespace details
 static void async_impl_dur(rtfm::time::system_clock::duration dur, unsigned isr)
 {
   /* Always get the current time. */
-  auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto now){
+  auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
     return now();
   });
 

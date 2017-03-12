@@ -161,7 +161,7 @@ To guarantee the lock for resources with a return works just as good with `claim
 example when getting the current time, as the system time is a shared resource):
 ```C++
 // Resource is handled within the claim, no risk of a data-race.
-auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto now){
+auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
   return now(); // now is a function pointer
 });
 ```
@@ -188,7 +188,7 @@ using namespace std::chrono_literals;
 rtfm::srp::async<JobToPend>(100ms);
 
 // Async in some specific time using a specific time
-auto time_to_execute = some_duration + rtfm::srp::claim<rtfm::Rsystem_clock>([](auto now){
+auto time_to_execute = some_duration + rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
   return now();
 });
 rtfm::srp::async<JobToPend>(time_to_execute);
