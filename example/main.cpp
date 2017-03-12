@@ -16,8 +16,8 @@ void job1()
     led.enable();
   });
 
-  // Disable led in 1000ms
-  rtfm::srp::async<J2>(1000ms);
+  // Disable led in 200ms
+  rtfm::srp::async<J2>(200ms);
 }
 
 /* Higher priority job */
@@ -30,8 +30,8 @@ void job2()
     led.disable();
   });
 
-  // Enable led in 1000ms
-  rtfm::srp::async<J1>(1000ms);
+  // Enable led in 200ms
+  rtfm::srp::async<J1>(200ms);
 }
 
 
