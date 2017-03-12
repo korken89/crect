@@ -5,41 +5,87 @@
 
 namespace details
 {
-template <typename... T>
-struct GetIntegralType_impl;
 
+/**
+ * @brief Get the type of an mpl::integral_constant, base case
+ *        that always will fail.
+ *
+ * @tparam Ts   Parameter pack.
+ */
+template <typename... Ts>
+struct get_integral_type_impl
+{
+  static_assert(kvasir::mpl::always_false<Ts...>{},
+                "The input is not an integral_constant.");
+};
+
+/**
+ * @brief Get the type of an mpl::integral_constant, general case.
+ *
+ * @tparam T    Type of the integral_constant.
+ * @tparam val  Value of the integral_constant.
+ */
 template <typename T, T val>
-struct GetIntegralType_impl<kvasir::mpl::integral_constant<T, val>>
+struct get_integral_type_impl<kvasir::mpl::integral_constant<T, val>>
 {
   using f = T;
 };
 
+/**
+ * @brief Get the type of an mpl::integral_constant, special case for nullptr.
+ */
 template <>
-struct GetIntegralType_impl<
+struct get_integral_type_impl<
     kvasir::mpl::integral_constant<decltype(nullptr), nullptr>>
 {
   using f = decltype(nullptr);
 };
 
 
+/**
+ * @brief Checks if an integral_constant contains a nullptr, base case that
+ *        will always fail.
+ *
+ * @tparam Ts   Parameter pack.
+ */
+template <typename... Ts>
+struct is_nullptr_impl
+{
+  static_assert(kvasir::mpl::always_false<Ts...>{},
+                "The input is not an integral_constant.");
+};
 
-template <typename... T>
-struct IsNullPtr_impl;
-
+/**
+ * @brief Checks if an integral_constant contains a nullptr, general case.
+ *
+ * @tparam T    Type of the integral_constant.
+ * @tparam val  Value of the integral_constant.
+ */
 template <typename T, T val>
-struct IsNullPtr_impl<kvasir::mpl::integral_constant<T, val>>
+struct is_nullptr_impl<kvasir::mpl::integral_constant<T, val>>
 {
   using f = kvasir::mpl::bool_<false>;
 };
 
+/**
+ * @brief Checks if an integral_constant contains a nullptr, first special case.
+ *
+ * @tparam T    Type of the integral_constant.
+ */
 template <typename T>
-struct IsNullPtr_impl<kvasir::mpl::integral_constant<T, nullptr>>
+struct is_nullptr_impl<kvasir::mpl::integral_constant<T, nullptr>>
 {
   using f = kvasir::mpl::bool_<true>;
 };
 
+/**
+ * @brief Checks if an integral_constant contains a nullptr, second special
+ *        case.
+ *
+ * @tparam T    Type of the integral_constant.
+ */
 template <>
-struct IsNullPtr_impl<
+struct is_nullptr_impl<
     kvasir::mpl::integral_constant<decltype(nullptr), nullptr>>
 {
   using f = kvasir::mpl::bool_<true>;
@@ -47,9 +93,24 @@ struct IsNullPtr_impl<
 
 
 
+/**
+ * @brief Selector functors for @p claim, based on if the pointer is nullptr or
+ *        not, base case.
+ *
+ * @tparam HasObject  True if the Object contains an valid pointer.
+ * @tparam Fun        Function to evaluate.
+ * @tparam Object     Integral_constant containing the data pointer.
+ */
 template <bool HasObject, typename Fun, typename Object>
 struct claim_impl;
 
+/**
+ * @brief Selector functors for @p claim, based on if the pointer is nullptr or
+ *        not - Object contains valid pointer.
+ *
+ * @tparam Fun        Function to evaluate.
+ * @tparam Object     Integral_constant containing the data pointer.
+ */
 template <typename Fun, typename Object>
 struct claim_impl<true, Fun, Object>
 {
@@ -59,6 +120,13 @@ struct claim_impl<true, Fun, Object>
   }
 };
 
+/**
+ * @brief Selector functors for @p claim, based on if the pointer is nullptr or
+ *        not - Object does not contain a valid pointer.
+ *
+ * @tparam Fun        Function to evaluate.
+ * @tparam Object     Integral_constant containing the data pointer.
+ */
 template <typename Fun, typename Object>
 struct claim_impl<false, Fun, Object>
 {
@@ -69,11 +137,21 @@ struct claim_impl<false, Fun, Object>
 };
 }
 
+/**
+ * @brief Get the type of an mpl::integral_constant.
+ *
+ * @tparam T  Integral_constant to get type from.
+ */
 template <typename T>
-using GetIntegralType = typename details::GetIntegralType_impl<T>::f;
+using get_integral_type = typename details::get_integral_type_impl<T>::f;
 
+/**
+ * @brief Checks if an integral_constant contains a nullptr.
+ *
+ * @tparam T    Integral_constant to check.
+ */
 template <typename T>
-using IsNullPtr = typename details::IsNullPtr_impl<T>::f;
+using is_nullptr = typename details::is_nullptr_impl<T>::f;
 
 template <typename ID_, typename Object, bool Unique, typename... Jobs>
 struct Resource
@@ -81,13 +159,13 @@ struct Resource
   static_assert(kvasir::mpl::is_integral<Object>{},
                 "Object must be an integral constant.");
 
-  static_assert((std::is_pointer<GetIntegralType<Object>>::value ||
-                 IsNullPtr<Object>{}),
+  static_assert((std::is_pointer<get_integral_type<Object>>::value ||
+                 is_nullptr<Object>{}),
                 "The type of the object must be a pointer.");
 
   using ID = ID_;
   using object = Object;
-  using has_object = typename kvasir::mpl::bool_<!IsNullPtr<Object>{}>;
+  using has_object = typename kvasir::mpl::bool_<!is_nullptr<Object>{}>;
   using is_unique = kvasir::mpl::bool_<Unique>;
   using jobs = kvasir::mpl::flatten<kvasir::mpl::list<Jobs...>>;
 };
@@ -146,6 +224,12 @@ int main()
   cout << "nr1: " << type_name<nr1>() << endl;
   cout << "R2 : " << type_name<R2>() << endl;
   cout << "nr2: " << type_name<nr2>() << endl << endl;
+
+  using i1 = kvasir::mpl::integral_constant<decltype(nullptr), nullptr>;
+  using i2 = kvasir::mpl::integral_constant<decltype(nullptr), nullptr>;
+
+
+  cout << "i1: " << type_name<std::is_same<i1, i2>::type>() << endl << endl;
 
 
   cout << "i is now 1: " << i << endl;
