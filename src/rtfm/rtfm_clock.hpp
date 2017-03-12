@@ -3,6 +3,8 @@
 
 #include <cstdint>
 #include <chrono>
+#include "kvasir/mpl/mpl.hpp"
+#include "rtfm/details/job_resource.hpp"
 #include "rtfm/srp/srp_locks.hpp"
 
 namespace rtfm
@@ -68,7 +70,10 @@ struct system_clock
 /**
  * @brief   Convenience definition of the clock resource.
  */
-using Rsystem_clock = resource<time::system_clock>;
+using Rsystem_clock =
+    resource<time::system_clock,
+             kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+             false>;
 
 
 } /* END namespace rtfm */

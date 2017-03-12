@@ -30,7 +30,8 @@ struct job_to_resource_impl
 template <unsigned I1, unsigned I2, typename ISR, typename... Res>
 struct job_to_resource_impl< job<I1, I2, ISR, Res...> >
 {
-  using f = kvasir::mpl::list< resource<typename Res::id, job<I1, I2, ISR> >... >;
+  using f = kvasir::mpl::list< resource<typename Res::id, typename Res::object,
+        typename Res::is_unique{}, job<I1, I2, ISR> >... >;
 };
 
 
@@ -84,18 +85,26 @@ struct merge_resources_impl
 /**
  * @brief Merges resources of same ID.
  *
- * @tparam ID    Type of the ID.
- * @tparam Jobs1 Left hand side pack of jobs.
- * @tparam Job     Right hand side last job.
+ * @tparam ID     Type of the ID.
+ * @tparam Jobs1  Left hand side pack of jobs.
+ * @tparam Job    Right hand side last job.
  */
-template <typename ID, typename... Jobs1, typename Job>
-struct merge_resources_impl< resource<ID, Jobs1...>, resource<ID, Job> >
+template <typename ID, typename Obj1, typename Obj2, bool Unq1, bool Unq2,
+          typename... Jobs1, typename Job>
+struct merge_resources_impl< resource<ID, Obj1, Unq1, Jobs1...>,
+                             resource<ID, Obj2, Unq2, Job> >
 {
   static_assert( !kvasir::mpl::any< _same_job_id<Job>::template f,
                                    kvasir::mpl::list<Jobs1...> >{},
       "Duplicate jobs defined, each job must have a unique ID");
 
-  using f = resource<ID, Jobs1..., Job>;
+  static_assert( std::is_same<Obj1, Obj2>::value,
+                 "Resource has different objects defined.");
+
+  static_assert( (Unq1 == Unq2),
+                 "Resource has different uniqueness defined.");
+
+  using f = resource<ID, Obj1, Unq1, Jobs1..., Job>;
 };
 
 

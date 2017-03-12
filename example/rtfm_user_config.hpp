@@ -12,7 +12,9 @@
 void job1(void);
 void job2(void);
 
-using R1 = rtfm::resource<char>;
+using R1 = rtfm::resource<char,
+              kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+              false>;
 
 using J1 = rtfm::job<
               rtfm::util::hashit("Job1"), // Unique ID

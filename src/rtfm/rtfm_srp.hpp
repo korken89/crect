@@ -19,7 +19,10 @@
 namespace rtfm
 {
 struct async_resource;
-using Rasync = rtfm::resource< async_resource >;
+using Rasync =
+    resource< async_resource,
+              kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+              false>;
 }
 
 /* RTFM job/system_job_list configuration. */
