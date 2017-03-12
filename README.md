@@ -162,7 +162,7 @@ example when getting the current time, as the system time is a shared resource):
 ```C++
 // Resource is handled within the claim, no risk of a data-race.
 auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
-  return now(); // now is a function pointer
+  return now(); // now is a function reference
 });
 ```
 
