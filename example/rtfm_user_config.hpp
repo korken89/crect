@@ -13,12 +13,13 @@
 void job1(void);
 void job2(void);
 
-using Rled = rtfm::resource<char,
-              kvasir::mpl::integral_constant<
-                decltype(&led_resource),
-                &led_resource
+using Rled = rtfm::resource<char,             // Resource unique ID
+              kvasir::mpl::integral_constant< // The resource link (can be nullptr)
+                decltype(&led_resource),      // Type of the pointer
+                &led_resource                 // Pointer to some object to be protected
               >,
-              false>;
+              false>;                         // Flag to indicate if it is a resource
+                                              // for a unique Job
 
 using J1 = rtfm::job<
               rtfm::util::hashit("Job1"), // Unique ID

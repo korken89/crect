@@ -24,11 +24,12 @@ run-time are minimal with:
 **Runtime:**
 
 * 3-4 instructions + 4 bytes of stack for a `lock`.
-* 1-3 instructions for an unlock.
+* 1-3 instructions for an (implicit) unlock.
+* `claim` has zero overhead, it decomposes into a `lock`.
 * 2-4 instructions for `pend` / `clear`.
 * About 20-30 instructions * number of items in queue for `async`.
 
-In this implementation of RTFM, heavy use of **C++ metaprogramming** and **C++14** allows, among other things, priority ceilings and interrupt masks to be automatically calculated at compile time, while resource locks are handled through RAII. This minimizes user error without the need for an external extra compile step, as is currently being investigated in the RTFM-core language (www.rtfm-lang.org).
+In this implementation of RTFM, heavy use of **C++ metaprogramming** and **C++14** allows, among other things, priority ceilings and interrupt masks to be automatically calculated at compile time, while resource locks are handled through RAII and resource access is handled via a monitor pattern. This minimizes user error without the need for an external extra compile step, as is currently being investigated in the RTFM-core language (www.rtfm-lang.org).
 
 More description will come...
 
@@ -67,7 +68,6 @@ can only be held within a job and must be released before the exit of a job.
 * Inheritance for resources so one can create an aggregate resource (`Ragg = {R1, R2, R3}`).
 For example `rtfm::Rasync` will always take the `rtfm::Rsystem_clock`, should be enough to only write the `rtfm::Rasync` in the resource claim.
 * Make the async implementation switchable (not to force the use of SysTick)
-* Add claim `Resource< pointer_or_someting >` for use with monitor pattern
 * Support for resource claims over job boundaries (_ex._ one start job [lock], one finished job [release]).
   * Non-shared resource to support lock over boundaries, only one thread can have it in its resource claim
 * Add a debug mode for `lock` / `claim`, use `IPSR` to check that the ISR number is allowed to take the resource.
@@ -79,14 +79,23 @@ For example `rtfm::Rasync` will always take the `rtfm::Rsystem_clock`, should be
 Small description on how to use this.
 
 #### Resource definition
-A resource definition is simple as follows, where `some_type` is a type that symbolizes the resource.
+A resource definition is as follows, where `some_type` is a type that symbolizes the resource.
 ```C++
-using R1 = rtfm::Resource<some_type>;
+using Rled = rtfm::resource<
+               char,                            // Resource unique ID
+               kvasir::mpl::integral_constant<  // The resource link (can be nullptr)
+                 decltype(&led_resource),       // Type of the pointer
+                 &led_resource                  // Pointer to some object to be protected
+               >,
+               false                            // Flag to indicate if it is a resource
+             >;                                 // for a unique Job
+
 ```
 Currently 2 system resources exists:
 
-1. The access to the async queue is protected via `rtfm::Rasync`.
-2. For getting the current time via `rtfm::clock::system::now()` is protected via `rtfm::Rsystem_clock`.
+1. The access to the `async_queue` is protected via `rtfm::Rasync`.
+2. For getting the current time via `rtfm::clock::system::now()` is protected
+via `rtfm::Rsystem_clock` - see **claim** for example usage.
 
 Any job **using these resources** need to have the corresponding resource **in its resource claim** in `rtfm_user_config.hpp`.
 
@@ -100,7 +109,7 @@ A job definition consists of a few parts:
 The Job definitions are placed (directly or via include) in `rtfm_user_config.hpp`.
 ```C++
 void job1(void);
-using J1 = rtfm::Job<
+using J1 = rtfm::job<
               rtfm::util::hashit("Job1"), // Unique ID (here through a hash of text)
               1,                          // Priority (0 = low)
               rtfm::MakeISR<job1, 1>,     // ISR connection and location
@@ -113,33 +122,48 @@ Each job need to be added to the `system_job_list< Jobs... >` in `rtfm_user_conf
 The ISR definitions available are split in the Peripheral ISRs (I >= 0), and System ISRs (I < 0).
 ```C++
 // Peripheral ISR definition (I >= 0)
-template <rtfm::details::ISRFunctionPointer P, int I>
-using MakeISR = rtfm::details::ISR<P, rtfm::details::Index<I>>;
+template <rtfm::details::isr_function_pointer<P, int I>
+using MakeISR = rtfm::details::isr<P, rtfm::details::index<I>>;
 
 // System ISR definition (I < 0)
 template <int I>
-using MakeSystemISR = rtfm::details::ISR<nullptr, rtfm::details::Index<I>>;
+using MakeSystemISR = rtfm::details::isr<nullptr, rtfm::details::index<I>>;
 ```
 
 #### lock
 A lock keeps the system from running a job which will lock the same resource.
 The analysis to determine which job can take which resource is done at
-compile-time, which makes the lock very cheap to use as indicated at the start of this document.
+compile-time, which makes the lock very cheap to use as indicated at the start
+of this document. Lock should however be **avoided** by the user, use **claim**
+wherever possible.
+
 ```C++
-// Lock the LED resource, remember locks are very cheap -- sprinkle them everywhere!
-rtfm::srp::lock< Rled > lock; // Locks are made in the constructor of the lock
-ToggleLED();
+// Lock the resource, remember locks are very cheap -- sprinkle them everywhere!
+rtfm::srp::lock< R1 > lock; // Locks are made in the constructor of the lock
+// ...
 // Unlock is automatic in the destructor of lock
 ```
 
-To guarantee the lock for resources with a return a lambda can be used (for
+There is no `unlock`, this is by design.
+
+#### claim
+Even with **lock**, it is easy to leak a resource, and to minimize this chance
+`claim` uses a _Monitor Pattern_ to guard the resource. Hence the resource is
+only available within the lambda of `claim`:
+```C++
+// Access the LED resource through the claim following a monitor pattern (just as cheap as a lock)
+rtfm::srp::claim<Rled>([](auto &led){
+  led.enable();
+});
+```
+
+To guarantee the lock for resources with a return works just as good with `claim` (for
 example when getting the current time, as the system time is a shared resource):
 ```C++
-// Lock and release the system_clock resource within the lambda, no risk of a data-race.
-auto current_time = [](){
-  rtfm::srp::lock<rtfm::Rsystem_clock> lock;
-  return rtfm::time::system_clock::now();
-}();
+// Resource is handled within the claim, no risk of a data-race.
+auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto now){
+  return now(); // now is a function pointer
+});
 ```
 
 #### pend / clear
@@ -164,12 +188,12 @@ using namespace std::chrono_literals;
 rtfm::srp::async<JobToPend>(100ms);
 
 // Async in some specific time using a specific time
-auto time_to_execute = rtfm::time::system_clock::now() + some_duration;
+auto time_to_execute = some_duration + rtfm::srp::claim<rtfm::Rsystem_clock>([](auto now){
+  return now();
+});
 rtfm::srp::async<JobToPend>(time_to_execute);
 
 // Async can be used as pend for runtime dependent execution
 rtfm::srp::async(100ms, JobToPend_ISR_ID);
 rtfm::srp::async(time_to_execute, JobToPend_ISR_ID);
 ```
-Don't do this in practice, `system_clock::now()` is a shared resource and this
-can cause a data-race. See **lock** on how to get the time in a safe way.
