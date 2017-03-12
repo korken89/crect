@@ -28,7 +28,7 @@ extern "C"
 template <typename A>
 struct _same_isr_value {
   template <typename B>
-  using f = kvasir::mpl::bool_<A{} ==  typename B::ISR::index{}>;
+  using f = kvasir::mpl::bool_<A{} ==  typename B::isr::index{}>;
 };
 
 /**
@@ -54,7 +54,7 @@ template <typename JobList>
 struct isr_selector
 {
   /* TODO: Check so the ISR is unique... */
-  using isr = typename kvasir::mpl::pop_front<JobList>::front::ISR;
+  using isr = typename kvasir::mpl::pop_front<JobList>::front::isr;
 };
 
 /**
@@ -85,8 +85,8 @@ struct get_vector_from_position
 struct vector_table
 {
   uint32_t *stack_end;
-  rtfm::details::ISRFunctionPointer arm_vectors[15];
-  rtfm::details::ISRFunctionPointer mcu_vectors[__MCU_NUM_VECTORS];
+  rtfm::details::isr_function_pointer arm_vectors[15];
+  rtfm::details::isr_function_pointer mcu_vectors[__MCU_NUM_VECTORS];
 };
 
 

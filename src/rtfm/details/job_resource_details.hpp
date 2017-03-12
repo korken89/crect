@@ -10,7 +10,7 @@ namespace details
 {
 
 /**
- * @brief Takes a Job< Resource... > and returns Resource<Job>..., base case
+ * @brief Takes a job< resource... > and returns resource<job>..., base case
  *        that always will fail.
  */
 template <typename... Ts>
@@ -20,7 +20,7 @@ struct job_to_resource_impl
 };
 
 /**
- * @brief Takes a Job< Resource... > and returns Resource<Job>...
+ * @brief Takes a job< resource... > and returns resource<job>...
  *
  * @tparam I1   Job unique ID.
  * @tparam I2   Priority.
@@ -28,9 +28,9 @@ struct job_to_resource_impl
  * @tparam Res  Parameter pack of resources.
  */
 template <unsigned I1, unsigned I2, typename ISR, typename... Res>
-struct job_to_resource_impl< Job<I1, I2, ISR, Res...> >
+struct job_to_resource_impl< job<I1, I2, ISR, Res...> >
 {
-  using f = kvasir::mpl::list< Resource<typename Res::ID, Job<I1, I2, ISR> >... >;
+  using f = kvasir::mpl::list< resource<typename Res::id, job<I1, I2, ISR> >... >;
 };
 
 
@@ -43,11 +43,11 @@ struct job_to_resource_impl< Job<I1, I2, ISR, Res...> >
 template <typename A>
 struct _same_job_id {
   template <typename B>
-  using f = std::is_same<typename A::UID, typename B::UID>;
+  using f = std::is_same<typename A::uid, typename B::uid>;
 };
 
 /**
- * @brief Checks if Resource ID is same.
+ * @brief Checks if resource ID is same.
  *
  * @tparam A   Left hand side.
  * @tparam B   Right hand side.
@@ -55,11 +55,11 @@ struct _same_job_id {
 template <typename A>
 struct _same_resource_id {
   template <typename B>
-  using f = std::is_same<typename A::ID, typename B::ID>;
+  using f = std::is_same<typename A::id, typename B::id>;
 };
 
 /**
- * @brief Checks if Resource ID is different.
+ * @brief Checks if resource ID is different.
  *
  * @tparam A   Left hand side.
  * @tparam B   Right hand side.
@@ -67,7 +67,7 @@ struct _same_resource_id {
 template <typename A>
 struct _different_resource_id {
   template <typename B>
-  using f = kvasir::mpl::invert< std::is_same<typename A::ID, typename B::ID> >;
+  using f = kvasir::mpl::invert< std::is_same<typename A::id, typename B::id> >;
 };
 
 
@@ -89,13 +89,13 @@ struct merge_resources_impl
  * @tparam Job     Right hand side last job.
  */
 template <typename ID, typename... Jobs1, typename Job>
-struct merge_resources_impl< Resource<ID, Jobs1...>, Resource<ID, Job> >
+struct merge_resources_impl< resource<ID, Jobs1...>, resource<ID, Job> >
 {
   static_assert( !kvasir::mpl::any< _same_job_id<Job>::template f,
                                    kvasir::mpl::list<Jobs1...> >{},
       "Duplicate jobs defined, each job must have a unique ID");
 
-  using f = Resource<ID, Jobs1..., Job>;
+  using f = resource<ID, Jobs1..., Job>;
 };
 
 

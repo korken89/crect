@@ -57,8 +57,8 @@ struct job_to_nvic_printer
   template <typename Job>
   void operator()(details::_wrapper<Job>) const
   {
-    using ISRn = typename Job::ISR::index;
-    using Prio = typename Job::P;
+    using ISRn = typename Job::isr::index;
+    using Prio = typename Job::prio;
 
 
     if (ISRn{} < 0)

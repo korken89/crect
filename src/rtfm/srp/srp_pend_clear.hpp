@@ -15,10 +15,8 @@ namespace srp
 template <typename Job>
 constexpr void pend()
 {
-#ifndef PC_DEBUG
-  using ISRn = typename Job::ISR::index;
+  using ISRn = typename Job::isr::index;
   NVIC->ISPR[ISRn{} >> 5UL] = (1UL << (ISRn{} & 0x1FUL));
-#endif
 }
 
 /**
@@ -28,9 +26,7 @@ constexpr void pend()
  */
 inline void pend(unsigned id)
 {
-#ifndef PC_DEBUG
   NVIC->ISPR[id >> 5UL] = (1UL << (id & 0x1FUL));
-#endif
 }
 
 /**
@@ -41,10 +37,8 @@ inline void pend(unsigned id)
 template <typename Job>
 constexpr void clear()
 {
-#ifndef PC_DEBUG
-  using ISRn = typename Job::ISR::index;
+  using ISRn = typename Job::isr::index;
   NVIC->ICPR[ISRn{} >> 5UL] = (1UL << (ISRn{} & 0x1FUL));
-#endif
 }
 
 /**
@@ -54,9 +48,7 @@ constexpr void clear()
  */
 inline void clear(unsigned id)
 {
-#ifndef PC_DEBUG
   NVIC->ICPR[id >> 5UL] = (1UL << (id & 0x1FUL));
-#endif
 }
 
 } /* END namespace srp */

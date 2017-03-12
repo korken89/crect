@@ -12,9 +12,9 @@
 void job1(void);
 void job2(void);
 
-using R1 = rtfm::Resource<char>;
+using R1 = rtfm::resource<char>;
 
-using J1 = rtfm::Job<
+using J1 = rtfm::job<
               rtfm::util::hashit("Job1"), // Unique ID
               1,                          // Priority
               rtfm::MakeISR<job1, 1>,     // ISR connection and location
@@ -23,7 +23,7 @@ using J1 = rtfm::Job<
               rtfm::Rasync
             >;
 
-using J2 = rtfm::Job<
+using J2 = rtfm::job<
               rtfm::util::hashit("Job2"), // Unique ID
               2,                          // Priority
               rtfm::MakeISR<job2, 2>,     // ISR connection and location
@@ -32,7 +32,7 @@ using J2 = rtfm::Job<
               rtfm::Rasync
             >;
 
-using Jasync = rtfm::Job<
+using Jasync = rtfm::job<
               rtfm::util::hashit("JobAsync"),     // Unique ID
               0,                                  // Priority
               rtfm::MakeSystemISR<SysTick_IRQn>,  // ISR connection and location

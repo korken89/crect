@@ -22,11 +22,11 @@ using max_priority = kvasir::mpl::integral_constant<unsigned,
  * @tparam Res    Parameter pack of resources.
  */
 template <unsigned UID_, unsigned Prio_, typename ISR_, typename... Res>
-struct Job
+struct job
 {
-  using UID = kvasir::mpl::integral_constant<unsigned, UID_>;
-  using P = kvasir::mpl::integral_constant<unsigned, Prio_>;
-  using ISR = ISR_;
+  using uid = kvasir::mpl::integral_constant<unsigned, UID_>;
+  using prio = kvasir::mpl::integral_constant<unsigned, Prio_>;
+  using isr = ISR_;
   using resources = kvasir::mpl::flatten< kvasir::mpl::list<Res...> >;
 
   /* Using < for now, comes from setting basepri = 0 has no effect. */
@@ -42,9 +42,9 @@ struct Job
  * @tparam Jobs   Parameter pack of jobs.
  */
 template <typename ID_, typename... Jobs>
-struct Resource
+struct resource
 {
-  using ID = ID_;
+  using id = ID_;
   using type = ID_;
   using jobs = kvasir::mpl::flatten< kvasir::mpl::list<Jobs...> >;
 };

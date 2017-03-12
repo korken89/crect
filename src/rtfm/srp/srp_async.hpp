@@ -67,7 +67,7 @@ template <typename Job, typename Rep, typename Period>
 constexpr void async(std::chrono::duration<Rep, Period> duration)
 {
   using namespace std::chrono;
-  using idx = typename Job::ISR::index;
+  using idx = typename Job::isr::index;
 
   auto dur = duration_cast<rtfm::time::system_clock::duration>(duration);
 
@@ -105,7 +105,7 @@ constexpr void async(std::chrono::duration<Rep, Period> duration, unsigned isr)
 template <typename Job>
 constexpr void async(rtfm::time::system_clock::time_point time)
 {
-  using idx = typename Job::ISR::index;
+  using idx = typename Job::isr::index;
   details::async_impl_time(time, idx{});
 }
 

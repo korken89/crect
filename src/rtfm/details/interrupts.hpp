@@ -10,13 +10,13 @@ namespace details
 /**
  * @brief ISR function pointer alias.
  */
-using ISRFunctionPointer = void (*)(void);
+using isr_function_pointer = void (*)(void);
 
 /**
  * @brief ISR index alias.
  */
 template <int I>
-using Index = kvasir::mpl::integral_constant<int, I>;
+using idx = kvasir::mpl::integral_constant<int, I>;
 
 /**
  * @brief Base definition of an ISR type, should not be used.
@@ -24,8 +24,8 @@ using Index = kvasir::mpl::integral_constant<int, I>;
  * @tparam P  Function pointer.
  * @tparam I  Index type.
  */
-template <ISRFunctionPointer P, typename I>
-struct ISR
+template <isr_function_pointer P, typename I>
+struct isr
 {
   static_assert(kvasir::mpl::always_false< I >{}, "Index type error");
 };
@@ -36,14 +36,14 @@ struct ISR
  * @tparam I  Index value.
  */
 template <int I>
-struct ISR<nullptr, Index<I>>
+struct isr<nullptr, idx<I>>
 {
   static_assert((I < 0), // System ISR
                "A system ISR must have a negative Index.");
 
-  static constexpr const ISRFunctionPointer value = nullptr;
-  using type = ISR<nullptr, Index<I>>;
-  using index = Index<I>;
+  static constexpr const isr_function_pointer value = nullptr;
+  using type = isr<nullptr, idx<I>>;
+  using index = idx<I>;
 };
 
 /**
@@ -52,15 +52,15 @@ struct ISR<nullptr, Index<I>>
  * @tparam P  Function pointer.
  * @tparam I  Index value.
  */
-template <ISRFunctionPointer P, int I>
-struct ISR<P, Index<I>>
+template <isr_function_pointer P, int I>
+struct isr<P, idx<I>>
 {
   static_assert((I >= 0), // Peripheral ISR
                 "A peripheral ISR must have a non-negaive Index.");
 
-  static constexpr const ISRFunctionPointer value = P;
-  using type = ISR<P, Index<I>>;
-  using index = Index<I>;
+  static constexpr const isr_function_pointer value = P;
+  using type = isr<P, idx<I>>;
+  using index = idx<I>;
 };
 } /* END namespace details */
 
@@ -70,8 +70,8 @@ struct ISR<P, Index<I>>
  * @tparam P  Function pointer.
  * @tparam I  Index value.
  */
-template <details::ISRFunctionPointer P, int I>
-using MakeISR = details::ISR<P, details::Index<I>>;
+template <details::isr_function_pointer P, int I>
+using MakeISR = details::isr<P, details::idx<I>>;
 
 /**
  * @brief Wrapper of an System ISR type for ease of use.
@@ -79,7 +79,7 @@ using MakeISR = details::ISR<P, details::Index<I>>;
  * @tparam I  Index value.
  */
 template <int I>
-using MakeSystemISR = details::ISR<nullptr, details::Index<I>>;
+using MakeSystemISR = details::isr<nullptr, details::idx<I>>;
 
 /**
  * @brief Default ISR definition, statically defined. A simple forever loop.

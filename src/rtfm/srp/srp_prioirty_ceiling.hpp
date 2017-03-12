@@ -71,7 +71,7 @@ struct job_to_priority
  * @tparam Res  Parameter pack of resources.
  */
 template <unsigned ID, unsigned PRIO, typename ISR, typename... Res>
-struct job_to_priority< Job<ID, PRIO, ISR, Res...> > :
+struct job_to_priority< job<ID, PRIO, ISR, Res...> > :
   kvasir::mpl::integral_constant<unsigned, PRIO>
 {
 };
@@ -84,9 +84,9 @@ struct job_to_priority< Job<ID, PRIO, ISR, Res...> > :
  */
 template <typename JobList, typename Resource>
 using resource_to_priority_list =
-                kvasir::mpl::flatten< kvasir::mpl::transform<
+                kvasir::mpl::join< kvasir::mpl::transform<
                   job_to_priority,
-                  kvasir::mpl::flatten< typename find_resource<JobList,
+                  kvasir::mpl::join< typename find_resource<JobList,
                                                                Resource>::jobs >
                 > >;
 

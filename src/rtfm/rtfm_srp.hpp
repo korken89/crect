@@ -19,7 +19,7 @@
 namespace rtfm
 {
 struct async_resource;
-using Rasync = rtfm::Resource< async_resource >;
+using Rasync = rtfm::resource< async_resource >;
 }
 
 /* RTFM job/system_job_list configuration. */
