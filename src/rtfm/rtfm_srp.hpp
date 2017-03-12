@@ -65,4 +65,5 @@ inline void initialize()
 } /* END namespace srp */
 } /* END namespace rtfm */
 
+#include "rtfm/srp/srp_claim.hpp"
 #include "rtfm/srp/srp_async.hpp"
