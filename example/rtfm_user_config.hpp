@@ -8,19 +8,23 @@
  ****************************************************************************/
 
 #include "rtfm/rtfm_utils.hpp"
+#include "led.hpp"
 
 void job1(void);
 void job2(void);
 
-using R1 = rtfm::resource<char,
-              kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+using Rled = rtfm::resource<char,
+              kvasir::mpl::integral_constant<
+                decltype(&led_resource),
+                &led_resource
+              >,
               false>;
 
 using J1 = rtfm::job<
               rtfm::util::hashit("Job1"), // Unique ID
               1,                          // Priority
               rtfm::MakeISR<job1, 1>,     // ISR connection and location
-              R1,                         // Possible resource claims
+              Rled,                       // Possible resource claims
               rtfm::Rsystem_clock,
               rtfm::Rasync
             >;
@@ -29,7 +33,7 @@ using J2 = rtfm::job<
               rtfm::util::hashit("Job2"), // Unique ID
               2,                          // Priority
               rtfm::MakeISR<job2, 2>,     // ISR connection and location
-              R1,                         // Possible resource claims
+              Rled,                       // Possible resource claims
               rtfm::Rsystem_clock,
               rtfm::Rasync
             >;

@@ -3,17 +3,18 @@
 #include "rtfm/rtfm_srp.hpp"
 #include "led.hpp"
 
-// using namespace std::chrono_literals;
+/* Shared LED object. */
+ManageLED led_resource;
 
 /* Lower priority job */
 void job1()
 {
   using namespace std::chrono_literals;
 
-  [](){
-    rtfm::srp::lock< R1 > lock;
-    EnableLED();
-  }();
+  /* Access the LED resource through the claim following a monitor pattern. */
+  rtfm::srp::claim<Rled>([](auto &led){
+    led.enable();
+  });
 
   // Disable led in 1000ms
   rtfm::srp::async<J2>(1000ms);
@@ -24,10 +25,10 @@ void job2()
 {
   using namespace std::chrono_literals;
 
-  [](){
-    rtfm::srp::lock< R1 > lock;
-    DisableLED();
-  }();
+  /* Access the LED resource through the claim following a monitor pattern. */
+  rtfm::srp::claim<Rled>([](auto &led){
+    led.disable();
+  });
 
   // Enable led in 1000ms
   rtfm::srp::async<J1>(1000ms);
@@ -36,9 +37,6 @@ void job2()
 
 int main()
 {
-
-  InitLED();
-
   /* Initialization code */
   rtfm::srp::initialize();
 
