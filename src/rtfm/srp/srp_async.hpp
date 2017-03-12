@@ -6,12 +6,7 @@
 
 #include <chrono>
 
-#ifndef __RTFM_ASYNC_QUEUE_SIZE
-#   define __RTFM_ASYNC_QUEUE_SIZE 10
-#endif
-
 extern rtfm::async_queue<__RTFM_ASYNC_QUEUE_SIZE> rtfm_async_queue;
-
 
 namespace rtfm
 {
@@ -29,13 +24,14 @@ namespace details
 static void async_impl_dur(rtfm::time::system_clock::duration dur, unsigned isr)
 {
   /* Always get the current time. */
-  auto current_time = [](){
-    rtfm::srp::lock<rtfm::Rsystem_clock> lock;
-    return rtfm::time::system_clock::now();
-  }();
+  auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto now){
+    return now();
+  });
 
-  rtfm::srp::lock<rtfm::Rasync> lock;
-  rtfm_async_queue.push(current_time + dur, isr);
+  /* Claim the async queue and manipulate. */
+  rtfm::srp::claim<rtfm::Rasync>([&](auto &async_queue){
+    async_queue.push(current_time + dur, isr);
+  });
 }
 
 /*
@@ -46,9 +42,10 @@ static void async_impl_dur(rtfm::time::system_clock::duration dur, unsigned isr)
  */
 static void async_impl_time(rtfm::time::system_clock::time_point time, unsigned isr)
 {
-  /* Always get the current time. */
-  rtfm::srp::lock<rtfm::Rasync> lock;
-  rtfm_async_queue.push(time, isr);
+  /* Claim the async queue and manipulate. */
+  rtfm::srp::claim<rtfm::Rasync>([&](auto &async_queue){
+    async_queue.push(time, isr);
+  });
 }
 
 } /* END namespace details */

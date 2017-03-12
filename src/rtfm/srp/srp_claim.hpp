@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include <functional>
 #include "kvasir/mpl/mpl.hpp"
 #include "rtfm/rtfm_utils.hpp"
 
@@ -35,7 +34,8 @@ struct claim_impl<true, Fun, Object>
 {
   auto operator()(Fun &&f) const noexcept
   {
-    return f( std::ref(*Object{}) ); // Pass by reference
+    /* Pass by reference. */
+    return f( *Object{} );
   }
 };
 

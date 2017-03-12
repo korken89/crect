@@ -14,14 +14,19 @@
 #include "rtfm/rtfm_clock.hpp"
 #include "rtfm/srp/srp_init.hpp"
 #include "rtfm/rtfm_timer.hpp"
+#include "rtfm/async/async_queue.hpp"
 
 /* Async resource definition for now... */
+extern rtfm::async_queue<__RTFM_ASYNC_QUEUE_SIZE> rtfm_async_queue;
 namespace rtfm
 {
 struct async_resource;
 using Rasync =
     resource< async_resource,
-              kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+              kvasir::mpl::integral_constant<
+                  decltype(&rtfm_async_queue),
+                  &rtfm_async_queue
+              >,
               false>;
 }
 

@@ -72,7 +72,10 @@ struct system_clock
  */
 using Rsystem_clock =
     resource<time::system_clock,
-             kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+             kvasir::mpl::integral_constant<
+                decltype(&time::system_clock::now),
+                &time::system_clock::now
+             >,
              false>;
 
 

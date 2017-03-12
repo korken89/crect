@@ -33,7 +33,7 @@ private:
   /** @brief Pointer to the head element. */
   queue_element *_head;
 
-  /** @brief Ponter to the free element. */
+  /** @brief Pointer to the free element. */
   queue_element *_free;
 
 public:
