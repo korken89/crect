@@ -1,8 +1,8 @@
 INCLUDE = -I../deps/mpl/src -I../src -I./inc -I.
 DEFS = -DNDEBUG
-FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -ggdb -O1
+FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -ggdb -Os
 COMMON = -fno-rtti -fno-non-call-exceptions -fno-exceptions
-#COMMON += -finline-small-functions -findirect-inlining # Use when -Os
+COMMON += -finline-small-functions -findirect-inlining # Use when -Os
 COMMON += -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb
 COMMON += -ffreestanding -fomit-frame-pointer -falign-functions=16 -fno-common
 COMMON += -mno-thumb-interwork -fno-threadsafe-statics -nostartfiles
@@ -23,14 +23,15 @@ all:
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) init.cpp -o build/init.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../src/rtfm/rtfm_vector_table.cpp -o build/vector.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../src/rtfm/rtfm_async.cpp -o build/async.o
-		arm-none-eabi-g++ $(LDFLAGS) build/main.o build/async.o build/vector.o build/init.o -o build/example.elf
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../src/rtfm/rtfm_clock.cpp -o build/clock.o
+		arm-none-eabi-g++ $(LDFLAGS) build/main.o build/clock.o build/async.o build/vector.o build/init.o -o build/example.elf
 		arm-none-eabi-objdump -D --source build/example.elf > build/example.dmp
 		@echo " "
 		@echo "Total size:"
 		@arm-none-eabi-size --format=berkeley build/example.elf
 		@echo " "
 		@echo "Each object size:"
-		@arm-none-eabi-size --format=berkeley build/main.o build/async.o build/vector.o build/init.o
+		@arm-none-eabi-size --format=berkeley build/main.o build/clock.o build/async.o build/vector.o build/init.o
 
 
 gdb:
