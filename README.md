@@ -16,7 +16,7 @@ run-time are minimal with:
 
 * 4-5 instructions / job for initialization of the NVIC.
 * 2-3 instructions / queue element for initializing the `async` queue.
-* The static requirement for `async` is about 400 bytes (the linked list and SysTick implementation).
+* The static requirement for `async` is about 400 bytes (the linked list, SysTick and time implementation).
 
 **Compile time:**
 * Uses the Kvasir MPL library for Metaprogramming.
@@ -65,8 +65,6 @@ can only be held within a job and must be released before the exit of a job.
 ### TODO
 
 * Cortex-M0 support, does not have `basepri` - will have to use interrupt masking.
-* Inheritance for resources so one can create an aggregate resource (`Ragg = {R1, R2, R3}`).
-For example `rtfm::Rasync` will always take the `rtfm::Rsystem_clock`, should be enough to only write the `rtfm::Rasync` in the resource claim.
 * Make the async implementation switchable (not to force the use of SysTick)
 * Support for resource claims over job boundaries (_ex._ one start job [lock], one finished job [release]).
   * Non-shared resource to support lock over boundaries, only one thread can have it in its resource claim
