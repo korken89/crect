@@ -61,4 +61,46 @@ struct resource
   using jobs = kvasir::mpl::flatten< kvasir::mpl::list<Jobs...> >;
 };
 
+/**
+ * @brief Resource convenience type definition.
+ *
+ * @tparam ID       Resource ID, a unique type that identifies the resource.
+ * @tparam Object   Integral_constant that contains a pointer to an object.
+ * @tparam Jobs     Parameter pack of jobs.
+ */
+template <typename ID, typename Object, typename... Jobs>
+using make_resource = resource<ID, Object, false, Jobs...>;
+
+/**
+ * @brief Unique resource convenience type definition.
+ *
+ * @tparam ID       Resource ID, a unique type that identifies the resource.
+ * @tparam Object   Integral_constant that contains a pointer to an object.
+ * @tparam Jobs     Parameter pack of jobs.
+ */
+template <typename ID, typename Object, typename... Jobs>
+using make_unique_resource = resource<ID, Object, true, Jobs...>;
+
+/**
+ * @brief Virtual resource convenience type definition.
+ *
+ * @tparam ID       Resource ID, a unique type that identifies the resource.
+ * @tparam Jobs     Parameter pack of jobs.
+ */
+template <typename ID, typename... Jobs>
+using make_virtual_resource =
+    resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+             false, Jobs...>;
+
+/**
+ * @brief Unique virtual resource convenience type definition.
+ *
+ * @tparam ID       Resource ID, a unique type that identifies the resource.
+ * @tparam Jobs     Parameter pack of jobs.
+ */
+template <typename ID, typename... Jobs>
+using make_unique_virtual_resource =
+    resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
+             true, Jobs...>;
+
 } /* END namespace rtfm */
