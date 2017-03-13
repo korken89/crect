@@ -95,6 +95,33 @@ struct is_nullptr_impl<
 {
   using f = kvasir::mpl::bool_<true>;
 };
+
+/**
+ * @brief Get the type information from an function, base case.
+ *
+ * @tparam T    Some type.
+ */
+template <typename T>
+struct function_traits_impl;
+
+/**
+ * @brief Get the type information from an function, implementation.
+ *
+ * @tparam Fun    Type of the operator() of the function.
+ * @tparam RType  Return type of the function.
+ * @tparam Args   Argument parameter pack of the function.
+ */
+template <typename Fun, typename RType, typename... Args>
+struct function_traits_impl<RType( Fun::* )( Args... ) const>
+//    Return type ( Function pointer type )( arguments ) const
+//                                                    (const because reasons...)
+{
+  using n_args = kvasir::mpl::integral_constant<unsigned, sizeof...(Args)>;
+  using return_type = RType;
+
+  template <unsigned I>
+  using arg = kvasir::mpl::at< I, kvasir::mpl::list< Args... > >;
+};
 } /* END namespace details */
 
 /**
@@ -112,6 +139,15 @@ using get_integral_type = typename details::get_integral_type_impl<T>::f;
  */
 template <typename T>
 using is_nullptr = typename details::is_nullptr_impl<T>::f;
+
+/**
+ * @brief Get the type information from an function.
+ *
+ * @tparam Fun    Function type.
+ */
+template <typename Fun>
+using function_traits =
+    details::function_traits_impl<decltype( &Fun::operator() )>;
 
 /**
  * @brief   Takes a user priority (0 = lowest, increasing numbers means higher
