@@ -42,6 +42,12 @@ If there are any questions on the usage, throw me a message.
 
 _Tested on Manjaro Linux using GCC 6.3.0 (arm-none-eabi) and a NUCLEO-F411RE for hardware testing. It is currently not working on Cortex-M0 devices._
 
+## Future name suggestions
+* ComTiS (Compile Time Scheduler)
+* CReactive (Compile-time Reactive Programming)
+
+_Winner gets a cookie!_
+
 ## Definitions
 **Job:**
 
