@@ -16,7 +16,7 @@ namespace details
 template <typename... Ts>
 struct job_to_resource_impl
 {
-  static_assert(kvasir::mpl::always_false<Ts...>{}, "Should not come here");
+  static_assert(kvasir::mpl::always_false<Ts...>::value, "Should not come here");
 };
 
 /**
@@ -78,7 +78,7 @@ struct _different_resource_id {
 template <typename... Ts>
 struct merge_resources_impl
 {
-  static_assert(kvasir::mpl::always_false<Ts...>{},
+  static_assert(kvasir::mpl::always_false<Ts...>::value,
                 "Merging different resources are not allowed");
 };
 
@@ -95,7 +95,7 @@ struct merge_resources_impl< resource<ID, Obj1, Unq1, Jobs1...>,
                              resource<ID, Obj2, Unq2, Job> >
 {
   static_assert( !kvasir::mpl::any< _same_job_id<Job>::template f,
-                                   kvasir::mpl::list<Jobs1...> >{},
+                                   kvasir::mpl::list<Jobs1...> >::value,
       "Duplicate jobs defined, each job must have a unique ID");
 
   static_assert( std::is_same<Obj1, Obj2>::value,

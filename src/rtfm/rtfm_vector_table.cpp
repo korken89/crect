@@ -18,4 +18,4 @@ __attribute__((used, section(".isr_vector")))
 constexpr const vector_table system_vectors = generate_vector_table(
     std::make_integer_sequence<
         unsigned, sizeof(vector_table::mcu_vectors) /
-                      sizeof(rtfm::details::isr_function_pointer)>{});
+                      sizeof(rtfm::details::isr_function_pointer)>::value);
