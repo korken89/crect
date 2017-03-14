@@ -38,8 +38,7 @@ template <typename JobList, typename Resource>
 struct find_resource_impl
 {
   /* Searches the resource tree for the same Resource ID. */
-  using type = kvasir::mpl::find_if<_same_resource_id<Resource>::template f,
-                                    resource_tree<JobList> >;
+  using type = kvasir::mpl::find_if<resource_tree<JobList>, _same_resource_id<Resource>::template f >;
 
   static_assert(!std::is_same< type, kvasir::mpl::list<> >::value,
                 "The resource in not registered in RTFM");
@@ -59,7 +58,7 @@ using find_resource = typename kvasir::mpl::pop_front<
 template <typename... Ts>
 struct job_to_priority
 {
-  static_assert(kvasir::mpl::always_false<Ts...>{}, "Should not come here");
+  static_assert(kvasir::mpl::always_false<Ts...>::value, "Should not come here");
 };
 
 /**
@@ -101,9 +100,9 @@ using resource_to_priority_list =
 template <typename JobList, typename Resource>
 using get_priority_ceiling =
                 kvasir::mpl::fold_right<
-                  kvasir::mpl::max,
+				  details::resource_to_priority_list<JobList, Resource>,
                   kvasir::mpl::integral_constant<unsigned, 0>,
-                  details::resource_to_priority_list<JobList, Resource>
+				  kvasir::mpl::max
                 >;
 
 } /* END namespace rtfm */
