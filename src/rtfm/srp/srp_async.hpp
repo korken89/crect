@@ -68,7 +68,7 @@ constexpr void async(std::chrono::duration<Rep, Period> duration)
 
   auto dur = duration_cast<rtfm::time::system_clock::duration>(duration);
 
-  details::async_impl_dur(dur, idx{});
+  details::async_impl_dur(dur, idx::value);
 }
 
 /**
@@ -103,7 +103,7 @@ template <typename Job>
 constexpr void async(rtfm::time::system_clock::time_point time)
 {
   using idx = typename Job::isr::index;
-  details::async_impl_time(time, idx{});
+  details::async_impl_time(time, idx::value);
 }
 
 /**

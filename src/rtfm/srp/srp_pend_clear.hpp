@@ -16,7 +16,7 @@ template <typename Job>
 constexpr void pend()
 {
   using ISRn = typename Job::isr::index;
-  NVIC->ISPR[ISRn{} >> 5UL] = (1UL << (ISRn{} & 0x1FUL));
+  NVIC->ISPR[ISRn::value >> 5UL] = (1UL << (ISRn::value & 0x1FUL));
 }
 
 /**
@@ -38,7 +38,7 @@ template <typename Job>
 constexpr void clear()
 {
   using ISRn = typename Job::isr::index;
-  NVIC->ICPR[ISRn{} >> 5UL] = (1UL << (ISRn{} & 0x1FUL));
+  NVIC->ICPR[ISRn::value >> 5UL] = (1UL << (ISRn::value & 0x1FUL));
 }
 
 /**

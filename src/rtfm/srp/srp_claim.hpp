@@ -45,7 +45,7 @@ struct claim_impl<true, Fun, Object>
     //               "The claim lambda must take arguments by reference." );
 
     /* Pass by reference. */
-    return f( *Object{} );
+    return f( *Object::value );
   }
 };
 
@@ -84,7 +84,7 @@ constexpr auto claim(Fun &&f)
 
   rtfm::srp::lock<Resource> lock{};
 
-  return details::claim_impl<has_object{}, Fun, object>{}(std::forward<Fun>(f));
+  return details::claim_impl<has_object::value, Fun, object>{}(std::forward<Fun>(f));
 }
 
 } /* END namespace srp */

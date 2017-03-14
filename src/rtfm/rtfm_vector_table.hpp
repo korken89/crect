@@ -28,7 +28,7 @@ extern "C"
 template <typename A>
 struct _same_isr_value {
   template <typename B>
-  using f = kvasir::mpl::bool_<A{} ==  typename B::isr::index{}>;
+  using f = kvasir::mpl::bool_<A::value ==  B::isr::index::value>;
 };
 
 /**
@@ -41,8 +41,8 @@ struct find_job_isr
 {
   /* Searches the resource tree for the Job with the correct ISR. */
   using f =
-      kvasir::mpl::find_if<_same_isr_value<ISR_POS>::template f,
-                           rtfm::system_job_list>;
+      kvasir::mpl::find_if<rtfm::system_job_list,
+                           _same_isr_value<ISR_POS>::template f>;
 };
 
 /**

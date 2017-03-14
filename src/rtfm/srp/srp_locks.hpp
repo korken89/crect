@@ -40,7 +40,7 @@ public:
   {
     /* Lock the resource. */
     arm_intrinsics::set_BASEPRI_MAX<
-      util::priority_to_NVIC_priority( ResourcePriority{} )
+      util::priority_to_NVIC_priority( ResourcePriority::value )
     >();
 
     /* Barriers to guarantee the instruction took hold before continuing. */

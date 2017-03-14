@@ -20,7 +20,7 @@ namespace details
 template <typename... Ts>
 struct get_integral_type_impl
 {
-  static_assert(kvasir::mpl::always_false<Ts...>{},
+  static_assert(kvasir::mpl::always_false<Ts...>::value,
                 "The input is not an integral_constant.");
 };
 
@@ -56,7 +56,7 @@ struct get_integral_type_impl<
 template <typename... Ts>
 struct is_nullptr_impl
 {
-  static_assert(kvasir::mpl::always_false<Ts...>{},
+  static_assert(kvasir::mpl::always_false<Ts...>::value,
                 "The input is not an integral_constant.");
 };
 

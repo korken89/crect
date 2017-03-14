@@ -61,20 +61,20 @@ struct job_to_nvic_printer
     using Prio = typename Job::prio;
 
 
-    if (ISRn{} < 0)
+    if (ISRn::value < 0)
     {
-      constexpr auto index = (static_cast<uint32_t>(ISRn{}) & 0xFUL) - 4UL;
+      constexpr auto index = (static_cast<uint32_t>(ISRn::value) & 0xFUL) - 4UL;
 
       /* Enable system interrupt. */
-      SCB->SHP[index] = util::priority_to_NVIC_priority(Prio{});
+      SCB->SHP[index] = util::priority_to_NVIC_priority(Prio::value);
     }
     else
     {
       /* Enable interrupt. */
-      NVIC->ISER[ISRn{} >> 5UL] = (1UL << (ISRn{} & 0x1FUL));
+      NVIC->ISER[ISRn::value >> 5UL] = (1UL << (ISRn::value & 0x1FUL));
 
       /* Set priority */
-      NVIC->IP[ISRn{}] = util::priority_to_NVIC_priority(Prio{});
+      NVIC->IP[ISRn::value] = util::priority_to_NVIC_priority(Prio::value);
     }
   }
 };
