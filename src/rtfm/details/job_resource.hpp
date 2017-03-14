@@ -31,7 +31,7 @@ struct job
   using resources = kvasir::mpl::flatten< kvasir::mpl::list<Res...> >;
 
   /* Using < for now, comes from setting basepri = 0 has no effect. */
-  static_assert(Prio_ < max_priority{},
+  static_assert(Prio_ < max_priority::value,
                 "Priority is higher than the max allowed");
 };
 
@@ -47,16 +47,16 @@ struct job
 template <typename ID_, typename Object, bool Unique, typename... Jobs>
 struct resource
 {
-  static_assert(kvasir::mpl::is_integral<Object>{},
+  static_assert(kvasir::mpl::is_integral<Object>::value,
                 "Object must be an integral constant.");
 
   static_assert((std::is_pointer<util::get_integral_type<Object>>::value ||
-                 util::is_nullptr<Object>{}),
+                 util::is_nullptr<Object>::value),
                 "The type of the object must be a pointer.");
 
   using id = ID_;
   using object = Object;
-  using has_object = typename kvasir::mpl::bool_<!util::is_nullptr<Object>{}>;
+  using has_object = typename kvasir::mpl::bool_<!util::is_nullptr<Object>::value>;
   using is_unique = kvasir::mpl::bool_<Unique>;
   using jobs = kvasir::mpl::flatten< kvasir::mpl::list<Jobs...> >;
 };

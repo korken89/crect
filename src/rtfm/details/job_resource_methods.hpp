@@ -21,8 +21,8 @@ struct make_resource_tree
   /* Take all the job<resources> and transform to resource<jobs> */
   using j2r = kvasir::mpl::flatten<
                 kvasir::mpl::transform<
-                  job_to_resource,
-                  kvasir::mpl::flatten< JobList >
+                  kvasir::mpl::flatten< JobList >,
+                  job_to_resource
                 > >;
 
 

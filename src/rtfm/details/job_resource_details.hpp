@@ -31,7 +31,7 @@ template <unsigned I1, unsigned I2, typename ISR, typename... Res>
 struct job_to_resource_impl< job<I1, I2, ISR, Res...> >
 {
   using f = kvasir::mpl::list< resource<typename Res::id, typename Res::object,
-        typename Res::is_unique{}, job<I1, I2, ISR> >... >;
+        Res::is_unique::value, job<I1, I2, ISR> >... >;
 };
 
 
@@ -94,8 +94,8 @@ template <typename ID, typename Obj1, typename Obj2, bool Unq1, bool Unq2,
 struct merge_resources_impl< resource<ID, Obj1, Unq1, Jobs1...>,
                              resource<ID, Obj2, Unq2, Job> >
 {
-  static_assert( !kvasir::mpl::any< _same_job_id<Job>::template f,
-                                   kvasir::mpl::list<Jobs1...> >::value,
+  static_assert( !kvasir::mpl::any< kvasir::mpl::list<Jobs1...>,
+                                    _same_job_id<Job>::template f >::value,
       "Duplicate jobs defined, each job must have a unique ID");
 
   static_assert( std::is_same<Obj1, Obj2>::value,
@@ -129,24 +129,24 @@ struct make_resource_tree_impl
 {
 
   using _current =  kvasir::mpl::pop_front< kvasir::mpl::remove_if<
+                      ResList,
                       _different_resource_id<
                         typename kvasir::mpl::pop_front<ResList>::front
-                      >::template f,
-                      ResList
+                      >::template f
                     > >;
 
   using _next =     kvasir::mpl::remove_if<
+                      ResList,
                       _same_resource_id<
                         typename kvasir::mpl::pop_front<ResList>::front
-                      >::template f,
-                      ResList
+                      >::template f
                     >;
 
   using f = kvasir::mpl::join< kvasir::mpl::list<
               kvasir::mpl::fold_right<
-                merge_resources,
+                typename _current::rest,
                 typename _current::front,
-                typename _current::rest
+                merge_resources
               > >,
               typename make_resource_tree_impl< _next >::f
             >;
