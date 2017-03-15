@@ -44,7 +44,7 @@ _Tested on Manjaro Linux using GCC 6.3.0 (arm-none-eabi) and a NUCLEO-F411RE for
 
 ## Future name suggestions
 * ComTiS (Compile Time Scheduler)
-* CReactive (Compile-time Reactive Programming)
+* CReactive (Compile-time Reactive Scheduler)
 
 _Winner gets a cookie!_
 
