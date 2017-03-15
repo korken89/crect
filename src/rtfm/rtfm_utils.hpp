@@ -120,7 +120,7 @@ struct function_traits_impl<RType( Fun::* )( Args... ) const>
   using return_type = RType;
 
   template <unsigned I>
-  using arg = kvasir::mpl::at< I, kvasir::mpl::list< Args... > >;
+  using arg = kvasir::mpl::at< kvasir::mpl::list< Args... >, I >;
 };
 } /* END namespace details */
 
@@ -142,6 +142,8 @@ using is_nullptr = typename details::is_nullptr_impl<T>::f;
 
 /**
  * @brief Get the type information from an function.
+ *
+ * @note  Only works if the function uses auto.
  *
  * @tparam Fun    Function type.
  */
