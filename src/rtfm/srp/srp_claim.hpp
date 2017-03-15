@@ -35,15 +35,6 @@ struct claim_impl<true, Fun, Object>
 {
   auto operator()(Fun &&f) const noexcept
   {
-    /* Use the function traits to check the number of parameters, and that
-     * arguments are passed by reference.
-     */
-    // using rtype = rtfm::util::function_traits<Fun>;
-    // static_assert(typename rtype::n_args{} == 1,
-    //               "The claim lambda may only take one argument" );
-    // static_assert(std::is_reference< typename rtype::template arg<0> >::value,
-    //               "The claim lambda must take arguments by reference." );
-
     /* Pass by reference. */
     return f( *Object::value );
   }
