@@ -18,7 +18,7 @@ using Rled = rtfm::resource<char,             // Resource unique ID
                 decltype(&led_resource),      // Type of the pointer
                 &led_resource                 // Pointer to some object to be protected
               >,
-              false>;                         // Flag to indicate if it is a resource
+              true>;                          // Flag to indicate if it is a resource
                                               // for a unique Job
 
 using J1 = rtfm::job<
@@ -39,29 +39,19 @@ using J2 = rtfm::job<
               rtfm::Rasync
             >;
 
-using Jasync = rtfm::job<
-              rtfm::util::hashit("JobAsync"),     // Unique ID
-              0,                                  // Priority
-              rtfm::MakeSystemISR<SysTick_IRQn>,  // ISR connection and location
-              rtfm::Rasync, rtfm::Rsystem_clock   // Possible resource claims
-            >;
 
 /****************************************************************************
  * End User Job and Resource defines.
  ****************************************************************************/
 
 
-namespace rtfm
-{
+/****************************************************************************
+ * Add user defined jobs to the list.
+ ****************************************************************************/
+
+using user_job_list = kvasir::mpl::list<J1, J2>;
 
 /****************************************************************************
  * Add user defined jobs to the list.
  ****************************************************************************/
 
-using system_job_list = kvasir::mpl::list<Jasync, J1, J2>;
-
-/****************************************************************************
- * Add user defined jobs to the list.
- ****************************************************************************/
-
-} /* END namespace rtfm */
