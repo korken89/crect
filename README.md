@@ -45,7 +45,7 @@ _Tested on Manjaro Linux using GCC 6.3.0 (arm-none-eabi) and a NUCLEO-F411RE for
 ## Future name suggestions
 * ComTiS (Compile Time Scheduler)
 * CReactive (Compile-time Reactive Scheduler)
-* TRust++ (Tast / Resource, pointing to the security of the system)
+* TRust++ (Task / Resource, pointing to the security of the system)
 
 _Winner gets a cookie!_
 
