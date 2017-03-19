@@ -26,7 +26,7 @@ using Rasync =
     resource<async_resource,
              kvasir::mpl::integral_constant<decltype(&rtfm_async_queue),
                                             &rtfm_async_queue>,
-             true>;
+             false>;
 
 using Jasync =
     rtfm::job<rtfm::util::hashit("JobAsync"),     // Unique ID

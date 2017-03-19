@@ -43,40 +43,48 @@ struct job_to_unique_resource_impl
   using f = kvasir::mpl::remove_if< typename Job::resources,
                                     is_not_unique_resource >;
 
-  //static_assert( kvasir::mpl::size< f >::value > 1,
-  //    "A job may only have one unique resource in its resource claim.");
+  static_assert( kvasir::mpl::size< f >::value <= 1,
+      "A job may only have one unique resource in its resource claim.");
 };
 
 template <typename Job>
 using job_to_unique_resource = typename job_to_unique_resource_impl<Job>::f;
 
-using jobs_to_unique_resource = kvasir::mpl::flatten< kvasir::mpl::transform<rtfm::system_job_list,
-                                                       job_to_unique_resource > >;
 
-template <typename E1, typename E2>
-using compare_func = kvasir::mpl::bool_<( !std::is_same<typename E1::id,
-                                                        typename E2::id>::value )>;
+template <typename JobList>
+using jobs_to_unique_resource = kvasir::mpl::flatten<
+    kvasir::mpl::transform<
+        JobList,
+        job_to_unique_resource > >;
 
-template <typename E1, typename E2>
-using compare_func2 = kvasir::mpl::bool_<( std::is_same<E1,
-                                                        E2>::value )>;
 
-using a = kvasir::mpl::list< int, char, float, double >;
-using b = kvasir::mpl::rotate< a, 1 >;
 
-template <template <typename...> class Pred, typename List>
-using adjacent = typename kvasir::mpl::zip_with< Pred, List, kvasir::mpl::rotate<List, 1> >;
+template <typename SortedList>
+using is_unique_list = kvasir::mpl::invert<
+    kvasir::mpl::fold_right<
+        typename kvasir::mpl::zip_with<
+            std::is_same,
+            SortedList,
+            kvasir::mpl::rotate<SortedList, 1> >,
+        kvasir::mpl::bool_<false>,
+        kvasir::mpl::logical_or > >;
+
+template <typename R1, typename R2>
+using different_resource_id = kvasir::mpl::bool_<( !std::is_same<typename R1::id,
+                                                        typename R2::id>::value )>;
+
+template <typename JobList>
+using is_unique_job_list = is_unique_list<
+    kvasir::mpl::sort<
+        jobs_to_unique_resource<JobList>,
+        different_resource_id > >;
+
 
 int main()
 {
-  using s = kvasir::mpl::sort<jobs_to_unique_resource, compare_func>;
-  //s::g;
-  //b::g;
-
-  //using ad = adjacent<std::is_same, a>;
-  using ad = kvasir::mpl::fold_right<adjacent<compare_func2, a>,
-                                     kvasir::mpl::bool_<false>,
-                                     kvasir::mpl::logical_or>;
+  //using ad = is_unique_list<a>;
+  using ad = is_unique_job_list<rtfm::system_job_list>;
+  //using ad = jobs_to_unique_resource< rtfm::system_job_list >;
   ad::g;
 
   /* Initialization code */
