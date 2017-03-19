@@ -89,7 +89,7 @@ Small description on how to use this.
 A resource definition is as follows, where `some_type` is a type that symbolizes the resource.
 ```C++
 using Rled = rtfm::resource<
-               char,                            // Resource unique ID
+               some_type,                       // Resource unique ID
                kvasir::mpl::integral_constant<  // The resource link (can be nullptr)
                  decltype(&led_resource),       // Type of the pointer
                  &led_resource                  // Pointer to some object to be protected
