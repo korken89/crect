@@ -70,11 +70,14 @@ can only be held within a job and must be released before the exit of a job.
 
 ### TODO
 
-* Cortex-M0 support, does not have `basepri` - will have to use interrupt masking.
-* Make the async implementation switchable (not to force the use of SysTick)
-* Support for resource claims over job boundaries (_ex._ one start job [lock], one finished job [release]).
-  * Non-shared resource to support lock over boundaries, only one thread can have it in its resource claim
-* Add a debug mode for `lock` / `claim`, use `IPSR` to check that the ISR number is allowed to take the resource.
+- [ ] Cortex-M0 support, does not have `basepri` - will have to use interrupt masking.
+- [ ] Make the async implementation switchable (not to force the use of SysTick)
+- [ ] Support for resource claims over job boundaries (_ex._ one start job [lock], one finished job [release]).
+
+  Add a unique resource to support lock over boundaries (only one job can have it in its resource claim). It will allow for producer/consumer patterns as the unique job can work by reading a queue of actions. _Ex._ a SPI/DMA combination, where jobs push to a "SPI transfer queue", and the job which has the unique SPI/DMA resource will read this queue and perform the desired transactions.
+
+
+- [ ] Add a debug mode for `lock` / `claim`, use `IPSR` to check that the ISR number is allowed to take the resource.
 
 ---
 
