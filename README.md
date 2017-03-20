@@ -46,6 +46,7 @@ _Tested on Manjaro Linux using GCC 6.3.0 (arm-none-eabi) and a NUCLEO-F411RE for
 * ComTiS (Compile Time Scheduler)
 * CReactive (Compile-time Reactive Scheduler)
 * TRust++ (Task / Resource, pointing to the security of the system)
+* SyRuP (SRP)
 
 _Winner gets a cookie!_
 
