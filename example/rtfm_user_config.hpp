@@ -18,7 +18,7 @@ using Rled = rtfm::resource<char,             // Resource unique ID
                 decltype(&led_resource),      // Type of the pointer
                 &led_resource                 // Pointer to some object to be protected
               >,
-              true>;                          // Flag to indicate if it is a resource
+              false>;                         // Flag to indicate if it is a resource
                                               // for a unique Job
 
 using J1 = rtfm::job<
