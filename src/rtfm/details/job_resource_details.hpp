@@ -71,6 +71,16 @@ struct _different_resource_id {
   using f = kvasir::mpl::invert< std::is_same<typename A::id, typename B::id> >;
 };
 
+/**
+ * @brief Checks if resource ID is different.
+ *
+ * @tparam A   Left hand side.
+ * @tparam B   Right hand side.
+ */
+template <typename A, typename B>
+using _different_resource_id_2r =
+    kvasir::mpl::invert< std::is_same<typename A::id, typename B::id> >;
+
 
 /**
  * @brief Merges resources of same ID, base case - should not come here.

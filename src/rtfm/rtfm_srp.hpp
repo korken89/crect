@@ -16,7 +16,7 @@
 #include "rtfm/srp/srp_locks.hpp"
 #include "rtfm/srp/srp_pend_clear.hpp"
 #include "rtfm/srp/srp_prioirty_ceiling.hpp"
-//#include "rtfm/srp/srp_unique.hpp"
+#include "rtfm/srp/srp_unique.hpp"
 
 /* Async resource definition for now... */
 extern rtfm::async_queue<__RTFM_ASYNC_QUEUE_SIZE> rtfm_async_queue;
@@ -47,8 +47,8 @@ using system_job_list =
     kvasir::mpl::flatten<kvasir::mpl::list<Jasync, user_job_list>>;
 
 /** Check the system job list for unique resources. */
-//static_assert(is_unique_job_list< system_job_list >::value,
-//              "A unique resource is claimed by multiple jobs.");
+static_assert(is_unique_job_list< system_job_list >::value,
+              "A unique resource is claimed by multiple jobs.");
 
 namespace srp
 {
