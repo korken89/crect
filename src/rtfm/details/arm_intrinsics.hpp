@@ -122,6 +122,14 @@ __attribute__((always_inline)) static inline void barrier_entry()
 #endif
 }
 
+/**
+ * @brief  Start of a instruction and data barrier with forced synchronization,
+ *         used to guarantee the memory order for critical operations.
+ */
+__attribute__((always_inline)) static inline void barrier_entry_with_sync()
+{
+  asm volatile("dsb 0xF\nisb 0xF\n" ::: "memory");
+}
 
 /**
  * @brief  End of a instruction and data barrier, used to guarantee the
