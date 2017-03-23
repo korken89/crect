@@ -4,6 +4,7 @@
 #include "kvasir/mpl/mpl.hpp"
 #include "rtfm/details/job_resource.hpp"
 #include "rtfm/details/job_resource_details.hpp"
+#include "rtfm/srp/srp_prioirty_ceiling.hpp"
 
 namespace rtfm
 {
@@ -82,6 +83,19 @@ using is_unique_job_list = details::is_unique_list<
     kvasir::mpl::sort<
         details::jobs_to_unique_resource<JobList>,
         details::_different_resource_id_2r > >;
+
+/**
+ * @brief Takes a list of jobs and finds the corresponding job to the unique
+ *        resource.
+ *
+ * @tparam  JobList    List of jobs search.
+ * @tparam  Resource   Resource to find the job of.
+ */
+template <typename JobList, typename Resource>
+using get_unique_job_from_resource = typename kvasir::mpl::pop_front<
+    typename details::find_resource<JobList, Resource>::jobs
+  >::front;
+
 
 } /* END namespace rtfm */
 
