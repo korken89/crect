@@ -28,31 +28,65 @@ template <typename JobList>
 using resource_tree = typename make_resource_tree<JobList>::result;
 
 /**
- * @brief Finds a resource in the resource tree (implementation).
+ * @brief Finds a non-unique resource in the resource tree (implementation).
  *
  * @tparam  JobList   The system's job list.
- * @tparam Resource   Resource to find.
+ * @tparam  Resource  Resource to find.
  */
 template <typename JobList, typename Resource>
 struct find_resource_impl
 {
   /* Searches the resource tree for the same Resource ID. */
-  using type = kvasir::mpl::find_if<resource_tree<JobList>,
+  using f = kvasir::mpl::find_if<resource_tree<JobList>,
                                     _same_resource_id<Resource>::template f >;
 
-  static_assert(!std::is_same< type, kvasir::mpl::list<> >::value,
+  static_assert(!std::is_same< f, kvasir::mpl::list<> >::value,
                 "The resource in not registered in RTFM");
+
+  static_assert(kvasir::mpl::pop_front<f>::front::is_unique::value == false,
+                "Found unique resource when normal was requested");
 };
 
 /**
- * @brief Finds a resource in the resource tree (alias).
+ * @brief Finds a unique resource in the resource tree (implementation).
+ *
+ * @tparam  JobList   The system's job list.
+ * @tparam  Resource  Resource to find.
+ */
+template <typename JobList, typename Resource>
+struct find_unique_resource_impl
+{
+  /* Searches the resource tree for the same Resource ID. */
+  using f = kvasir::mpl::find_if<resource_tree<JobList>,
+                                    _same_resource_id<Resource>::template f >;
+
+  static_assert(!std::is_same< f, kvasir::mpl::list<> >::value,
+                "The resource in not registered in RTFM");
+
+  static_assert(kvasir::mpl::pop_front<f>::front::is_unique::value == true,
+                "Found unique resource when normal was requested");
+};
+
+/**
+ * @brief Finds a non-unique resource in the resource tree (alias).
  *
  * @tparam  JobList   The system's job list.
  * @tparam Resource   Resource to find.
  */
 template <typename JobList, typename Resource>
 using find_resource = typename kvasir::mpl::pop_front<
-                        typename find_resource_impl<JobList, Resource>::type
+                        typename find_resource_impl<JobList, Resource>::f
+                      >::front;
+
+/**
+ * @brief Finds a unique resource in the resource tree (alias).
+ *
+ * @tparam  JobList   The system's job list.
+ * @tparam Resource   Resource to find.
+ */
+template <typename JobList, typename Resource>
+using find_unique_resource = typename kvasir::mpl::pop_front<
+                        typename find_unique_resource_impl<JobList, Resource>::f
                       >::front;
 
 template <typename... Ts>
@@ -71,7 +105,7 @@ struct job_to_priority
  */
 template <unsigned ID, unsigned PRIO, typename ISR, typename... Res>
 struct job_to_priority< job<ID, PRIO, ISR, Res...> > :
-  kvasir::mpl::integral_constant<unsigned, PRIO>
+    kvasir::mpl::integral_constant<unsigned, PRIO>
 {
 };
 

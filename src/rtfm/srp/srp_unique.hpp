@@ -93,7 +93,7 @@ using is_unique_job_list = details::is_unique_list<
  */
 template <typename JobList, typename Resource>
 using get_unique_job_from_resource = typename kvasir::mpl::pop_front<
-    typename details::find_resource<JobList, Resource>::jobs
+    typename details::find_unique_resource<JobList, Resource>::jobs
   >::front;
 
 
