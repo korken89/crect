@@ -1,4 +1,4 @@
-INCLUDE = -I../deps/mpl/src -I../src -I./inc -I.
+INCLUDE = -I../../deps/mpl/src -I../../src -I../sys/inc -I.
 DEFS = -DNDEBUG
 FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -ggdb -O1
 COMMON = -fno-rtti -fno-non-call-exceptions -fno-exceptions
@@ -9,7 +9,7 @@ COMMON += -mno-thumb-interwork -fno-threadsafe-statics -nostartfiles
 COMMON += -fsigned-char -fno-move-loop-invariants -ffunction-sections
 COMMON += -fdata-sections -Xlinker --gc-sections
 ARM_FLAGS = -c $(FLAGS) $(COMMON)
-LDFLAGS = $(COMMON) -T link.ld -Wl,-Map=build/output.map --specs=nano.specs
+LDFLAGS = $(COMMON) -T ../sys/link.ld -Wl,-Map=build/output.map --specs=nano.specs
 
 OCD_TARGET = stm32f4x
 OCD_INTERFFACE = stlink-v2-1.cfg
@@ -20,10 +20,10 @@ GDB_FLAGS = -tui -ex "target remote | $(OPENOCD) -c \"gdb_port pipe; log_output 
 all:
 		@mkdir -p build
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) main.cpp -o build/main.o
-		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) init.cpp -o build/init.o
-		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../src/rtfm/rtfm_vector_table.cpp -o build/vector.o
-		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../src/rtfm/rtfm_async.cpp -o build/async.o
-		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../src/rtfm/rtfm_clock.cpp -o build/clock.o
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../sys/init.cpp -o build/init.o
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/rtfm/rtfm_vector_table.cpp -o build/vector.o
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/rtfm/rtfm_async.cpp -o build/async.o
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/rtfm/rtfm_clock.cpp -o build/clock.o
 		arm-none-eabi-g++ $(LDFLAGS) build/main.o build/clock.o build/async.o build/vector.o build/init.o -o build/example.elf
 		arm-none-eabi-objdump -D --source build/example.elf > build/example.dmp
 		@echo " "
