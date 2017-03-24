@@ -64,7 +64,7 @@ struct find_unique_resource_impl
                 "The resource in not registered in RTFM");
 
   static_assert(kvasir::mpl::pop_front<f>::front::is_unique::value == true,
-                "Found unique resource when normal was requested");
+                "Found normal resource when unique was requested");
 };
 
 /**
