@@ -26,6 +26,8 @@ run-time are minimal with:
 * 3-4 instructions + 4 bytes of stack for a `lock`.
 * 1-3 instructions for an (implicit) unlock.
 * `claim` has zero overhead, it decomposes into a `lock`.
+* 5 instructions for a `unique_lock`.
+* 2 instructions for a `unique_unlock`.
 * 2-4 instructions for `pend` / `clear`.
 * About 20-30 instructions * number of items in queue for `async`.
 
@@ -74,12 +76,7 @@ can only be held within a job and must be released before the exit of a job.
 
 - [ ] Cortex-M0 support, does not have `basepri` - will have to use interrupt masking.
 - [ ] Make the async implementation switchable (not to force the use of SysTick)
-- [ ] Support for resource claims over job boundaries (_ex._ one start job [lock], one finished job [release]).
-
-  Add a unique resource to support lock over boundaries (only one job can have it in its resource claim). It will allow for producer/consumer patterns as the unique job can work by reading a queue of actions. _Ex._ a SPI/DMA combination, where jobs push to a "SPI transfer queue", and the job which has the unique SPI/DMA resource will read this queue and perform the desired transactions.
-
-
-- [ ] Add a debug mode for `lock` / `claim`, use `IPSR` to check that the ISR number is allowed to take the resource.
+- [ ] Add a debug mode for `lock` / `claim` / `unique_lock`, use `IPSR` to check that the ISR number is allowed to take the resource.
 
 ---
 
@@ -88,17 +85,12 @@ can only be held within a job and must be released before the exit of a job.
 Small description on how to use this.
 
 #### Resource definition
-A resource definition is as follows, where `some_type` is a type that symbolizes the resource.
+A resource definition is as follows, where `ManageLED` is a type that symbolizes the resource.
 ```C++
-using Rled = rtfm::resource<
-               some_type,                       // Resource unique ID
-               kvasir::mpl::integral_constant<  // The resource link (can be nullptr)
-                 decltype(&led_resource),       // Type of the pointer
-                 &led_resource                  // Pointer to some object to be protected
-               >,
-               false                            // Flag to indicate if it is a resource
-             >;                                 // for a unique Job
-
+using Rled = rtfm::make_resource<
+    ManageLED,                      // Resource unique ID
+    RTFM_OBJECT_LINK(led_resource)  // Link to some object to be protected
+  >;
 ```
 Currently 2 system resources exists:
 
@@ -175,6 +167,25 @@ auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
 });
 ```
 
+For a full example please see `./examples/blinky`.
+
+#### unique_lock
+Add a unique resource and its corresponding lock is to support lock over job
+boundaries. This allows for
+producer/consumer patterns as the unique job can work by reading a queue of
+actions. _Ex._ a DMA, where jobs push to a "DMA transfer queue",
+and the job which has the unique DMA resource will read this queue and
+perform the desired transactions.
+
+A `unique_lock` effectively decomposes into disabling the interrupt vector of
+the job, while the `unique_unlock` re-enables the interrupt vector.
+
+For a full example please see `./examples/unique`.
+
+```C++
+```
+
+There is no `unlock`, this is by design.
 #### pend / clear
 `pend` directly sets a job for execution and will be as soon as its priority is the highest, while `clear` removes the job for execution.
 ```C++
