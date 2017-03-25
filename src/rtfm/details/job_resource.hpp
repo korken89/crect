@@ -93,4 +93,11 @@ using make_unique_resource =
     resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
              true, Jobs...>;
 
+/**
+ * @brief Convenience define for creating an object link until we have
+ *        auto templates.
+ */
+#define RTFM_OBJECT_LINK(obj) \
+        kvasir::mpl::integral_constant< decltype(&obj), (&obj) >
+
 } /* END namespace rtfm */

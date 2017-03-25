@@ -12,13 +12,7 @@
 void job_start(void);
 void job_done(void);
 
-using Runique = rtfm::resource<char,          // Resource unique ID
-              kvasir::mpl::integral_constant< // The resource link (can be nullptr)
-                decltype(nullptr),            // Type of the pointer
-                nullptr                       // Pointer to some object to be protected
-              >,
-              true>;                          // Flag to indicate if it is a resource
-                                              // for a unique Job
+using Runique = rtfm::make_unique_resource<char>;
 
 using J1 = rtfm::job<
               rtfm::util::hashit("Job start"), // Unique ID
