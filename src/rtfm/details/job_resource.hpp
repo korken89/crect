@@ -17,21 +17,21 @@ using max_priority = kvasir::mpl::integral_constant<unsigned,
 /**
  * @brief Job type definition.
  *
- * @tparam UID_   Job unique ID.
- * @tparam Prio_  Priority.
+ * @tparam UID    Job unique ID.
+ * @tparam Prio   Priority.
  * @tparam ISR    ISR definition.
  * @tparam Res    Parameter pack of resources.
  */
-template <unsigned UID_, unsigned Prio_, typename ISR_, typename... Res>
+template <unsigned UID, unsigned Prio, typename ISR, typename... Res>
 struct job
 {
-  using uid = kvasir::mpl::integral_constant<unsigned, UID_>;
-  using prio = kvasir::mpl::integral_constant<unsigned, Prio_>;
-  using isr = ISR_;
+  using uid = kvasir::mpl::integral_constant<unsigned, UID>;
+  using prio = kvasir::mpl::integral_constant<unsigned, Prio>;
+  using isr = ISR;
   using resources = kvasir::mpl::flatten< kvasir::mpl::list<Res...> >;
 
   /* Using < for now, comes from setting basepri = 0 has no effect. */
-  static_assert(Prio_ < max_priority::value,
+  static_assert(Prio < max_priority::value,
                 "Priority is higher than the max allowed");
 };
 
@@ -39,12 +39,12 @@ struct job
 /**
  * @brief Resource type definition.
  *
- * @tparam ID_      Resource "ID", a unique type that identifies the resource.
+ * @tparam ID       Resource "ID", a unique type that identifies the resource.
  * @tparam Object   Integral_constant that contains a pointer to an object.
  * @tparam Unique   Flag to indicate if it is a unique resource.
  * @tparam Jobs     Parameter pack of jobs.
  */
-template <typename ID_, typename Object, bool Unique, typename... Jobs>
+template <typename ID, typename Object, bool Unique, typename... Jobs>
 struct resource
 {
   static_assert(kvasir::mpl::is_integral<Object>::value,
@@ -54,7 +54,7 @@ struct resource
                  util::is_nullptr<Object>::value),
                 "The type of the object must be a pointer.");
 
-  using id = ID_;
+  using id = ID;
   using object = Object;
   using has_object = typename kvasir::mpl::bool_<!util::is_nullptr<Object>::value>;
   using is_unique = kvasir::mpl::bool_<Unique>;
@@ -70,16 +70,6 @@ struct resource
  */
 template <typename ID, typename Object, typename... Jobs>
 using make_resource = resource<ID, Object, false, Jobs...>;
-
-/**
- * @brief Unique resource convenience type definition.
- *
- * @tparam ID       Resource ID, a unique type that identifies the resource.
- * @tparam Object   Integral_constant that contains a pointer to an object.
- * @tparam Jobs     Parameter pack of jobs.
- */
-template <typename ID, typename Object, typename... Jobs>
-using make_unique_resource = resource<ID, Object, true, Jobs...>;
 
 /**
  * @brief Virtual resource convenience type definition.
@@ -99,7 +89,7 @@ using make_virtual_resource =
  * @tparam Jobs     Parameter pack of jobs.
  */
 template <typename ID, typename... Jobs>
-using make_unique_virtual_resource =
+using make_unique_resource =
     resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
              true, Jobs...>;
 
