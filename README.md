@@ -75,8 +75,8 @@ can only be held within a job and must be released before the exit of a job.
 ### TODO
 
 - [ ] Cortex-M0 support, does not have `basepri` - will have to use interrupt masking.
-- [ ] Make the async implementation switchable (not to force the use of SysTick)
 - [ ] Add a debug mode for `lock` / `claim` / `unique_lock`, use `IPSR` to check that the ISR number is allowed to take the resource.
+- [ ] Make the NVIC init merged into minimal set of operations, not one operation per job.
 
 ---
 
