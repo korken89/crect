@@ -63,7 +63,7 @@ struct isr_selector
 template <>
 struct isr_selector<kvasir::mpl::list<>>
 {
-  using isr = rtfm::MakeISR<_unhandled_exception, 0>;
+  using isr = rtfm::make_isr<_unhandled_exception, 0>;
 };
 
 /**

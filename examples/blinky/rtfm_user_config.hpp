@@ -21,7 +21,7 @@ using Rled = rtfm::make_resource<
 using J1 = rtfm::job<
               rtfm::util::hashit("Job1"), // Unique ID
               1,                          // Priority
-              rtfm::MakeISR<job1, 1>,     // ISR connection and location
+              rtfm::make_isr<job1, 1>,    // ISR connection and location
               Rled,                       // Possible resource claims
               rtfm::Rsystem_clock,
               rtfm::Rasync
@@ -30,7 +30,7 @@ using J1 = rtfm::job<
 using J2 = rtfm::job<
               rtfm::util::hashit("Job2"), // Unique ID
               2,                          // Priority
-              rtfm::MakeISR<job2, 2>,     // ISR connection and location
+              rtfm::make_isr<job2, 2>,    // ISR connection and location
               Rled,                       // Possible resource claims
               rtfm::Rsystem_clock,
               rtfm::Rasync

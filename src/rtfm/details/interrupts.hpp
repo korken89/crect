@@ -71,7 +71,7 @@ struct isr<P, idx<I>>
  * @tparam I  Index value.
  */
 template <details::isr_function_pointer P, int I>
-using MakeISR = details::isr<P, details::idx<I>>;
+using make_isr = details::isr<P, details::idx<I>>;
 
 /**
  * @brief Wrapper of an System ISR type for ease of use.
@@ -79,7 +79,7 @@ using MakeISR = details::isr<P, details::idx<I>>;
  * @tparam I  Index value.
  */
 template <int I>
-using MakeSystemISR = details::isr<nullptr, details::idx<I>>;
+using make_system_isr = details::isr<nullptr, details::idx<I>>;
 
 /**
  * @brief Default ISR definition, statically defined. A simple forever loop.

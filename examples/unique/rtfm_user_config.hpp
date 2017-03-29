@@ -17,7 +17,7 @@ using Runique = rtfm::make_unique_resource<char>;
 using J1 = rtfm::job<
               rtfm::util::hashit("Job start"), // Unique ID
               1,                               // Priority
-              rtfm::MakeISR<job_start, 1>,     // ISR connection and location
+              rtfm::make_isr<job_start, 1>,    // ISR connection and location
               Runique,                         // Possible resource claims
               rtfm::Rsystem_clock,
               rtfm::Rasync
@@ -26,7 +26,7 @@ using J1 = rtfm::job<
 using J2 = rtfm::job<
               rtfm::util::hashit("Job done"), // Unique ID
               2,                              // Priority
-              rtfm::MakeISR<job_done, 2>,     // ISR connection and location
+              rtfm::make_isr<job_done, 2>,    // ISR connection and location
               Runique,                        // Possible resource claims
               rtfm::Rsystem_clock,
               rtfm::Rasync

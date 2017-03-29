@@ -113,7 +113,7 @@ void job1(void);
 using J1 = rtfm::job<
               rtfm::util::hashit("Job1"), // Unique ID (here through a hash of text)
               1,                          // Priority (0 = low)
-              rtfm::MakeISR<job1, 1>,     // ISR connection and location
+              rtfm::make_isr<job1, 1>,    // ISR connection and location
               R1, rtfm::Rasync            // List of possible resource claims
             >;
 ```
@@ -124,11 +124,11 @@ The ISR definitions available are split in the Peripheral ISRs (I >= 0), and Sys
 ```C++
 // Peripheral ISR definition (I >= 0)
 template <rtfm::details::isr_function_pointer<P, int I>
-using MakeISR = rtfm::details::isr<P, rtfm::details::index<I>>;
+using make_isr = rtfm::details::isr<P, rtfm::details::index<I>>;
 
 // System ISR definition (I < 0)
 template <int I>
-using MakeSystemISR = rtfm::details::isr<nullptr, rtfm::details::index<I>>;
+using make_system_isr = rtfm::details::isr<nullptr, rtfm::details::index<I>>;
 ```
 
 #### lock

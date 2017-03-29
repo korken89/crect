@@ -30,10 +30,10 @@ using Rasync =
              false>;
 
 using Jasync =
-    rtfm::job<rtfm::util::hashit("JobAsync"),     // Unique ID
-              0,                                  // Priority
-              rtfm::MakeSystemISR<SysTick_IRQn>,  // ISR connection and location
-              rtfm::Rasync, rtfm::Rsystem_clock   // Possible resource claims
+    rtfm::job<rtfm::util::hashit("JobAsync"),      // Unique ID
+              0,                                   // Priority
+              rtfm::make_system_isr<SysTick_IRQn>, // ISR connection and location
+              rtfm::Rasync, rtfm::Rsystem_clock    // Possible resource claims
               >;
 }
 
