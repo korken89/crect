@@ -19,8 +19,8 @@ template <typename JobList>
 struct make_resource_tree
 {
   /* Take all the job<resources> and transform to resource<jobs> */
-  using j2r = kvasir::mpl::flatten<
-                kvasir::mpl::transform<
+  using j2r = kvasir::mpl::eager::flatten<
+                kvasir::mpl::eager::transform<
                   JobList,
                   job_to_resource
                 >
