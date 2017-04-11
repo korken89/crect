@@ -41,7 +41,7 @@ struct find_job_isr
 {
   /* Searches the resource tree for the Job with the correct ISR. */
   using f =
-      kvasir::mpl::find_if<rtfm::system_job_list,
+      kvasir::mpl::eager::find_if<rtfm::system_job_list,
                            _same_isr_value<ISR_POS>::template f>;
 };
 
@@ -54,7 +54,7 @@ template <typename JobList>
 struct isr_selector
 {
   /* TODO: Check so the ISR is unique... */
-  using isr = typename kvasir::mpl::pop_front<JobList>::front::isr;
+  using isr = typename kvasir::mpl::eager::pop_front<JobList>::front::isr;
 };
 
 /**

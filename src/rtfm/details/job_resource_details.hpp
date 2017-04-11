@@ -104,7 +104,7 @@ template <typename ID, typename Obj1, typename Obj2, bool Unq1, bool Unq2,
 struct merge_resources_impl< resource<ID, Obj1, Unq1, Jobs1...>,
                              resource<ID, Obj2, Unq2, Job> >
 {
-  static_assert( !kvasir::call<kvasir::mpl::any<_same_job_id<Job>, Jobs1...>::value,
+  static_assert( !kvasir::mpl::call<kvasir::mpl::any<_same_job_id<Job>>, Jobs1...>::value,
       "Duplicate jobs defined, each job must have a unique ID");
 
   static_assert( std::is_same<Obj1, Obj2>::value,

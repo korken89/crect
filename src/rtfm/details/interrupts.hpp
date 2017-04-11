@@ -27,7 +27,7 @@ using idx = kvasir::mpl::integral_constant<int, I>;
 template <isr_function_pointer P, typename I>
 struct isr
 {
-  static_assert(kvasir::mpl::always_false< I >::value, "Index type error");
+  static_assert(kvasir::mpl::eager::always_false< I >::value, "Index type error");
 };
 
 /**

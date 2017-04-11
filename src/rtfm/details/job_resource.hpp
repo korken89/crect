@@ -28,7 +28,7 @@ struct job
   using uid = kvasir::mpl::integral_constant<unsigned, UID>;
   using prio = kvasir::mpl::integral_constant<unsigned, Prio>;
   using isr = ISR;
-  using resources = kvasir::mpl::flatten< kvasir::mpl::list<Res...> >;
+  using resources = kvasir::mpl::eager::flatten< kvasir::mpl::list<Res...> >;
 
   /* Using < for now, comes from setting basepri = 0 has no effect. */
   static_assert(Prio < max_priority::value,
@@ -58,7 +58,7 @@ struct resource
   using object = Object;
   using has_object = typename kvasir::mpl::bool_<!util::is_nullptr<Object>::value>;
   using is_unique = kvasir::mpl::bool_<Unique>;
-  using jobs = kvasir::mpl::flatten< kvasir::mpl::list<Jobs...> >;
+  using jobs = kvasir::mpl::eager::flatten< kvasir::mpl::list<Jobs...> >;
 };
 
 /**

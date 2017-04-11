@@ -37,13 +37,13 @@ template <typename JobList, typename Resource>
 struct find_resource_impl
 {
   /* Searches the resource tree for the same Resource ID. */
-  using f = kvasir::mpl::find_if<resource_tree<JobList>,
+  using f = kvasir::mpl::eager::find_if<resource_tree<JobList>,
                                     _same_resource_id<Resource>::template f >;
 
   static_assert(!std::is_same< f, kvasir::mpl::list<> >::value,
                 "The resource in not registered in RTFM");
 
-  static_assert(kvasir::mpl::pop_front<f>::front::is_unique::value == false,
+  static_assert(kvasir::mpl::eager::pop_front<f>::front::is_unique::value == false,
                 "Found unique resource when normal was requested");
 };
 
@@ -57,13 +57,13 @@ template <typename JobList, typename Resource>
 struct find_unique_resource_impl
 {
   /* Searches the resource tree for the same Resource ID. */
-  using f = kvasir::mpl::find_if<resource_tree<JobList>,
+  using f = kvasir::mpl::eager::find_if<resource_tree<JobList>,
                                     _same_resource_id<Resource>::template f >;
 
   static_assert(!std::is_same< f, kvasir::mpl::list<> >::value,
                 "The resource in not registered in RTFM");
 
-  static_assert(kvasir::mpl::pop_front<f>::front::is_unique::value == true,
+  static_assert(kvasir::mpl::eager::pop_front<f>::front::is_unique::value == true,
                 "Found normal resource when unique was requested");
 };
 
@@ -74,7 +74,7 @@ struct find_unique_resource_impl
  * @tparam Resource   Resource to find.
  */
 template <typename JobList, typename Resource>
-using find_resource = typename kvasir::mpl::pop_front<
+using find_resource = typename kvasir::mpl::eager::pop_front<
                         typename find_resource_impl<JobList, Resource>::f
                       >::front;
 
@@ -85,14 +85,14 @@ using find_resource = typename kvasir::mpl::pop_front<
  * @tparam Resource   Resource to find.
  */
 template <typename JobList, typename Resource>
-using find_unique_resource = typename kvasir::mpl::pop_front<
+using find_unique_resource = typename kvasir::mpl::eager::pop_front<
                         typename find_unique_resource_impl<JobList, Resource>::f
                       >::front;
 
 template <typename... Ts>
 struct job_to_priority
 {
-  static_assert(kvasir::mpl::always_false<Ts...>::value, "Should not come here");
+  static_assert(kvasir::mpl::eager::always_false<Ts...>::value, "Should not come here");
 };
 
 /**
@@ -117,8 +117,8 @@ struct job_to_priority< job<ID, PRIO, ISR, Res...> > :
  */
 template <typename JobList, typename Resource>
 using resource_to_priority_list =
-                kvasir::mpl::join< kvasir::mpl::transform<
-                  kvasir::mpl::join< typename find_resource<JobList,
+                kvasir::mpl::eager::join< kvasir::mpl::eager::transform<
+                  kvasir::mpl::eager::join< typename find_resource<JobList,
                                                             Resource>::jobs >,
                   job_to_priority
                 > >;
@@ -133,10 +133,10 @@ using resource_to_priority_list =
  */
 template <typename JobList, typename Resource>
 using get_priority_ceiling =
-                kvasir::mpl::fold_right<
+                kvasir::mpl::eager::fold_right<
                   details::resource_to_priority_list<JobList, Resource>,
                   kvasir::mpl::integral_constant<unsigned, 0>,
-                  kvasir::mpl::max
+                  kvasir::mpl::eager::max
                 >;
 
 } /* END namespace rtfm */
