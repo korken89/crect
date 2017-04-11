@@ -16,7 +16,7 @@ namespace details
 template <typename... Ts>
 struct job_to_resource_impl
 {
-  static_assert(kvasir::mpl::always_false<Ts...>::value, "Should not come here");
+  static_assert(kvasir::mpl::eager::always_false<Ts...>::value, "Should not come here");
 };
 
 /**
@@ -68,7 +68,7 @@ struct _same_resource_id {
 template <typename A>
 struct _different_resource_id {
   template <typename B>
-  using f = kvasir::mpl::invert< std::is_same<typename A::id, typename B::id> >;
+  using f = kvasir::mpl::eager::invert< std::is_same<typename A::id, typename B::id> >;
 };
 
 /**
@@ -79,7 +79,7 @@ struct _different_resource_id {
  */
 template <typename A, typename B>
 using _different_resource_id_2r =
-    kvasir::mpl::invert< std::is_same<typename A::id, typename B::id> >;
+    kvasir::mpl::eager::invert< std::is_same<typename A::id, typename B::id> >;
 
 
 /**
@@ -88,7 +88,7 @@ using _different_resource_id_2r =
 template <typename... Ts>
 struct merge_resources_impl
 {
-  static_assert(kvasir::mpl::always_false<Ts...>::value,
+  static_assert(kvasir::mpl::eager::always_false<Ts...>::value,
                 "Merging different resources are not allowed");
 };
 
@@ -104,8 +104,7 @@ template <typename ID, typename Obj1, typename Obj2, bool Unq1, bool Unq2,
 struct merge_resources_impl< resource<ID, Obj1, Unq1, Jobs1...>,
                              resource<ID, Obj2, Unq2, Job> >
 {
-  static_assert( !kvasir::mpl::any< kvasir::mpl::list<Jobs1...>,
-                                    _same_job_id<Job>::template f >::value,
+  static_assert( !kvasir::call<kvasir::mpl::any<_same_job_id<Job>, Jobs1...>::value,
       "Duplicate jobs defined, each job must have a unique ID");
 
   static_assert( std::is_same<Obj1, Obj2>::value,
@@ -138,22 +137,22 @@ template <typename ResList>
 struct make_resource_tree_impl
 {
 
-  using _current =  kvasir::mpl::pop_front< kvasir::mpl::remove_if<
+  using _current =  kvasir::mpl::eager::pop_front< kvasir::mpl::eager::remove_if<
                       ResList,
                       _different_resource_id<
-                        typename kvasir::mpl::pop_front<ResList>::front
+                        typename kvasir::mpl::eager::pop_front<ResList>::front
                       >::template f
                     > >;
 
-  using _next =     kvasir::mpl::remove_if<
+  using _next =     kvasir::mpl::eager::remove_if<
                       ResList,
                       _same_resource_id<
-                        typename kvasir::mpl::pop_front<ResList>::front
+                        typename kvasir::mpl::eager::pop_front<ResList>::front
                       >::template f
                     >;
 
-  using f = kvasir::mpl::join< kvasir::mpl::list<
-              kvasir::mpl::fold_right<
+  using f = kvasir::mpl::eager::join< kvasir::mpl::list<
+              kvasir::mpl::eager::fold_right<
                 typename _current::rest,
                 typename _current::front,
                 merge_resources
