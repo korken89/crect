@@ -19,6 +19,7 @@ run-time are minimal with:
 * The static requirement for `async` is about 400 bytes (the linked list, SysTick and time implementation).
 
 **Compile time:**
+
 * Uses the Kvasir MPL library for Metaprogramming.
 
 **Runtime:**
