@@ -47,9 +47,9 @@ _Tested on Manjaro Linux using GCC 6.3.0 (arm-none-eabi) and a NUCLEO-F411RE for
 ## Future name suggestions
 * ComTiS (Compile Time Scheduler)
 * CReactive (Compile-time Reactive Scheduler)
+    * crect (sounds like correct, as in "correct by design")
 * TRust++ (Task / Resource, pointing to the security of the system)
 * SyRuP (SRP)
-* Crect (Compile-time REaCTtive Schedules: sounds like correct, as in "correct by design")
 
 _Winner gets a cookie!_
 
