@@ -11,7 +11,6 @@ namespace rtfm
 {
 namespace time
 {
-
 /**
  * @brief     The definition of the system clock.
  * @details   It is based on the DWT cycle counter for calculating time, this
@@ -23,11 +22,12 @@ namespace time
 struct system_clock
 {
   /** @brief  Definition of the duration of timer ticks running at MCU clock. */
-  using duration = std::chrono::duration<int64_t, std::ratio<1, __F_CPU>>;
-  using small_duration = std::chrono::duration<int32_t, std::ratio<1, __F_CPU>>;
-  using rep = duration::rep;
-  using period = duration::period;
-  using time_point = std::chrono::time_point<system_clock>;
+  using duration = std::chrono::duration< int64_t, std::ratio< 1, __F_CPU > >;
+  using small_duration =
+      std::chrono::duration< int32_t, std::ratio< 1, __F_CPU > >;
+  using rep                   = duration::rep;
+  using period                = duration::period;
+  using time_point            = std::chrono::time_point< system_clock >;
   static const bool is_steady = false;
 
   /**
@@ -44,19 +44,14 @@ struct system_clock
   static time_point now() noexcept;
 };
 
-
 } /* END namespace time */
 
 /**
  * @brief   Convenience definition of the clock resource.
  */
-using Rsystem_clock =
-    resource<time::system_clock,
-             kvasir::mpl::integral_constant<
-                decltype(&time::system_clock::now),
-                &time::system_clock::now
-             >,
-             false>;
-
+using Rsystem_clock = resource<
+    kvasir::mpl::integral_constant< decltype(&time::system_clock::now),
+                                    &time::system_clock::now >,
+    false >;
 
 } /* END namespace rtfm */

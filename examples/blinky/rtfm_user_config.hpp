@@ -14,12 +14,10 @@ void job1(void);
 void job2(void);
 
 using Rled = rtfm::make_resource<
-    ManageLED,                      // Resource unique ID
     RTFM_OBJECT_LINK(led_resource)  // Pointer to some object to be protected
   >;
 
 using J1 = rtfm::job<
-              rtfm::util::hashit("Job1"), // Unique ID
               1,                          // Priority
               rtfm::make_isr<job1, 1>,    // ISR connection and location
               Rled,                       // Possible resource claims
@@ -28,7 +26,6 @@ using J1 = rtfm::job<
             >;
 
 using J2 = rtfm::job<
-              rtfm::util::hashit("Job2"), // Unique ID
               2,                          // Priority
               rtfm::make_isr<job2, 2>,    // ISR connection and location
               Rled,                       // Possible resource claims
