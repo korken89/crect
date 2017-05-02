@@ -56,7 +56,7 @@ template <isr_function_pointer P, int I>
 struct isr<P, idx<I>>
 {
   static_assert((I >= 0), // Peripheral ISR
-                "A peripheral ISR must have a non-negaive Index.");
+                "A peripheral ISR must have a non-negative Index.");
 
   static constexpr const isr_function_pointer value = P;
   using type = isr<P, idx<I>>;
