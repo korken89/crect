@@ -66,7 +66,7 @@ _Winner gets a cookie!_
 * An entity symbolizing something lockable, _i.e._ any locked Resource may
 only be accessed by a single Job at a time.
 
-**Lock (Stack Resource Policy):**
+**Lock:**
 
 * A lock on a resource keeps other jobs, that will also take said resource,
 from running through manipulation of the systems NVIC/basepri settings. A lock
