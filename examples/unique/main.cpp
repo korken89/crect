@@ -5,13 +5,14 @@
 /* Start a memory transaction */
 void job_start()
 {
-  rtfm::srp::unique_lock<Runique>();
+  // Fill queue for processing
 }
 
 /* Memory transaction finished */
-void job_done()
+void job_process()
 {
-  rtfm::srp::unique_unlock<Runique>();
+  // Has unique access to memory, can serialize access
+
 }
 
 
