@@ -70,6 +70,15 @@ template <typename Object, typename... Jobs>
 using make_resource = resource<Object, false, Jobs...>;
 
 /**
+ * @brief Unique resource convenience type definition.
+ *
+ * @tparam Object   Integral_constant that contains a pointer to an object.
+ * @tparam Jobs     Parameter pack of jobs.
+ */
+template <typename Object, typename... Jobs>
+using make_unique_resource = resource<Object, true, Jobs...>;
+
+/**
  * @brief Convenience define for creating an object link until we have
  *        auto templates.
  */

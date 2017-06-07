@@ -70,6 +70,16 @@ using is_unique_list = kvasir::mpl::eager::invert<
         kvasir::mpl::bool_<false>,
         kvasir::mpl::eager::logical_or > >;
 
+/**
+ * @brief Takes a job list and converts it to sorted unique resources.
+ *
+ * @tparam  SortedResourceList    Sorted list of resources to check.
+ */
+template <typename JobList>
+using jobs_to_unique_sorted = kvasir::mpl::eager::sort<
+      details::jobs_to_unique_resource<JobList>,
+      details::_different_resource_id_2r >;
+
 } /* END namespace details */
 
 /**
@@ -79,11 +89,9 @@ using is_unique_list = kvasir::mpl::eager::invert<
  * @tparam  JobList    List of jobs to check.
  */
 template <typename JobList>
-using is_unique_job_list = details::is_unique_list<
-    kvasir::mpl::eager::sort<
-        details::jobs_to_unique_resource<JobList>,
-        details::_different_resource_id_2r > >;
-
+using is_unique_job_list = kvasir::mpl::bool_<
+  details::is_unique_list< details::jobs_to_unique_sorted<JobList> >::value ||
+  (kvasir::mpl::eager::size< details::jobs_to_unique_sorted<JobList> >::value <= 1) >;
 /**
  * @brief Takes a list of jobs and finds the corresponding job to the unique
  *        resource.

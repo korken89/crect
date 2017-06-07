@@ -44,8 +44,8 @@ using system_job_list =
     kvasir::mpl::eager::flatten<kvasir::mpl::list<Jasync, user_job_list>>;
 
 /** Check the system job list for unique resources. */
-//static_assert(is_unique_job_list< system_job_list >::value,
-//              "A unique resource is claimed by multiple jobs.");
+static_assert(is_unique_job_list< system_job_list >::value == true,
+              "A unique resource is claimed by multiple jobs.");
 
 namespace srp
 {
