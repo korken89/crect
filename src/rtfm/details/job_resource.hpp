@@ -44,7 +44,7 @@ struct job
 template <typename Object, bool Unique, typename... Jobs>
 struct resource
 {
-  static_assert(kvasir::mpl::is_integral<Object>::value,
+  static_assert(kvasir::mpl::eager::is_integral<Object>::value,
                 "Object must be an integral constant.");
 
   static_assert((std::is_pointer<util::get_integral_type<Object>>::value ||
