@@ -22,16 +22,13 @@
 extern rtfm::async_queue<__RTFM_ASYNC_QUEUE_SIZE> rtfm_async_queue;
 namespace rtfm
 {
-struct async_resource;
 using Rasync =
-    resource<async_resource,
-             kvasir::mpl::integral_constant<decltype(&rtfm_async_queue),
+    resource<kvasir::mpl::integral_constant<decltype(&rtfm_async_queue),
                                             &rtfm_async_queue>,
              false>;
 
 using Jasync =
-    rtfm::job<rtfm::util::hashit("JobAsync"),      // Unique ID
-              0,                                   // Priority
+    rtfm::job<0,                                   // Priority
               rtfm::make_system_isr<SysTick_IRQn>, // ISR connection and location
               rtfm::Rasync, rtfm::Rsystem_clock    // Possible resource claims
               >;
@@ -47,8 +44,8 @@ using system_job_list =
     kvasir::mpl::eager::flatten<kvasir::mpl::list<Jasync, user_job_list>>;
 
 /** Check the system job list for unique resources. */
-static_assert(is_unique_job_list< system_job_list >::value,
-              "A unique resource is claimed by multiple jobs.");
+//static_assert(is_unique_job_list< system_job_list >::value,
+//              "A unique resource is claimed by multiple jobs.");
 
 namespace srp
 {

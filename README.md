@@ -66,7 +66,7 @@ _Winner gets a cookie!_
 * An entity symbolizing something lockable, _i.e._ any locked Resource may
 only be accessed by a single Job at a time.
 
-**Lock (Stack Resource Policy):**
+**Lock:**
 
 * A lock on a resource keeps other jobs, that will also take said resource,
 from running through manipulation of the systems NVIC/basepri settings. A lock
@@ -76,11 +76,12 @@ can only be held within a job and must be released before the exit of a job.
 
 ### TODO
 
-- [ ] Remove ID from resource (the object link works as ID).
-- [ ] Remove UID from job (the ISR works as ID).
+- [x] ~~Remove ID from resource (the object link works as ID).~~ Done.
+- [x] ~~Remove UID from job (the ISR works as ID).~~ Done.
 - [ ] Cortex-M0 support, does not have `basepri` - will have to use interrupt masking.
 - [ ] Add a debug mode for `lock` / `claim` / `unique_lock`, use `IPSR` to check that the ISR number is allowed to take the resource.
 - [ ] Make the NVIC init merged into minimal set of operations, not one operation per job.
+- [ ] Move to the new library name.
 
 ---
 
@@ -89,10 +90,9 @@ can only be held within a job and must be released before the exit of a job.
 Small description on how to use this.
 
 #### Resource definition
-A resource definition is as follows, where `ManageLED` is a type that symbolizes the resource.
+A resource definition is as follows:
 ```C++
 using Rled = rtfm::make_resource<
-    ManageLED,                      // Resource unique ID
     RTFM_OBJECT_LINK(led_resource)  // Link to some object to be protected
   >;
 ```
@@ -106,22 +106,20 @@ Any job **using these resources** need to have the corresponding resource **in i
 
 #### Job definition
 A job definition consists of a few parts:
-  1. A unique ID, used for static checking.
-  2. The priority of the Job, from 0 meaning low, to max_priority meaning max.
-  3. An ISR the Job is connected to (peripheral ISRs, 0 is the lowest, negative numbers are the system ISRs). If it is not connected to any, take any random ISR number for now, in the future this will be automatic.
-  4. The list of resources that the Job may claim.
+  1. The priority of the Job, from 0 meaning low, to max_priority meaning max.
+  2. An ISR the Job is connected to (peripheral ISRs, 0 is the lowest, negative numbers are the system ISRs). If it is not connected to any, take any random ISR number for now, in the future this will be automatic.
+  3. The list of resources that the Job may claim.
 
 The Job definitions are placed (directly or via include) in `rtfm_user_config.hpp`.
 ```C++
 void job1(void);
 using J1 = rtfm::job<
-              rtfm::util::hashit("Job1"), // Unique ID (here through a hash of text)
               1,                          // Priority (0 = low)
               rtfm::make_isr<job1, 1>,    // ISR connection and location
               R1, rtfm::Rasync            // List of possible resource claims
             >;
 ```
-Each job need to be added to the `system_job_list< Jobs... >` in `rtfm_user_config.hpp`.
+Each job need to be added to the `user_job_list< Jobs... >` in `rtfm_user_config.hpp`.
 
 #### ISR definition
 The ISR definitions available are split in the Peripheral ISRs (I >= 0), and System ISRs (I < 0).

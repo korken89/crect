@@ -98,13 +98,12 @@ struct job_to_priority
 /**
  * @brief Converts a job to an integral_constant containing the job's priority.
  *
- * @tparam ID   Job unique ID.
  * @tparam PRIO Priority.
  * @tparam ISR  ISR definition.
  * @tparam Res  Parameter pack of resources.
  */
-template <unsigned ID, unsigned PRIO, typename ISR, typename... Res>
-struct job_to_priority< job<ID, PRIO, ISR, Res...> > :
+template <unsigned PRIO, typename ISR, typename... Res>
+struct job_to_priority< job<PRIO, ISR, Res...> > :
     kvasir::mpl::integral_constant<unsigned, PRIO>
 {
 };

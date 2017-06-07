@@ -17,15 +17,13 @@ using max_priority = kvasir::mpl::integral_constant<unsigned,
 /**
  * @brief Job type definition.
  *
- * @tparam UID    Job unique ID.
  * @tparam Prio   Priority.
  * @tparam ISR    ISR definition.
  * @tparam Res    Parameter pack of resources.
  */
-template <unsigned UID, unsigned Prio, typename ISR, typename... Res>
+template <unsigned Prio, typename ISR, typename... Res>
 struct job
 {
-  using uid = kvasir::mpl::integral_constant<unsigned, UID>;
   using prio = kvasir::mpl::integral_constant<unsigned, Prio>;
   using isr = ISR;
   using resources = kvasir::mpl::eager::flatten< kvasir::mpl::list<Res...> >;
@@ -39,12 +37,11 @@ struct job
 /**
  * @brief Resource type definition.
  *
- * @tparam ID       Resource "ID", a unique type that identifies the resource.
  * @tparam Object   Integral_constant that contains a pointer to an object.
  * @tparam Unique   Flag to indicate if it is a unique resource.
  * @tparam Jobs     Parameter pack of jobs.
  */
-template <typename ID, typename Object, bool Unique, typename... Jobs>
+template <typename Object, bool Unique, typename... Jobs>
 struct resource
 {
   static_assert(kvasir::mpl::is_integral<Object>::value,
@@ -54,7 +51,9 @@ struct resource
                  util::is_nullptr<Object>::value),
                 "The type of the object must be a pointer.");
 
-  using id = ID;
+  static_assert(util::is_nullptr<Object>::value == false,
+                "The object cannot be nullptr, does not make sense.");
+
   using object = Object;
   using has_object = typename kvasir::mpl::bool_<!util::is_nullptr<Object>::value>;
   using is_unique = kvasir::mpl::bool_<Unique>;
@@ -64,34 +63,11 @@ struct resource
 /**
  * @brief Resource convenience type definition.
  *
- * @tparam ID       Resource ID, a unique type that identifies the resource.
  * @tparam Object   Integral_constant that contains a pointer to an object.
  * @tparam Jobs     Parameter pack of jobs.
  */
-template <typename ID, typename Object, typename... Jobs>
-using make_resource = resource<ID, Object, false, Jobs...>;
-
-/**
- * @brief Virtual resource convenience type definition.
- *
- * @tparam ID       Resource ID, a unique type that identifies the resource.
- * @tparam Jobs     Parameter pack of jobs.
- */
-template <typename ID, typename... Jobs>
-using make_virtual_resource =
-    resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
-             false, Jobs...>;
-
-/**
- * @brief Unique virtual resource convenience type definition.
- *
- * @tparam ID       Resource ID, a unique type that identifies the resource.
- * @tparam Jobs     Parameter pack of jobs.
- */
-template <typename ID, typename... Jobs>
-using make_unique_resource =
-    resource<ID, kvasir::mpl::integral_constant<decltype(nullptr), nullptr>,
-             true, Jobs...>;
+template <typename Object, typename... Jobs>
+using make_resource = resource<Object, false, Jobs...>;
 
 /**
  * @brief Convenience define for creating an object link until we have
