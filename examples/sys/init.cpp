@@ -123,7 +123,7 @@ void Reset_Handler()
   __disable_irq();
 
   /* Set the stack pointer. */
-  __set_PSP((uint32_t)&__stack);
+  __set_MSP((uint32_t)&__stack);
 
   /* Enable FPU ( Set bits 20-23 to enable CP10 and CP11 coprocessors) */
   SCB->CPACR |= (0xF << 20);

@@ -88,7 +88,10 @@ template <typename JobList>
 constexpr void initialize_jobs_impl()
 {
   /* Enable DWT */
-  DWT->CTRL |= (1 << DWT_CTRL_CYCCNTENA_Pos);
+  CoreDebug->DEMCR |= (1UL << CoreDebug_DEMCR_TRCENA_Pos);
+  //DWT->LAR = 0xC5ACCE55;
+  DWT->CYCCNT = 0;
+  DWT->CTRL |= (1UL << DWT_CTRL_CYCCNTENA_Pos);
 
   /* Fill the ISR settings. */
   for_each<job_to_nvic_printer, JobList>();
