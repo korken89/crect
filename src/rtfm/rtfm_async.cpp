@@ -69,32 +69,34 @@ extern "C" void SysTick_Handler()
   });
 
   /* Access the async queue through the resource. */
-  rtfm::srp::claim<rtfm::Rasync>([&](auto &async_queue){
-
-  /* Check if there is any job in the async queue. */
-  if (async_queue.front() != nullptr)
+  rtfm::srp::claim<rtfm::Rasync>([&](auto &async_queue)
   {
-    /* For every job where the time has expired, pend the job and remove from
-     * the job from the queue.
-     */
-    while (current_time >= async_queue.front()->baseline)
+    /* Check if there is any job in the async queue. */
+    if (async_queue.front() != nullptr)
     {
-      rtfm::srp::pend(async_queue.front()->job_isr_id);
-
-      if (async_queue.pop() == nullptr)
+      /* For every job where the time has expired, pend the job and remove from
+       * the job from the queue.
+       */
+      while (current_time >= async_queue.front()->baseline)
       {
-        /* The queue is empty, exit and set the timer to its max time.
-           is to adhere to the requirements of @p system_clock.
-         */
-        rtfm::timer::set_max();
-        return;
-      }
-    }
+        rtfm::srp::pend(async_queue.front()->job_isr_id);
 
-    /* Set up the timer to call for the next job in the queue. */
-    rtfm::timer::set(async_queue.front()->baseline);
-  }
-  else
-    rtfm::timer::set_max();
+        if (async_queue.pop() == nullptr)
+        {
+          /* The queue is empty, exit and set the timer to its max time.
+             is to adhere to the requirements of @p system_clock.
+           */
+          rtfm::timer::set_max();
+          return;
+        }
+      }
+
+      /* Set up the timer to call for the next job in the queue. */
+      rtfm::timer::set(async_queue.front()->baseline);
+    }
+    else
+    {
+      rtfm::timer::set_max();
+    }
   });
 }
