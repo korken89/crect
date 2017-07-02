@@ -34,6 +34,7 @@ run-time are minimal with:
 
 In this scheduler, heavy use of **C++ metaprogramming** and **C++14** allows, among other things, priority ceilings and interrupt masks to be automatically calculated at compile time, while resource locks are handled through RAII and resource access is handled via a monitor pattern. This minimizes user error without the need for an external extra compile step, as is currently being investigated in the RTFM-core language (www.rtfm-lang.org).
 
+
 ## Give it a test
 
 In `./example` an example project is setup for the NUCLEO-F411RE board, that will blink a LED every one seconds.
@@ -42,6 +43,17 @@ It also contains an example of `crect_system_config.hpp` and `crect_user_config.
 If there are any questions on the usage, throw me a message.
 
 _Tested on Ubuntu Linux using GCC 6.3.1 (arm-none-eabi) and a NUCLEO-F411RE for hardware testing. It is currently not working on Cortex-M0 devices._
+
+## License
+Boost Software License - Version 1.0
+
+## Contributors
+
+List of contributors in alphabetical order:
+
+* Carlos van Rooijen (github.com/CvRXX)
+* Emil Fresk (github.com/korken89)
+* Odin Holmes (github.com/odinthenerd)
 
 ## Definitions
 **Job:**
