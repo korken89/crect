@@ -1,7 +1,7 @@
 
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/rtfm_srp.hpp"
-#include "rtfm/rtfm_vector_table.hpp"
+#include "crect/crect.hpp"
+#include "crect/vector_table.hpp"
 
 /**
  * @brief Unhandled exception definition.
@@ -18,4 +18,4 @@ __attribute__((used, section(".isr_vector")))
 constexpr const vector_table system_vectors = generate_vector_table(
     std::make_integer_sequence<
         unsigned, sizeof(vector_table::mcu_vectors) /
-                      sizeof(rtfm::details::isr_function_pointer)>{});
+                      sizeof(crect::details::isr_function_pointer)>{});

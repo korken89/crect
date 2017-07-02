@@ -3,11 +3,11 @@
 
 
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/details/interrupts.hpp"
-#include "rtfm/details/job_resource.hpp"
-#include "rtfm/details/job_resource_details.hpp"
+#include "crect/details/interrupts.hpp"
+#include "crect/details/job_resource.hpp"
+#include "crect/details/job_resource_details.hpp"
 
-namespace rtfm
+namespace crect
 {
 
 /**
@@ -29,4 +29,4 @@ struct make_resource_tree
   using result = typename details::make_resource_tree_impl<j2r>::f;
 };
 
-} /* END namespace rtfm */
+} /* END namespace crect */

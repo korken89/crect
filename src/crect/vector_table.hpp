@@ -3,7 +3,7 @@
 
 
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/rtfm_srp.hpp"
+#include "crect/crect.hpp"
 
 extern "C"
 {
@@ -41,7 +41,7 @@ struct find_job_isr
 {
   /* Searches the resource tree for the Job with the correct ISR. */
   using f =
-      kvasir::mpl::eager::find_if<rtfm::system_job_list,
+      kvasir::mpl::eager::find_if<crect::system_job_list,
                            _same_isr_value<ISR_POS>::template f>;
 };
 
@@ -63,7 +63,7 @@ struct isr_selector
 template <>
 struct isr_selector<kvasir::mpl::list<>>
 {
-  using isr = rtfm::make_isr<_unhandled_exception, 0>;
+  using isr = crect::make_isr<_unhandled_exception, 0>;
 };
 
 /**
@@ -85,8 +85,8 @@ struct get_vector_from_position
 struct vector_table
 {
   uint32_t *stack_end;
-  rtfm::details::isr_function_pointer arm_vectors[15];
-  rtfm::details::isr_function_pointer mcu_vectors[__MCU_NUM_VECTORS];
+  crect::details::isr_function_pointer arm_vectors[15];
+  crect::details::isr_function_pointer mcu_vectors[__MCU_NUM_VECTORS];
 };
 
 

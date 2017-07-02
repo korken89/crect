@@ -2,16 +2,14 @@
 #pragma once
 
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/details/arm_intrinsics.hpp"
-#include "rtfm/rtfm_utils.hpp"
+#include "crect/details/arm_intrinsics.hpp"
+#include "crect/utils.hpp"
 
-namespace rtfm
-{
-namespace srp
+namespace crect
 {
 
 /**
- * @brief  The definition of a lock in the SRP version of RTFM++.
+ * @brief  The definition of a lock in SRP.
  *
  * @tparam ResourcePriority   The integral_constant which has the priority
  *                            value to lock.
@@ -60,5 +58,4 @@ public:
   }
 };
 
-} /* END namespace srp */
-} /* END namespace rtfm */
+} /* END namespace crect */

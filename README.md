@@ -1,10 +1,10 @@
-# RTFM++: A proof-of-concept C++ implementation of the Stack Resource Policy (SRP) based Real-Time For the Masses (RTFM) kernel
+# crect: A C++, compile-time, reactive RTOS
 
-**RTFM++** is a proof-of-concept C++ library for generating a compile time
-scheduler for Cortex-M series MCUs, which guarantees dead-lock free execution, based on the papers by:
+**crect** is a C++ library for generating a compile time
+scheduler for Cortex-M series MCUs, which guarantees dead-lock free and data race free execution, based on the papers by:
 
 * T.P. Baker, **"A Stack-Based Resource Allocation Policy for Realtime Processes"**, (general theory of SRP)
-* Johan Eriksson et. al., **"Real-Time For the Masses, Step 1: Programming API and Static Priority SRP Kernel Primitives"**, (SRP primitives, the RTFM name)
+* Johan Eriksson et. al., **"Real-Time For the Masses, Step 1: Programming API and Static Priority SRP Kernel Primitives"**, (SRP primitives)
 * Per Lindgren et. al., **"Abstract Timers and their Implementation onto the ARM Cortex-M family of MCUs"**, (async idea)
 
 which utilizes the Nested Vector Interrupt Controller (NVIC) in Cortex-M
@@ -32,27 +32,16 @@ run-time are minimal with:
 * 2-4 instructions for `pend` / `clear`.
 * About 20-30 instructions * number of items in queue for `async`.
 
-In this implementation of RTFM, heavy use of **C++ metaprogramming** and **C++14** allows, among other things, priority ceilings and interrupt masks to be automatically calculated at compile time, while resource locks are handled through RAII and resource access is handled via a monitor pattern. This minimizes user error without the need for an external extra compile step, as is currently being investigated in the RTFM-core language (www.rtfm-lang.org).
-
-More description will come...
+In this scheduler, heavy use of **C++ metaprogramming** and **C++14** allows, among other things, priority ceilings and interrupt masks to be automatically calculated at compile time, while resource locks are handled through RAII and resource access is handled via a monitor pattern. This minimizes user error without the need for an external extra compile step, as is currently being investigated in the RTFM-core language (www.rtfm-lang.org).
 
 ## Give it a test
 
 In `./example` an example project is setup for the NUCLEO-F411RE board, that will blink a LED every one seconds.
-It also contains an example of `rtfm_system_config.hpp` and `rtfm_user_config.hpp`, providing examples.
+It also contains an example of `crect_system_config.hpp` and `crect_user_config.hpp`, providing examples.
 
 If there are any questions on the usage, throw me a message.
 
-_Tested on Manjaro Linux using GCC 6.3.0 (arm-none-eabi) and a NUCLEO-F411RE for hardware testing. It is currently not working on Cortex-M0 devices._
-
-## Future name suggestions
-* ComTiS (Compile Time Scheduler)
-* CReactive (Compile-time Reactive Scheduler)
-    * crect (sounds like correct, as in "correct by design")
-* TRust++ (Task / Resource, pointing to the security of the system)
-* SyRuP (SRP)
-
-_Winner gets a cookie!_
+_Tested on Ubuntu Linux using GCC 6.3.1 (arm-none-eabi) and a NUCLEO-F411RE for hardware testing. It is currently not working on Cortex-M0 devices._
 
 ## Definitions
 **Job:**
@@ -92,17 +81,17 @@ Small description on how to use this.
 #### Resource definition
 A resource definition is as follows:
 ```C++
-using Rled = rtfm::make_resource<
-    RTFM_OBJECT_LINK(led_resource)  // Link to some object to be protected
+using Rled = crect::make_resource<
+    CRECT_OBJECT_LINK(led_resource)  // Link to some object to be protected
   >;
 ```
 Currently 2 system resources exists:
 
-1. The access to the `async_queue` is protected via `rtfm::Rasync`.
-2. For getting the current time via `rtfm::clock::system::now()` is protected
-via `rtfm::Rsystem_clock` - see **claim** for example usage.
+1. The access to the `async_queue` is protected via `crect::Rasync`.
+2. For getting the current time via `crect::clock::system::now()` is protected
+via `crect::Rsystem_clock` - see **claim** for example usage.
 
-Any job **using these resources** need to have the corresponding resource **in its resource claim** in `rtfm_user_config.hpp`.
+Any job **using these resources** need to have the corresponding resource **in its resource claim** in `crect_user_config.hpp`.
 
 #### Job definition
 A job definition consists of a few parts:
@@ -110,27 +99,27 @@ A job definition consists of a few parts:
   2. An ISR the Job is connected to (peripheral ISRs, 0 is the lowest, negative numbers are the system ISRs). If it is not connected to any, take any random ISR number for now, in the future this will be automatic.
   3. The list of resources that the Job may claim.
 
-The Job definitions are placed (directly or via include) in `rtfm_user_config.hpp`.
+The Job definitions are placed (directly or via include) in `crect_user_config.hpp`.
 ```C++
 void job1(void);
-using J1 = rtfm::job<
+using J1 = crect::job<
               1,                          // Priority (0 = low)
-              rtfm::make_isr<job1, 1>,    // ISR connection and location
-              R1, rtfm::Rasync            // List of possible resource claims
+              crect::make_isr<job1, 1>,    // ISR connection and location
+              R1, crect::Rasync            // List of possible resource claims
             >;
 ```
-Each job need to be added to the `user_job_list< Jobs... >` in `rtfm_user_config.hpp`.
+Each job need to be added to the `user_job_list< Jobs... >` in `crect_user_config.hpp`.
 
 #### ISR definition
 The ISR definitions available are split in the Peripheral ISRs (I >= 0), and System ISRs (I < 0).
 ```C++
 // Peripheral ISR definition (I >= 0)
-template <rtfm::details::isr_function_pointer<P, int I>
-using make_isr = rtfm::details::isr<P, rtfm::details::index<I>>;
+template <crect::details::isr_function_pointer<P, int I>
+using make_isr = crect::details::isr<P, crect::details::index<I>>;
 
 // System ISR definition (I < 0)
 template <int I>
-using make_system_isr = rtfm::details::isr<nullptr, rtfm::details::index<I>>;
+using make_system_isr = crect::details::isr<nullptr, crect::details::index<I>>;
 ```
 
 #### lock
@@ -142,7 +131,7 @@ wherever possible.
 
 ```C++
 // Lock the resource, remember locks are very cheap -- sprinkle them everywhere!
-rtfm::srp::lock< R1 > lock; // Locks are made in the constructor of the lock
+crect::lock< R1 > lock; // Locks are made in the constructor of the lock
 // ...
 // Unlock is automatic in the destructor of lock
 ```
@@ -155,7 +144,7 @@ Even with **lock**, it is easy to leak a resource, and to minimize this chance
 only available within the lambda of `claim`:
 ```C++
 // Access the LED resource through the claim following a monitor pattern (just as cheap as a lock)
-rtfm::srp::claim<Rled>([](auto &led){
+crect::claim<Rled>([](auto &led){
   led.enable();
 });
 ```
@@ -164,7 +153,7 @@ To guarantee the lock for resources with a return works just as good with `claim
 example when getting the current time, as the system time is a shared resource):
 ```C++
 // Resource is handled within the claim, no risk of a data-race.
-auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
+auto current_time = crect::claim<crect::Rsystem_clock>([](auto &now){
   return now(); // now is a function reference
 });
 ```
@@ -192,12 +181,12 @@ There is no `unlock`, this is by design.
 `pend` directly sets a job for execution and will be as soon as its priority is the highest, while `clear` removes the job for execution.
 ```C++
 // Compile time constant pend/clear
-rtfm::srp::pend<JobToPend>();
-rtfm::srp::clear<JobToPend>();
+crect::pend<JobToPend>();
+crect::clear<JobToPend>();
 
 // Runtime dependent pend/clear
-rtfm::srp::pend(JobToPend_ISR_ID);
-rtfm::srp::clear(JobToPend_ISR_ID);
+crect::pend(JobToPend_ISR_ID);
+crect::clear(JobToPend_ISR_ID);
 ```
 
 #### async
@@ -207,15 +196,15 @@ Async defers a jobs execution to some specific time.
 using namespace std::chrono_literals;
 
 // Async in some specific duration using chrono
-rtfm::srp::async<JobToPend>(100ms);
+crect::async<JobToPend>(100ms);
 
 // Async in some specific time using a specific time
-auto time_to_execute = some_duration + rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
+auto time_to_execute = some_duration + crect::claim<crect::Rsystem_clock>([](auto &now){
   return now();
 });
-rtfm::srp::async<JobToPend>(time_to_execute);
+crect::async<JobToPend>(time_to_execute);
 
 // Async can be used as pend for runtime dependent execution
-rtfm::srp::async(100ms, JobToPend_ISR_ID);
-rtfm::srp::async(time_to_execute, JobToPend_ISR_ID);
+crect::async(100ms, JobToPend_ISR_ID);
+crect::async(time_to_execute, JobToPend_ISR_ID);
 ```

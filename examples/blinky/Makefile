@@ -21,9 +21,9 @@ all:
 		@mkdir -p build
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) main.cpp -o build/main.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../sys/init.cpp -o build/init.o
-		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/rtfm/rtfm_vector_table.cpp -o build/vector.o
-		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/rtfm/rtfm_async.cpp -o build/async.o
-		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/rtfm/rtfm_clock.cpp -o build/clock.o
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/crect/vector_table.cpp -o build/vector.o
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/crect/async.cpp -o build/async.o
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/crect/clock.cpp -o build/clock.o
 		arm-none-eabi-g++ $(LDFLAGS) build/main.o build/clock.o build/async.o build/vector.o build/init.o -o build/example.elf
 		arm-none-eabi-objdump -D --source build/example.elf > build/example.dmp
 		@echo " "

@@ -3,12 +3,12 @@
 
 #include <chrono>
 #include <array>
-#include "rtfm/rtfm_clock.hpp"
-#include "rtfm/rtfm_timer.hpp"
+#include "crect/clock.hpp"
+#include "crect/timer.hpp"
 
 extern "C" void _unhandled_exception(void);
 
-namespace rtfm
+namespace crect
 {
 
 /**
@@ -84,7 +84,7 @@ public:
     }
     else
     {
-      /* Queue is not emptly, sort the element into the queue. */
+      /* Queue is not empty, sort the element into the queue. */
       auto _current = _head;
 
       while ((_current->next != nullptr) && (_current->next->baseline < time))
@@ -124,4 +124,4 @@ public:
 
 };
 
-} /* END namespace rtfm */
+} /* END namespace crect */

@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include "rtfm/rtfm_srp.hpp"
+#include "crect/crect.hpp"
 
 /****************************************************************************
  * User Job and Resource defines here.
  ****************************************************************************/
 
-#include "rtfm/rtfm_utils.hpp"
+#include "crect/utils.hpp"
 
 void job_start(void);
 void job_process(void);
@@ -17,23 +17,23 @@ void job_process(void);
  *
  * TODO: Change the Runique to something meaningful
  */
-using Runique = rtfm::make_unique_resource<
-    RTFM_OBJECT_LINK(job_process)
+using Runique = crect::make_unique_resource<
+    CRECT_OBJECT_LINK(job_process)
   >;
 
-using J1 = rtfm::job<
+using J1 = crect::job<
               1,                               // Priority
-              rtfm::make_isr<job_start, 1>,    // ISR connection and location
-              rtfm::Rsystem_clock,             // Possible resource claims
-              rtfm::Rasync
+              crect::make_isr<job_start, 1>,   // ISR connection and location
+              crect::Rsystem_clock,            // Possible resource claims
+              crect::Rasync
             >;
 
-using J2 = rtfm::job<
-              2,                              // Priority
-              rtfm::make_isr<job_process, 2>, // ISR connection and location
-              Runique,                        // Possible resource claims
-              rtfm::Rsystem_clock,
-              rtfm::Rasync
+using J2 = crect::job<
+              2,                               // Priority
+              crect::make_isr<job_process, 2>, // ISR connection and location
+              Runique,                         // Possible resource claims
+              crect::Rsystem_clock,
+              crect::Rasync
             >;
 
 

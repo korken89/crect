@@ -4,10 +4,10 @@
 #include <cstdint>
 #include <chrono>
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/details/job_resource.hpp"
-#include "rtfm/srp/srp_locks.hpp"
+#include "crect/details/job_resource.hpp"
+#include "crect/srp/locks.hpp"
 
-namespace rtfm
+namespace crect
 {
 namespace time
 {
@@ -54,4 +54,4 @@ using Rsystem_clock = resource<
                                     &time::system_clock::now >,
     false >;
 
-} /* END namespace rtfm */
+} /* END namespace crect */

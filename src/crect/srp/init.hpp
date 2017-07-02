@@ -6,11 +6,9 @@
 #include <cstdint>
 
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/rtfm_utils.hpp"
+#include "crect/utils.hpp"
 
-namespace rtfm
-{
-namespace srp
+namespace crect
 {
 namespace details
 {
@@ -80,7 +78,7 @@ struct job_to_nvic_printer
 };
 
 /**
- * @brief Initialize the NVIC based on a list of RTFM jobs.
+ * @brief Initialize the NVIC based on a list of crect jobs.
  *
  * @tparam JobList    The system's job list.
  */
@@ -97,6 +95,4 @@ constexpr void initialize_jobs_impl()
   for_each<job_to_nvic_printer, JobList>();
 }
 
-
-} /* END namespace srp */
-} /* END namespace rtfm */
+} /* END namespace crect */

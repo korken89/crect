@@ -1,6 +1,6 @@
 #include <type_traits>
 
-#include "rtfm/rtfm_srp.hpp"
+#include "crect/crect.hpp"
 
 /* Start a memory transaction */
 void job_start()
@@ -20,12 +20,12 @@ int main()
 {
 
   /* Initialization code */
-  rtfm::srp::initialize();
+  crect::initialize();
 
   /*
    * Convoluted way to blink a LED
    */
-  rtfm::srp::pend<J1>();
+  crect::pend<J1>();
 
 
   while(1)

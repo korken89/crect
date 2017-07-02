@@ -2,9 +2,9 @@
 #pragma once
 
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/details/job_resource.hpp"
+#include "crect/details/job_resource.hpp"
 
-namespace rtfm
+namespace crect
 {
 namespace details
 {
@@ -163,4 +163,4 @@ struct make_resource_tree_impl< kvasir::mpl::list<> >
 template < typename T >
 using job_to_resource = typename details::job_to_resource_impl< T >::f;
 
-} /* END namespace rtfm */
+} /* END namespace crect */

@@ -3,8 +3,9 @@
 #pragma once
 
 #include "kvasir/mpl/mpl.hpp"
+#include "crect_system_config.hpp"
 
-namespace rtfm
+namespace crect
 {
 namespace util
 {
@@ -180,4 +181,4 @@ constexpr uint32_t hashit(const char *txt)
 }
 
 } /* END namespace util */
-} /* END namespace rtfm */
+} /* END namespace crect */

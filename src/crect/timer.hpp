@@ -2,7 +2,7 @@
 #pragma once
 
 
-namespace rtfm
+namespace crect
 {
 namespace timer
 {
@@ -11,7 +11,7 @@ namespace timer
  * @brief   Convenience definition of the max SysTick duration.
  */
 static const constexpr auto max_systick_duration =
-  rtfm::time::system_clock::duration{SysTick_LOAD_RELOAD_Msk};
+  crect::time::system_clock::duration{SysTick_LOAD_RELOAD_Msk};
 
 /**
  * @brief   Convenience definition to pend SysTick.
@@ -33,4 +33,4 @@ inline void initialize()
 }
 
 } /* END namespace timer */
-} /* END namespace rtfm */
+} /* END namespace crect */

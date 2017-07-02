@@ -1,36 +1,36 @@
 
 #pragma once
 
-#include "rtfm/rtfm_srp.hpp"
+#include "crect/crect.hpp"
 
 /****************************************************************************
  * User Job and Resource defines here.
  ****************************************************************************/
 
-#include "rtfm/rtfm_utils.hpp"
+#include "crect/utils.hpp"
 #include "led.hpp"
 
 void job1(void);
 void job2(void);
 
-using Rled = rtfm::make_resource<
-    RTFM_OBJECT_LINK(led_resource)  // Pointer to some object to be protected
+using Rled = crect::make_resource<
+    CRECT_OBJECT_LINK(led_resource)  // Pointer to some object to be protected
   >;
 
-using J1 = rtfm::job<
+using J1 = crect::job<
               1,                          // Priority
-              rtfm::make_isr<job1, 1>,    // ISR connection and location
+              crect::make_isr<job1, 1>,   // ISR connection and location
               Rled,                       // Possible resource claims
-              rtfm::Rsystem_clock,
-              rtfm::Rasync
+              crect::Rsystem_clock,
+              crect::Rasync
             >;
 
-using J2 = rtfm::job<
+using J2 = crect::job<
               2,                          // Priority
-              rtfm::make_isr<job2, 2>,    // ISR connection and location
+              crect::make_isr<job2, 2>,   // ISR connection and location
               Rled,                       // Possible resource claims
-              rtfm::Rsystem_clock,
-              rtfm::Rasync
+              crect::Rsystem_clock,
+              crect::Rasync
             >;
 
 

@@ -1,9 +1,9 @@
 
-#include "rtfm/rtfm_srp.hpp"
-#include "rtfm/rtfm_clock.hpp"
+//#include "crect/crect.hpp"
+#include "crect/clock.hpp"
 
 
-namespace rtfm
+namespace crect
 {
 namespace time
 {
@@ -31,4 +31,4 @@ system_clock::time_point system_clock::now() noexcept
 }
 
 } /* END namespace time */
-} /* END namespace rtfm */
+} /* END namespace crect */

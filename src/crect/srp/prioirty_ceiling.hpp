@@ -10,11 +10,11 @@
 
 #include "kvasir/mpl/mpl.hpp"
 
-#include "rtfm/details/job_resource.hpp"
-#include "rtfm/details/job_resource_details.hpp"
-#include "rtfm/details/job_resource_methods.hpp"
+#include "crect/details/job_resource.hpp"
+#include "crect/details/job_resource_details.hpp"
+#include "crect/details/job_resource_methods.hpp"
 
-namespace rtfm
+namespace crect
 {
 namespace details
 {
@@ -41,7 +41,7 @@ struct find_resource_impl
                                     _same_resource_id<Resource>::template f >;
 
   static_assert(!std::is_same< f, kvasir::mpl::list<> >::value,
-                "The resource in not registered in RTFM");
+                "The resource in not registered in crect");
 
   static_assert(kvasir::mpl::eager::pop_front<f>::front::is_unique::value == false,
                 "Found unique resource when normal was requested");
@@ -61,7 +61,7 @@ struct find_unique_resource_impl
                                     _same_resource_id<Resource>::template f >;
 
   static_assert(!std::is_same< f, kvasir::mpl::list<> >::value,
-                "The resource in not registered in RTFM");
+                "The resource in not registered in crect");
 
   static_assert(kvasir::mpl::eager::pop_front<f>::front::is_unique::value == true,
                 "Found normal resource when unique was requested");
@@ -138,4 +138,4 @@ using get_priority_ceiling =
                   kvasir::mpl::eager::max
                 >;
 
-} /* END namespace rtfm */
+} /* END namespace crect */

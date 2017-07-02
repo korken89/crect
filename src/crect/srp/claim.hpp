@@ -3,12 +3,10 @@
 
 #include <type_traits>
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/rtfm_utils.hpp"
+#include "crect/utils.hpp"
 
 
-namespace rtfm
-{
-namespace srp
+namespace crect
 {
 namespace details
 {
@@ -73,10 +71,9 @@ constexpr auto claim(Fun &&f)
   using has_object = typename Resource::has_object;
 
 
-  rtfm::srp::lock<Resource> lock{};
+  lock<Resource> lock{};
 
   return details::claim_impl<has_object::value, Fun, object>{}(std::forward<Fun>(f));
 }
 
-} /* END namespace srp */
-} /* END namespace rtfm */
+} /* END namespace crect */

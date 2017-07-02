@@ -1,12 +1,12 @@
 
-#include "rtfm/rtfm_srp.hpp"
-#include "rtfm/srp/srp_async.hpp"
-#include "rtfm/rtfm_timer.hpp"
+#include "crect/crect.hpp"
+#include "crect/async.hpp"
+#include "crect/timer.hpp"
 
 
-rtfm::async_queue<__RTFM_ASYNC_QUEUE_SIZE> rtfm_async_queue;
+crect::async_queue<__CRECT_ASYNC_QUEUE_SIZE> crect_async_queue;
 
-namespace rtfm
+namespace crect
 {
 namespace timer
 {
@@ -18,7 +18,7 @@ namespace timer
  */
 inline void set(time::system_clock::time_point time)
 {
-  auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
+  auto current_time = crect::claim<crect::Rsystem_clock>([](auto &now){
     return now();
   });
 
@@ -55,7 +55,7 @@ inline void set_max()
 
 
 } /* END namespace timer */
-} /* END namespace rtfm */
+} /* END namespace crect */
 
 
 /**
@@ -64,12 +64,12 @@ inline void set_max()
 extern "C" void SysTick_Handler()
 {
   /* Always get the current time. */
-  auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
+  auto current_time = crect::claim<crect::Rsystem_clock>([](auto &now){
     return now();
   });
 
   /* Access the async queue through the resource. */
-  rtfm::srp::claim<rtfm::Rasync>([&](auto &async_queue)
+  crect::claim<crect::Rasync>([&](auto &async_queue)
   {
     /* Check if there is any job in the async queue. */
     if (async_queue.front() != nullptr)
@@ -79,24 +79,24 @@ extern "C" void SysTick_Handler()
        */
       while (current_time >= async_queue.front()->baseline)
       {
-        rtfm::srp::pend(async_queue.front()->job_isr_id);
+        crect::pend(async_queue.front()->job_isr_id);
 
         if (async_queue.pop() == nullptr)
         {
           /* The queue is empty, exit and set the timer to its max time.
              is to adhere to the requirements of @p system_clock.
            */
-          rtfm::timer::set_max();
+          crect::timer::set_max();
           return;
         }
       }
 
       /* Set up the timer to call for the next job in the queue. */
-      rtfm::timer::set(async_queue.front()->baseline);
+      crect::timer::set(async_queue.front()->baseline);
     }
     else
     {
-      rtfm::timer::set_max();
+      crect::timer::set_max();
     }
   });
 }

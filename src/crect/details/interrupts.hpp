@@ -3,7 +3,7 @@
 
 #include "kvasir/mpl/mpl.hpp"
 
-namespace rtfm
+namespace crect
 {
 namespace details
 {
@@ -93,4 +93,4 @@ public:
   }
 };
 
-}
+} /* END namespace crect */

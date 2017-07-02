@@ -2,13 +2,11 @@
 #pragma once
 
 
-namespace rtfm
-{
-namespace srp
+namespace crect
 {
 
 /**
- * @brief Synchronous pend of an RTFM job.
+ * @brief Synchronous pend of an crect job.
  *
  * @tparam Job  The job to pend.
  */
@@ -20,7 +18,7 @@ constexpr void pend()
 }
 
 /**
- * @brief Synchronous pend of an RTFM job.
+ * @brief Synchronous pend of an crect job.
  *
  * @param[in] id    The interrupt ID to pend.
  */
@@ -30,7 +28,7 @@ inline void pend(unsigned id)
 }
 
 /**
- * @brief Clear an pending RTFM job.
+ * @brief Clear an pending crect job.
  *
  * @tparam Job  The job to clear.
  */
@@ -42,7 +40,7 @@ constexpr void clear()
 }
 
 /**
- * @brief Clear an pending RTFM job.
+ * @brief Clear an pending crect job.
  *
  * @param[in] id    The interrupt ID to clear.
  */
@@ -51,5 +49,4 @@ inline void clear(unsigned id)
   NVIC->ICPR[id >> 5UL] = (1UL << (id & 0x1FUL));
 }
 
-} /* END namespace srp */
-} /* END namespace rtfm */
+} /* END namespace crect */

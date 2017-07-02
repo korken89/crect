@@ -2,10 +2,9 @@
 #pragma once
 
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/rtfm_utils.hpp"
+#include "crect/utils.hpp"
 
-
-namespace rtfm
+namespace crect
 {
 
 /**
@@ -82,7 +81,7 @@ using make_unique_resource = resource<Object, true, Jobs...>;
  * @brief Convenience define for creating an object link until we have
  *        auto templates.
  */
-#define RTFM_OBJECT_LINK(obj) \
+#define CRECT_OBJECT_LINK(obj) \
         kvasir::mpl::integral_constant< decltype(&obj), (&obj) >
 
-} /* END namespace rtfm */
+} /* END namespace crect */

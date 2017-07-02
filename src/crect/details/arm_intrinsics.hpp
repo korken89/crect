@@ -1,7 +1,7 @@
 
 #pragma once
 
-namespace rtfm
+namespace crect
 {
 
 /**
@@ -141,4 +141,4 @@ __attribute__((always_inline)) static inline void barrier_exit()
 }
 
 } /* END namespace arm_intrinsics */
-} /* END namespace rtfm */
+} /* END namespace crect */

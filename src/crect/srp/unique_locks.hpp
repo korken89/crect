@@ -2,13 +2,11 @@
 #pragma once
 
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/details/arm_intrinsics.hpp"
-#include "rtfm/rtfm_utils.hpp"
-#include "rtfm/srp/srp_unique.hpp"
+#include "crect/details/arm_intrinsics.hpp"
+#include "crect/utils.hpp"
+#include "crect/srp/unique.hpp"
 
-namespace rtfm
-{
-namespace srp
+namespace crect
 {
 /**
  * @brief  The definition of a unique lock.
@@ -18,7 +16,7 @@ namespace srp
 template <typename Resource>
 inline void unique_lock()
 {
-  using Job = get_unique_job_from_resource<rtfm::system_job_list, Resource>;
+  using Job = get_unique_job_from_resource<crect::system_job_list, Resource>;
   using ISRn = typename Job::isr::index;
 
   /* Lock the resource by disabling the ISR. */
@@ -36,7 +34,7 @@ inline void unique_lock()
 template <typename Resource>
 inline void unique_unlock()
 {
-  using Job = get_unique_job_from_resource<rtfm::system_job_list, Resource>;
+  using Job = get_unique_job_from_resource<crect::system_job_list, Resource>;
   using ISRn = typename Job::isr::index;
 
   /* Barriers to guarantee no reordering before continuing. */
@@ -44,8 +42,6 @@ inline void unique_unlock()
 
   /* Unlock the resource. */
   NVIC->ISER[ISRn::value >> 5UL] = (1UL << (ISRn::value & 0x1FUL));
-
 }
 
-} /* END namespace srp */
-} /* END namespace rtfm */
+} /* END namespace crect */

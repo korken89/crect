@@ -1,49 +1,47 @@
 
 #pragma once
 
-#include "rtfm/rtfm_srp.hpp"
-#include "rtfm/async/async_queue.hpp"
+#include "crect/crect.hpp"
+#include "crect/async/async_queue.hpp"
 
 #include <chrono>
 
-extern rtfm::async_queue<__RTFM_ASYNC_QUEUE_SIZE> rtfm_async_queue;
+extern crect::async_queue<__CRECT_ASYNC_QUEUE_SIZE> crect_async_queue;
 
-namespace rtfm
-{
-namespace srp
+namespace crect
 {
 namespace details
 {
 
 /*
- * @brief Asynchronous pend of an RTFM job with duration (implementation).
+ * @brief Asynchronous pend of a job with duration (implementation).
  *
  * @param[in] duration  The time until the job shall be executed.
  * @param[in] isr       The Job's ISR value.
  */
-static void async_impl_dur(rtfm::time::system_clock::duration dur, unsigned isr)
+static void async_impl_dur(time::system_clock::duration dur, unsigned isr)
 {
   /* Always get the current time. */
-  auto current_time = rtfm::srp::claim<rtfm::Rsystem_clock>([](auto &now){
+  auto current_time = claim<Rsystem_clock>([](auto &now){
     return now();
   });
 
   /* Claim the async queue and manipulate. */
-  rtfm::srp::claim<rtfm::Rasync>([&](auto &async_queue){
+  claim<Rasync>([&](auto &async_queue){
     async_queue.push(current_time + dur, isr);
   });
 }
 
 /*
- * @brief Asynchronous pend of an RTFM job at specific time (implementation).
+ * @brief Asynchronous pend of a job at specific time (implementation).
  *
- * @param[in] time      The absoulute time the job shall be executed.
+ * @param[in] time      The absolute time the job shall be executed.
  * @param[in] isr       The Job's ISR value.
  */
-static void async_impl_time(rtfm::time::system_clock::time_point time, unsigned isr)
+static void async_impl_time(time::system_clock::time_point time, unsigned isr)
 {
   /* Claim the async queue and manipulate. */
-  rtfm::srp::claim<rtfm::Rasync>([&](auto &async_queue){
+  claim<Rasync>([&](auto &async_queue){
     async_queue.push(time, isr);
   });
 }
@@ -51,7 +49,7 @@ static void async_impl_time(rtfm::time::system_clock::time_point time, unsigned 
 } /* END namespace details */
 
 /**
- * @brief Asynchronous pend of an RTFM job.
+ * @brief Asynchronous pend of a job.
  *
  * @tparam Job          The job to pend in the future.
  * @tparam Rep          Representation of the duration.
@@ -66,13 +64,13 @@ constexpr void async(std::chrono::duration<Rep, Period> duration)
   using namespace std::chrono;
   using idx = typename Job::isr::index;
 
-  auto dur = duration_cast<rtfm::time::system_clock::duration>(duration);
+  auto dur = duration_cast<time::system_clock::duration>(duration);
 
   details::async_impl_dur(dur, idx::value);
 }
 
 /**
- * @brief Asynchronous pend of an RTFM job, manually specifying the ISR ID.
+ * @brief Asynchronous pend of a job, manually specifying the ISR ID.
  *
  * @tparam Rep          Representation of the duration.
  * @tparam Period       Period of the duration.
@@ -86,13 +84,13 @@ constexpr void async(std::chrono::duration<Rep, Period> duration, unsigned isr)
 {
   using namespace std::chrono;
 
-  auto dur = duration_cast<rtfm::time::system_clock::duration>(duration);
+  auto dur = duration_cast<time::system_clock::duration>(duration);
 
   details::async_impl_dur(dur, isr);
 }
 
 /**
- * @brief Asynchronous pend of an RTFM job.
+ * @brief Asynchronous pend of a job.
  *
  * @tparam Job          The job to pend in the future.
  *
@@ -100,14 +98,14 @@ constexpr void async(std::chrono::duration<Rep, Period> duration, unsigned isr)
  */
 
 template <typename Job>
-constexpr void async(rtfm::time::system_clock::time_point time)
+constexpr void async(time::system_clock::time_point time)
 {
   using idx = typename Job::isr::index;
   details::async_impl_time(time, idx::value);
 }
 
 /**
- * @brief Asynchronous pend of an RTFM job, manually specifying the ISR ID.
+ * @brief Asynchronous pend of a job, manually specifying the ISR ID.
  *
  * @tparam Job          The job to pend in the future.
  *
@@ -115,10 +113,9 @@ constexpr void async(rtfm::time::system_clock::time_point time)
  * @param[in] isr       The ISR ID to pend.
  */
 
-inline void async(rtfm::time::system_clock::time_point time, unsigned isr)
+inline void async(time::system_clock::time_point time, unsigned isr)
 {
   details::async_impl_time(time, isr);
 }
 
-} /* END namespace srp */
-} /* END namespace rtfm */
+} /* END namespace crect */

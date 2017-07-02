@@ -2,11 +2,11 @@
 #pragma once
 
 #include "kvasir/mpl/mpl.hpp"
-#include "rtfm/details/job_resource.hpp"
-#include "rtfm/details/job_resource_details.hpp"
-#include "rtfm/srp/srp_prioirty_ceiling.hpp"
+#include "crect/details/job_resource.hpp"
+#include "crect/details/job_resource_details.hpp"
+#include "crect/srp/prioirty_ceiling.hpp"
 
-namespace rtfm
+namespace crect
 {
 namespace details
 {
@@ -105,7 +105,7 @@ using get_unique_job_from_resource = typename kvasir::mpl::eager::pop_front<
   >::front;
 
 
-} /* END namespace rtfm */
+} /* END namespace crect */
 
 
 
