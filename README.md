@@ -1,6 +1,6 @@
 # crect: A C++, compile-time, reactive RTOS
 
-**crect** is a C++ library for generating a compile time
+**crect** (pronounced _correct_) is a C++ library for generating a compile time
 scheduler for Cortex-M series MCUs, which guarantees dead-lock free and data race free execution, based on the papers by:
 
 * T.P. Baker, **"A Stack-Based Resource Allocation Policy for Realtime Processes"**, (general theory of SRP)
