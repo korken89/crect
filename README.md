@@ -54,9 +54,9 @@ Boost Software License - Version 1.0
 
 List of contributors in alphabetical order:
 
-* Carlos van Rooijen (github.com/CvRXX)
-* Emil Fresk (github.com/korken89)
-* Odin Holmes (github.com/odinthenerd)
+* [Carlos van Rooijen](https://www.github.com/CvRXX)
+* [Emil Fresk](https://www.github.com/korken89)
+* [Odin Holmes](https://www.github.com/odinthenerd)
 
 ## Definitions
 **Job:**
