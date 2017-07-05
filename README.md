@@ -36,8 +36,12 @@ In this scheduler, heavy use of **C++ metaprogramming** and **C++14** allows, am
 
 ## Give it a test
 
-In `./example` an example project is setup for the NUCLEO-F411RE board, that will blink a LED every one seconds.
-It also contains an example of `crect_system_config.hpp` and `crect_user_config.hpp`, providing examples.
+In the `example` folder a few example projects are setup for the NUCLEO-F411RE board. For example:
+
+* A program that will blink a LED every one seconds using `crect` primitives.
+* An example for how to use `unique_lock` with a data pumping peripheral (for example DMA or a communication interface).
+
+It also contains examples of `crect_system_config.hpp` and `crect_user_config.hpp`, providing references until a documentation is available.
 
 If there are any questions on the usage, throw me a message.
 
