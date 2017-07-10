@@ -1,3 +1,8 @@
+#          Copyright Emil Fresk 2017.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE.md or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
+
 INCLUDE = -I../../deps/mpl/src -I../../src -I../sys/inc -I.
 DEFS = -DNDEBUG
 FLAGS = -std=c++14 -Wall -Wextra -Wfatal-errors -ggdb -O1
