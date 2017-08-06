@@ -16,19 +16,25 @@ requirements at run-time are minimal with:
 
 **Compile time:**
 
-* Uses the Kvasir MPL library for Metaprogramming.
+* Uses the Kvasir MPL library for metaprogramming.
 
 **Runtime:**
 
 * 3-4 instructions + 4 bytes of stack for a `lock`.
 * 1-3 instructions for an (implicit) unlock.
 * `claim` has zero overhead, it decomposes into a `lock`.
-* 5 instructions for a `unique_lock`.
-* 2 instructions for a `unique_unlock`.
+* 5 instructions for a `unique_lock` (will change).
+* 2 instructions for a `unique_unlock` (will change).
 * 2-4 instructions for `pend` / `clear`.
 * About 20-30 instructions * number of items in queue for `async`.
 
-In this scheduler, heavy use of C++ metaprogramming and C++14 allows, among other things, priority ceilings and interrupt masks to be automatically calculated at compile time, while resource locks are handled through RAII and resource access is handled via a monitor pattern. This minimizes user error without the need for an external extra compile step, as is currently being investigated in the RTFM-core language (www.rtfm-lang.org).
+In this scheduler, heavy use of C++ metaprogramming and C++14 allows,
+among other things, priority ceilings and interrupt masks to be
+automatically calculated at compile time, while resource locks are
+handled through RAII and resource access is handled via a monitor
+pattern. This minimizes user error without the need for an external
+extra compile step, as is currently being investigated in the
+[RTFM-core language](www.rtfm-lang.org).
 
 
 ## Give it a test
@@ -51,9 +57,9 @@ Boost Software License - Version 1.0
 
 List of contributors in alphabetical order:
 
-* [Carlos van Rooijen](https://www.github.com/CvRXX)
 * [Emil Fresk](https://www.github.com/korken89)
 * [Odin Holmes](https://www.github.com/odinthenerd)
+* [Carlos van Rooijen](https://www.github.com/CvRXX)
 
 ## References
 
