@@ -1,15 +1,12 @@
 # crect: A C++, compile-time, reactive RTOS
 
-**crect** (pronounced _correct_) is a C++ library for generating a scheduler, _at compile time_, for Cortex-M series MCUs, which _guarantees_ dead-lock free and data-race free execution, based on the papers by:
-
-* T.P. Baker, **"A Stack-Based Resource Allocation Policy for Realtime Processes"**, (general theory of SRP)
-* Johan Eriksson et. al., **"Real-Time For the Masses, Step 1: Programming API and Static Priority SRP Kernel Primitives"**, (SRP primitives)
-* Per Lindgren et. al., **"Abstract Timers and their Implementation onto the ARM Cortex-M family of MCUs"**, (async idea)
-
-which utilizes the Nested Vector Interrupt Controller (NVIC) in Cortex-M
-processors to implement a Stack Resource Policy (SRP) based scheduler. Thanks
-to the compile time creation of the scheduler, the resource requirements at
-run-time are minimal with:
+**crect** (pronounced _correct_) is a C++ library for generating a
+scheduler (_at compile time_) for Cortex-M series MCUs, which
+**_guarantees_** dead-lock free and data-race free execution.
+It utilizes the Nested Vector Interrupt Controller (NVIC) in Cortex-M
+processors to implement a Stack Resource Policy (SRP) based scheduler.
+Thanks to the compile time creation of the scheduler, the resource
+requirements at run-time are minimal with:
 
 **Initialization:**
 
@@ -31,7 +28,7 @@ run-time are minimal with:
 * 2-4 instructions for `pend` / `clear`.
 * About 20-30 instructions * number of items in queue for `async`.
 
-In this scheduler, heavy use of **C++ metaprogramming** and **C++14** allows, among other things, priority ceilings and interrupt masks to be automatically calculated at compile time, while resource locks are handled through RAII and resource access is handled via a monitor pattern. This minimizes user error without the need for an external extra compile step, as is currently being investigated in the RTFM-core language (www.rtfm-lang.org).
+In this scheduler, heavy use of C++ metaprogramming and C++14 allows, among other things, priority ceilings and interrupt masks to be automatically calculated at compile time, while resource locks are handled through RAII and resource access is handled via a monitor pattern. This minimizes user error without the need for an external extra compile step, as is currently being investigated in the RTFM-core language (www.rtfm-lang.org).
 
 
 ## Give it a test
@@ -57,6 +54,14 @@ List of contributors in alphabetical order:
 * [Carlos van Rooijen](https://www.github.com/CvRXX)
 * [Emil Fresk](https://www.github.com/korken89)
 * [Odin Holmes](https://www.github.com/odinthenerd)
+
+## References
+
+crect is based on the following academic papers:
+
+* T.P. Baker, **"A Stack-Based Resource Allocation Policy for Realtime Processes"**, (general theory of SRP)
+* Johan Eriksson et. al., **"Real-Time For the Masses, Step 1: Programming API and Static Priority SRP Kernel Primitives"**, (SRP primitives)
+* Per Lindgren et. al., **"Abstract Timers and their Implementation onto the ARM Cortex-M family of MCUs"**, (async idea)
 
 ## Definitions
 **Job:**
