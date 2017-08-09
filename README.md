@@ -34,7 +34,7 @@ automatically calculated at compile time, while resource locks are
 handled through RAII and resource access is handled via a monitor
 pattern. This minimizes user error without the need for an external
 extra compile step, as is currently being investigated in the
-[RTFM-core language](www.rtfm-lang.org).
+[RTFM-core language](http://www.rtfm-lang.org/).
 
 
 ## Give it a test
