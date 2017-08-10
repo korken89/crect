@@ -60,7 +60,15 @@ static_assert(is_unique_job_list< system_job_list >::value == true,
  * @tparam Resource   The resource to lock.
  */
 template <typename Resource>
-using lock = lock_impl<get_priority_ceiling<system_job_list, Resource>>;
+#if __CORTEX_M  >= 3
+/* BASEPRI based for Cortex-M3 and above */
+using lock = lock_impl_basepri<get_priority_ceiling<system_job_list,
+                                                    Resource>>;
+#else
+/* Source masking based for Cortex-M0(+) */
+using lock = lock_impl_basepri<get_source_masking<system_job_list,
+                                                  Resource>>;
+#endif
 
 /**
  * @brief  A convenience definition of the initialization of crect.
