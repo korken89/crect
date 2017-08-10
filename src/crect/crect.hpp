@@ -20,6 +20,7 @@
 #include "crect/srp/locks.hpp"
 #include "crect/srp/pend_clear.hpp"
 #include "crect/srp/prioirty_ceiling.hpp"
+#include "crect/srp/source_masking.hpp"
 #include "crect/srp/unique.hpp"
 
 /* Async resource definition for now... */

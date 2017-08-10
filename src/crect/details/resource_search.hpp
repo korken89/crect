@@ -3,6 +3,8 @@
 //    (See accompanying file LICENSE.md or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#pragma once
+
 #include "kvasir/mpl/mpl.hpp"
 #include "crect/details/job_resource_definitions.hpp"
 #include "crect/details/job_resource_comparisons.hpp"

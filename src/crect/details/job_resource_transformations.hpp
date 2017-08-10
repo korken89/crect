@@ -85,32 +85,32 @@ struct job_to_priority< job<PRIO, ISR, Res...> > :
 /**************************************************************************/
 
 /**
- * @brief Converts a job to an integral_constant containing the job's ISR
- *        position.
+ * @brief Converts a job to an integral_constant containing the job's ISR mask.
  * @note  Base case, should not come here.
  *
  * @note  Used for Cortex-M0, as it does not have basepri -- needs to use source
  *        masking.
  */
 template <typename... Ts>
-struct job_to_isr_pos
+struct job_to_isr_mask
 {
   static_assert(kvasir::mpl::eager::always_false<Ts...>::value,
                 "Should not come here");
 };
 
 /**
- * @brief Converts a job to an integral_constant containing the job's ISR position.
+ * @brief Converts a job to an integral_constant containing the job's ISR mask.
  *
- * @note Used for Cortex-M0, as it does not have basepri -- needs to use source masking.
+ * @note  Used for Cortex-M0, as it does not have basepri -- needs to use source
+ *        masking.
  *
  * @tparam PRIO Priority.
  * @tparam ISR  ISR definition.
  * @tparam Res  Parameter pack of resources.
  */
 template <unsigned PRIO, typename ISR, typename... Res>
-struct job_to_isr_pos< job<PRIO, ISR, Res...> > :
-    kvasir::mpl::integral_constant<unsigned, ISR::index::value>
+struct job_to_isr_mask< job<PRIO, ISR, Res...> > :
+    kvasir::mpl::integral_constant<unsigned, (1u << (ISR::index::value % 32))>
 {
 };
 
