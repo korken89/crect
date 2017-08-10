@@ -6,8 +6,6 @@
 #pragma once
 
 #include "kvasir/mpl/mpl.hpp"
-#include "crect/details/job_resource.hpp"
-#include "crect/details/job_resource_details.hpp"
 #include "crect/srp/prioirty_ceiling.hpp"
 
 namespace crect

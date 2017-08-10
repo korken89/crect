@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <chrono>
 #include "kvasir/mpl/mpl.hpp"
-#include "crect/details/job_resource.hpp"
+#include "crect/details/job_resource_definitions.hpp"
 #include "crect/srp/locks.hpp"
 
 namespace crect

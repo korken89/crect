@@ -12,8 +12,8 @@
 
 #include "crect/async/async_queue.hpp"
 #include "crect/details/interrupts.hpp"
-#include "crect/details/job_resource.hpp"
-#include "crect/details/job_resource_methods.hpp"
+#include "crect/details/job_resource_definitions.hpp"
+#include "crect/details/resource_tree.hpp"
 #include "crect/clock.hpp"
 #include "crect/timer.hpp"
 #include "crect/srp/init.hpp"
