@@ -59,13 +59,14 @@ struct job_to_resource_impl< job< Prio, ISR, Res... > >
 template <typename... Ts>
 struct job_to_priority
 {
-  static_assert(kvasir::mpl::eager::always_false<Ts...>::value, "Should not come here");
+  static_assert(kvasir::mpl::eager::always_false<Ts...>::value,
+                "Should not come here");
 };
 
 /**
  * @brief Converts a job to an integral_constant containing the job's priority.
  *
- * @note Used for Cortex-M3 and above, as it has basepri.
+ * @note  Used for Cortex-M3 and above, as it has basepri.
  *
  * @tparam PRIO Priority.
  * @tparam ISR  ISR definition.
@@ -84,15 +85,18 @@ struct job_to_priority< job<PRIO, ISR, Res...> > :
 /**************************************************************************/
 
 /**
- * @brief Converts a job to an integral_constant containing the job's ISR position.
- * @note Base case, should not come here.
+ * @brief Converts a job to an integral_constant containing the job's ISR
+ *        position.
+ * @note  Base case, should not come here.
  *
- * @note Used for Cortex-M0, as it does not have basepri -- needs to use source masking.
+ * @note  Used for Cortex-M0, as it does not have basepri -- needs to use source
+ *        masking.
  */
 template <typename... Ts>
 struct job_to_isr_pos
 {
-  static_assert(kvasir::mpl::eager::always_false<Ts...>::value, "Should not come here");
+  static_assert(kvasir::mpl::eager::always_false<Ts...>::value,
+                "Should not come here");
 };
 
 /**
