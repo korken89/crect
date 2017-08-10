@@ -11,7 +11,7 @@
 #include "crect_system_config.hpp"
 
 #include "crect/async/async_queue.hpp"
-#include "crect/details/interrupts.hpp"
+#include "crect/details/interrupt_definitions.hpp"
 #include "crect/details/job_resource_definitions.hpp"
 #include "crect/details/resource_tree.hpp"
 #include "crect/clock.hpp"
