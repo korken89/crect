@@ -48,7 +48,7 @@ namespace crect
 
 /** Create the system job list. */
 using system_job_list =
-    kvasir::mpl::eager::flatten<kvasir::mpl::list<Jasync, user_job_list>>;
+    kvasir::mpl::eager::join<kvasir::mpl::list<Jasync>, user_job_list>;
 
 /** Check the system job list for unique resources. */
 static_assert(is_unique_job_list< system_job_list >::value == true,
