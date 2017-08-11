@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <cstdint>
 #include "kvasir/mpl/mpl.hpp"
 #include "crect_system_config.hpp"
 
@@ -154,6 +155,12 @@ using is_nullptr = typename details::is_nullptr_impl<T>::f;
 template <typename Fun>
 using function_traits =
     details::function_traits_impl<decltype( &Fun::operator() )>;
+
+template <class T, std::uintptr_t ADDRESS>
+struct memory_mapper
+{
+  static_assert(std::is_pod<T>::value, "T must be POD");
+};
 
 /**
  * @brief   Takes a user priority (0 = lowest, increasing numbers means higher
