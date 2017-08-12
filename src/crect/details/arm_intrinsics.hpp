@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace crect
 {
 
@@ -109,7 +111,7 @@ static inline uint32_t get_IPSR(void)
 __attribute__((always_inline))
 static inline void enable_interrupts(void)
 {
-  __ASM volatile ("cpsie i" ::: "memory");
+  asm volatile ("cpsie i" ::: "memory");
 }
 
 
@@ -119,7 +121,7 @@ static inline void enable_interrupts(void)
 __attribute__((always_inline))
 static inline void disable_interrupts(void)
 {
-  __ASM volatile ("cpsid i" ::: "memory");
+  asm volatile ("cpsid i" ::: "memory");
 }
 
 /**
