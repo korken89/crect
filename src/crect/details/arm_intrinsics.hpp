@@ -85,7 +85,7 @@ template <unsigned I>
 __attribute__((always_inline))
 static inline void set_BASEPRI_MAX(void)
 {
-  asm volatile ("MSR basepri_max, %0" : : "r" (I) : "memory");
+  asm volatile ("MSR basepri_max, %0" :: "r" (I) : "memory");
 }
 
 /**
@@ -101,6 +101,25 @@ static inline uint32_t get_IPSR(void)
 
   asm volatile ("MRS %0, ipsr" : "=r" (result) );
   return(result);
+}
+
+/**
+ * @brief   Enable IRQ Interrupts
+ */
+__attribute__((always_inline))
+static inline void enable_interrupts(void)
+{
+  __ASM volatile ("cpsie i" ::: "memory");
+}
+
+
+/**
+ * @brief   Disable IRQ Interrupts
+ */
+__attribute__((always_inline))
+static inline void disable_interrupts(void)
+{
+  __ASM volatile ("cpsid i" ::: "memory");
 }
 
 /**
