@@ -70,7 +70,7 @@ struct resource< kvasir::mpl::integral_constant< T, V >, Unique, Jobs... >
    *
    * @return    The reference to the object.
    */
-  static typename std::remove_pointer< T >::type& as_object() noexcept
+  static std::remove_pointer_t< T >& as_object() noexcept
   {
     return *V;
   }
