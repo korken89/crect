@@ -29,7 +29,8 @@ all:
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/crect/vector_table.cpp -o build/vector.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/crect/async.cpp -o build/async.o
 		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/crect/clock.cpp -o build/clock.o
-		arm-none-eabi-g++ $(LDFLAGS) build/main.o build/clock.o build/async.o build/vector.o build/init.o -o build/example.elf
+		arm-none-eabi-g++ $(INCLUDE) $(DEFS) $(ARM_FLAGS) ../../src/crect/debug.cpp -o build/debug.o
+		arm-none-eabi-g++ $(LDFLAGS) build/main.o build/debug.o build/clock.o build/async.o build/vector.o build/init.o -o build/example.elf
 		arm-none-eabi-objdump -D --source build/example.elf > build/example.dmp
 		@echo " "
 		@echo "Total size:"
