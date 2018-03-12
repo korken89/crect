@@ -36,6 +36,7 @@ public:
   /**
    * @brief  The constructor locks the resource by manipulating BASEPRI.
    */
+  __attribute__((always_inline))
   lock_impl_basepri() : _old_basepri( arm_intrinsics::get_BASEPRI() )
     /* Save old BASEPRI before execution of constructor body as per
      * C++ Standard §12.6.2 */
@@ -52,6 +53,7 @@ public:
   /**
    * @brief  The destructor releases the resource by restoring BASEPRI.
    */
+  __attribute__((always_inline))
   ~lock_impl_basepri()
   {
     /* Barriers to guarantee no reordering before continuing. */
@@ -89,6 +91,7 @@ public:
    * @brief  The constructor locks the resource by manipulating the NVIC
    *         interrupt clear enable mask.
    */
+  __attribute__((always_inline))
   lock_impl_source_mask() : _old_mask( NVIC->ICER[0] )
   {
     /* Lock the resource by clearing the mask. */
@@ -101,6 +104,7 @@ public:
   /**
    * @brief  The destructor releases the resource by restoring the mask.
    */
+  __attribute__((always_inline))
   ~lock_impl_source_mask()
   {
     /* Barriers to guarantee no reordering before continuing. */
