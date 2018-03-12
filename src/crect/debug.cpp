@@ -61,21 +61,14 @@ struct printer
 {
 };
 
-template < int... Is >
-struct int_list
-{
-};
-
 template < typename >
-struct make_int_list
-{
-};
+struct make_int_list;
 
 template < int... Is >
 struct make_int_list<
     kvasir::mpl::list< kvasir::mpl::integral_constant< int, Is >... > >
 {
-	using f = int_list<Is...>;
+  using f = std::integer_sequence< int, Is... >;
 };
 
 
