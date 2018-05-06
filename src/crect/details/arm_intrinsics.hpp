@@ -91,6 +91,30 @@ static inline void set_BASEPRI_MAX(void)
 }
 
 /**
+ * @brief     Get PRIMASK
+ * @details   Returns the current value of the PRIMASK register.
+ *
+ * @return    PRIMASK register value
+ */
+__attribute__((always_inline)) static inline uint32_t get_PRIMASK(void)
+{
+  uint32_t result;
+  asm volatile("MRS %0, primask" : "=r"(result) : : "memory");
+  return result;
+}
+
+/**
+ * @brief     Set PRIMASK
+ * @details   Assigns the given value to the PRIMASK register.
+ *
+ * @param primask    PRIMASK value to set.
+ */
+__attribute__((always_inline)) static inline void set_PRIMASK(uint32_t primask)
+{
+  asm volatile("MSR primask, %0" : : "r"(primask) : "memory");
+}
+
+/**
  * @brief     Get IPSR
  * @details   Returns the current value of the IPSR register.
  *
