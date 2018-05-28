@@ -36,6 +36,9 @@ pattern. This minimizes user error without the need for an external
 extra compile step, as is currently being investigated in the
 [RTFM-core language](http://www.rtfm-lang.org/).
 
+## Videos / tutorials
+
+YouTube video from [embo++ 2018](https://www.embo.io/) describing the inner workings of **crect**: https://www.youtube.com/watch?v=SBij9W9GfBw
 
 ## Give it a test
 
